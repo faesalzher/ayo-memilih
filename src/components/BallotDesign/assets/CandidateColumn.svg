@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 640" width="512" height="640">
+    <defs>
+        <linearGradient id="paper" x2="0" y2="1">
+            <stop stop-color="#fffdf8" />
+            <stop offset="1" stop-color="#f2eee5" />
+        </linearGradient>
+        <clipPath id="photo-clip">
+            <rect x="22" y="94" width="468" height="298" />
+        </clipPath>
+    </defs>
+ <rect
+        width="512" height="640" fill="url(#paper)" />
+ <rect x="18" y="15" width="476" height="610"
+        fill="none" stroke="#777168" stroke-width="2" />
+ <rect x="21" y="18" width="470" height="73"
+        fill="#f8f5ec" />
+ <circle cx="256" cy="54" r="32" fill="none" stroke="#393632"
+        stroke-width="3" />
+ <text x="256" y="67" text-anchor="middle" font-family="Arial,sans-serif"
+        font-size="37" font-weight="900" fill="#252323">{{NUMBER}}</text>
+ <rect x="22" y="94"
+        width="468" height="298" fill="{{ACCENT}}" /> {{PHOTO}} {{PLACEHOLDER}} <rect x="22" y="392"
+        width="468" height="233" fill="#f7f3e9" />
+ <path d="M256 405v130" stroke="rgba(83,76,68,.38)"
+        stroke-width="1" />
+ <g text-anchor="middle" font-family="Arial,sans-serif">
+        <text x="139" y="423" font-size="12" font-weight="700" fill="#625c54">CALON WALIKOTA</text>
+        <text x="373" y="423" font-size="12" font-weight="700" fill="#625c54">CALON WAKIL WALIKOTA</text>
+        <text x="139" y="458" font-size="18" font-weight="800" fill="#262626">{{NAME_LINES}}</text>
+        <text x="373" y="458" font-size="18" font-weight="800" fill="#262626">{{MATE_LINES}}</text>
+    </g>
+</svg>

@@ -1,0 +1,82 @@
+.fold-button { position: relative; z-index: 3; margin: 12px auto 0; }
+.ballot-stage { position: relative; }
+
+.delivery-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  gap: clamp(12px, 3vw, 48px);
+  width: min(100%, 1080px);
+  margin-inline: auto;
+}
+
+.delivery-stage .ballot-touch-wrapper {
+  grid-column: 1;
+  justify-self: end;
+  width: min(40vw, 480px);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.delivery-stage .ballot-touch-wrapper:active { cursor: grabbing; }
+.delivery-stage .ballot-3d-shell { width: 100%; height: min(43svh, 590px); }
+.ballot-drop-scene { grid-column: 2; display: grid; justify-items: center; align-content: center; width: min(36vw, 390px); perspective: 1000px; }
+
+/* Original supplied PNG; keep its square artwork intact at every viewport size. */
+.ballot-box {
+  position: relative;
+  width: min(34vw, 350px);
+  aspect-ratio: 1;
+  filter: drop-shadow(0 20px 15px #67443c35);
+  transition: filter .22s ease;
+}
+.ballot-box-art { position: absolute; inset: 0; }
+.ballot-box-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.ballot-box-slot-hit {
+  position: absolute;
+  /* Align to the dark horizontal slot in src/img/ballot-box.png. */
+  left: 31%;
+  top: 18%;
+  width: 38%;
+  height: 4.5%;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0;
+}
+.drop-caption { margin: 14px 0 0; padding: 8px 16px; border-radius: 999px; color: #8c1521; background: #fff9ed; font-size: clamp(11px, 1.3vw, 18px); font-weight: 1000; letter-spacing: .1em; box-shadow: 0 4px 12px #67443c14; text-align: center; }
+.target-active { filter: drop-shadow(0 24px 18px #67443c45); }
+
+.finale-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(12px, 2.2svh, 30px); }
+.finale-stage .ballot-touch-wrapper { position: absolute; z-index: -1; pointer-events: none; }
+.ballot-drop-scene-final { grid-column: auto; width: min(48vw, 510px); }
+.ballot-drop-scene-final .ballot-box { width: min(40vw, 420px); }
+.thank-you-panel { width: min(90vw, 820px); text-align: center; color: var(--ink); }
+.thank-you-check { display: grid; place-items: center; width: clamp(52px, 7vw, 86px); aspect-ratio: 1; margin: 0 auto 12px; border: 5px solid #fff; border-radius: 50%; color: white; background: #55a76a; box-shadow: 0 0 0 7px #55a76a27, 0 10px 20px #4b95623b; font-size: clamp(30px, 4.5vw, 55px); font-weight: 1000; }
+.thank-you-panel h2 { margin: 0; color: var(--red-dark); font-family: 'Baloo 2', sans-serif; font-size: clamp(28px, 4.3vw, 60px); font-weight: 900; line-height: 1; text-shadow: 2px 2px 0 #f6c8ae; }
+.thank-you-panel p { margin: 12px auto 0; max-width: 650px; color: var(--muted); font-size: clamp(16px, 1.8vw, 25px); font-weight: 800; }
+
+@media (max-width: 600px) {
+  .delivery-stage { gap: 6px; padding-inline: 2px; }
+  .delivery-stage .ballot-touch-wrapper { width: 43vw; }
+  .delivery-stage .ballot-3d-shell { height: min(35svh, 390px); }
+  .ballot-drop-scene { width: 39vw; }
+  .ballot-box { width: 37vw; }
+  .drop-caption { margin-top: 8px; padding: 7px 9px; }
+  .ballot-drop-scene-final { width: min(66vw, 350px); }
+  .ballot-drop-scene-final .ballot-box { width: min(56vw, 300px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ballot-box, .ballot-box-slot-hit { transition-duration: 0.01ms !important; }
+}

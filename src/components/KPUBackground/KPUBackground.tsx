@@ -1,0 +1,3 @@
+export default function KPUBackground() {
+  return <div className="kpu-background" aria-hidden="true"><span className="blob blob-one" /><span className="blob blob-two" /><span className="blob blob-three" /><svg className="wave" viewBox="0 0 1440 300" preserveAspectRatio="none"><path d="M0 105C210 235 390 15 625 105c230 88 350 151 815 20v175H0Z" fill="#c92735" /><path d="M0 143c260 123 417-73 666 9 215 71 424 129 774 18v54H0Z" fill="#ed7070" opacity=".66" /></svg><div className="sparkle sparkle-a">✦</div><div className="sparkle sparkle-b">✦</div><div className="dot dot-a" /><div className="dot dot-b" /></div>
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 640" width="512" height="640">
+ <defs><linearGradient id="paper" x2="0" y2="1"><stop stop-color="#fffdf8"/><stop offset="1" stop-color="#f3efe5"/></linearGradient></defs>
+ <rect width="512" height="640" fill="url(#paper)"/>
+ <path d="M0 0h512v236c-90-28-130 17-215-2S91 260 0 229Z" fill="#c92724"/>
+ <g id="kpu-logo-slot"/>
+ <g id="ayo-logo-slot"/>
+ <g fill="#fff" font-family="Arial,sans-serif" font-weight="700"><text x="155" y="88" font-size="18">KOMISI</text><text x="155" y="114" font-size="18">PEMILIHAN UMUM</text><text x="155" y="140" font-size="18">KOTA BATU</text></g>
+ <g text-anchor="middle" font-family="Arial,sans-serif" fill="#252323"><text x="256" y="302" font-size="44" font-weight="900">SURAT SUARA</text><text x="256" y="350" font-size="22" font-weight="800">PEMILIHAN WALIKOTA</text><text x="256" y="380" font-size="22" font-weight="800">DAN WAKIL WALIKOTA</text><text x="256" y="414" font-size="21" font-weight="800">KOTA BATU — TAHUN 2026</text></g>
+ <rect y="558" width="512" height="57" fill="#242424"/><text x="256" y="596" text-anchor="middle" font-family="Arial,sans-serif" font-size="24" font-weight="900" fill="#fff">SIMULASI EDUKASI</text>
+</svg>

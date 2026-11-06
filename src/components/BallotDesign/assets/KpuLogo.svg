@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <circle cx="50" cy="50" r="47" fill="#fff8ed" stroke="#302b28" stroke-width="4"/>
+  <path d="M21 33h58v37H21z" fill="#f3c84b" stroke="#302b28" stroke-width="3"/>
+  <path d="M29 62 41 38h8l-7 13 16-13h11L52 53l13 9h-12l-10-7-3 7z" fill="#c92724"/>
+  <text x="50" y="84" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" font-weight="800" fill="#302b28">KPU KOTA BATU</text>
+</svg>
