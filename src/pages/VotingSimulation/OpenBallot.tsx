@@ -14,7 +14,11 @@ import './OpenBallot.css'
 const PANEL_WIDTH = 1.68
 type FinaleStage = 'idle' | 'ballot-inserted' | 'centering-box' | 'showing-thanks' | 'voting-finished'
 
-export default function OpenBallot() {
+type OpenBallotProps = {
+  onComplete?: (candidateNumber: string) => void
+}
+
+export default function OpenBallot({ onComplete }: OpenBallotProps) {
   const [phase, setPhase] = useState<BallotPhase>('folded-cover')
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
   const [punchState, setPunchState] = useState<PunchState>('idle')
@@ -88,6 +92,10 @@ export default function OpenBallot() {
     }
     return () => { if (timer !== undefined) window.clearTimeout(timer) }
   }, [finaleStage, reduceMotion])
+
+  useEffect(() => {
+    if (finaleStage === 'voting-finished' && selectedCandidate) onComplete?.(selectedCandidate)
+  }, [finaleStage, onComplete, selectedCandidate])
 
   const finishPunch = useCallback(() => {
     transitionLocked.current = false
@@ -205,26 +213,19 @@ export default function OpenBallot() {
   return <main className="app-shell">
     <KPUBackground />
     <div className="app-content">
-      <header className="topbar">
-        <div className="brand"><span className="brand-mark">★</span><span>AYO MEMILIH!</span></div>
-        <div className="step-pill">{finaleStage === 'voting-finished' ? 'SIMULASI SELESAI' : 'LANGKAH 1 DARI 3'}</div>
+      <div className="figma-header-wave figma-header-wave-standard" aria-hidden="true">
+        <img className="figma-wave-cream" src="/figma-ui/header-cream.svg" alt="" />
+        <img className="figma-wave-white" src="/figma-ui/header-white.svg" alt="" />
+        <img className="figma-wave-red" src="/figma-ui/header-red.svg" alt="" />
+        <img className="figma-wave-dark" src="/figma-ui/header-dark.svg" alt="" />
+        <img className="figma-wave-crescent" src="/figma-ui/header-crescent.svg" alt="" />
+      </div>
+      <header className="figma-brand">
+        <img src="/idle-assets/kpu-logo.png" alt="" />
+        <span><strong>KOMISI PEMILIHAN UMUM</strong><strong>KOTA BATU</strong></span>
       </header>
-      <AnimatePresence>
-        {!deposited && <motion.section className="intro" key="ballot-instructions" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12, transition: { duration: reduceMotion ? 0 : 0.25 } }}>
-          <p className="eyebrow">SIMULASI EDUKASI DEMOKRASI</p>
-          <h1>{deliveryReady ? 'Masukkan surat suara' : folding ? 'LIPAT KEMBALI SURAT SUARA' : opened ? 'Pilih kandidatmu!' : outerOpen ? 'Sisi luar surat suara' : 'Buka surat suaramu'}</h1>
-          <p>{instruction}</p>
-        </motion.section>}
-      </AnimatePresence>
-      {opened && punchState === 'completed' && !deliveryReady && <motion.button
-        className="continue-button fold-button"
-        type="button"
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        whileHover={reduceMotion ? undefined : { scale: 1.035, y: -2 }}
-        whileTap={reduceMotion ? undefined : { scale: 0.97, y: 3 }}
-        onClick={startRefold}
-      >LIPAT SURAT SUARA</motion.button>}
+      <section className="figma-page-heading voting-page-heading"><h1>Simulasi Surat Suara</h1></section>
+      <div className="voting-content-spacer" aria-hidden="true" />
       <section className={`ballot-stage${deliveryReady ? ' delivery-stage' : ''}${boxCentered ? ' finale-stage' : ''}`} aria-live="polite">
         <motion.div
           ref={ballotDragRef}
@@ -273,26 +274,34 @@ export default function OpenBallot() {
               <div ref={dropSlotRef} className="ballot-box-slot-hit" role="img" aria-label="Lubang kotak suara" />
             </div>
           </motion.div>
-          {!deposited && <p className="drop-caption">{targetActive ? 'LEPASKAN DI SINI' : 'GESER KE LUBANG DI ATAS'}</p>}
         </motion.div>}
         {showThanks && <motion.div className="thank-you-panel" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0.01 : 0.55, ease: 'easeOut' }}>
           <span className="thank-you-check" aria-hidden="true">✓</span>
           <h2>TERIMA KASIH TELAH MEMILIH</h2>
           <p>Suara Anda telah berhasil dimasukkan ke dalam kotak suara.</p>
         </motion.div>}
+        {!deposited && <p className="ballot-instruction">{instruction}</p>}
         <AnimatePresence>
-          {phase === 'folded-cover' && !deliveryReady && <motion.div className="hint" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}>Sentuh surat suara untuk membukanya</motion.div>}
+          {opened && punchState === 'completed' && !deliveryReady && <motion.button
+            className="continue-button fold-button"
+            type="button"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={reduceMotion ? undefined : { scale: 1.035, y: -2 }}
+            whileTap={reduceMotion ? undefined : { scale: 0.97, y: 3 }}
+            onClick={startRefold}
+          >LIPAT SURAT SUARA</motion.button>}
+        </AnimatePresence>
+        <AnimatePresence>
+          {outerOpen && <motion.button
+            className="continue-button"
+            type="button"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={startFlip}
+          >LANJUTKAN <span aria-hidden="true">→</span></motion.button>}
         </AnimatePresence>
       </section>
-      <AnimatePresence>
-        {outerOpen && <motion.button
-          className="continue-button"
-          type="button"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          onClick={startFlip}
-        >LANJUTKAN <span aria-hidden="true">→</span></motion.button>}
-      </AnimatePresence>
     </div>
   </main>
 }

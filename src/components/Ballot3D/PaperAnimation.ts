@@ -50,10 +50,13 @@ export function animatePaperPhase(
 
   if (phase === 'opening-outer-fold') {
     const timeline = gsap.timeline({ defaults: { ease: 'power3.inOut' }, onComplete: onOpenComplete })
-    timeline.to([leftTop.rotation, rightTop.rotation, leftBottom.rotation, rightBottom.rotation], { y: 0, duration: 1.35 }, 0)
-    timeline.to(bottomRow.rotation, { x: 0, duration: 1.35 }, 0)
-    timeline.to(root.position, { y: 0, duration: 1.35 }, 0)
-    timeline.to([leftTop.position, rightTop.position, bottomRow.position, leftBottom.position, rightBottom.position], { z: 0, duration: 1.15 }, 0.1)
+    timeline.to([leftTop.rotation, rightTop.rotation], { y: (index) => index === 0 ? Math.PI * 2 : -Math.PI * 2, duration: 1.05 }, 0)
+    timeline.to([leftBottom.rotation, rightBottom.rotation], { y: (index) => index === 0 ? Math.PI * 2 : -Math.PI * 2, duration: 0.9 }, 0.35)
+    timeline.to(bottomRow.rotation, { x: 0, duration: 1.15 }, 0.72)
+    timeline.to(root.position, { y: 0, duration: 1.4 }, 0)
+    timeline.to([leftTop.position, rightTop.position], { z: 0, duration: 0.95 }, 0.15)
+    timeline.to(bottomRow.position, { z: 0, duration: 0.95 }, 0.72)
+    timeline.to([leftBottom.position, rightBottom.position], { z: 0, duration: 0.8 }, 0.4)
     timeline.to(shadow.position, { y: -PANEL_HEIGHT - 0.1, duration: 1.25 }, 0.05)
     timeline.to(shadow.scale, { x: 2.65, y: 0.55, duration: 1.15 }, 0.1)
     timeline.to(shadow.material, { opacity: 0.14, duration: 1.1 }, 0.15)
@@ -117,16 +120,15 @@ export function animatePaperPhase(
       defaults: { ease: 'power2.inOut', overwrite: 'auto' },
       onComplete: onFoldComplete,
     })
-    // Reverse the same panel hinges used by the opening animation. Fold the
-    // lower row first, then bring both outer columns back over the center cover.
-    timeline.to(bottomRow.rotation, { x: Math.PI, duration: 0.72 }, 0)
-    timeline.to([leftBottom.rotation, rightBottom.rotation], { y: (index) => index === 0 ? Math.PI : -Math.PI, duration: 0.72 }, 0.08)
-    timeline.to([leftTop.rotation, rightTop.rotation], { y: (index) => index === 0 ? Math.PI : -Math.PI, duration: 0.78 }, 0.36)
-    timeline.to(root.position, { y: -PANEL_HEIGHT / 2, duration: 0.9, ease: 'power2.inOut' }, 0.24)
-    timeline.to([leftTop.position, rightTop.position, bottomRow.position], { z: -0.025, duration: 0.66 }, 0.38)
-    timeline.to([leftBottom.position, rightBottom.position], { z: -0.008, duration: 0.66 }, 0.38)
-    timeline.to(shadow.scale, { x: 0.72, y: 0.85, duration: 0.9 }, 0.2)
-    timeline.to(shadow.material, { opacity: 0.23, duration: 0.78 }, 0.25)
+    timeline.to(bottomRow.rotation, { x: Math.PI, duration: 1.05 }, 0)
+    timeline.to([leftBottom.rotation, rightBottom.rotation], { y: (index) => index === 0 ? -Math.PI : Math.PI, duration: 0.9 }, 0.48)
+    timeline.to([leftTop.rotation, rightTop.rotation], { y: (index) => index === 0 ? -Math.PI : Math.PI, duration: 0.92 }, 0.82)
+    timeline.to(root.position, { y: -PANEL_HEIGHT / 2, duration: 1.1, ease: 'power2.inOut' }, 0.2)
+    timeline.to([leftTop.position, rightTop.position], { z: -0.025, duration: 0.66 }, 0.12)
+    timeline.to(bottomRow.position, { z: -0.025, duration: 0.66 }, 0)
+    timeline.to([leftBottom.position, rightBottom.position], { z: -0.008, duration: 0.66 }, 0.48)
+    timeline.to(shadow.scale, { x: 0.72, y: 0.85, duration: 1.1 }, 0.2)
+    timeline.to(shadow.material, { opacity: 0.23, duration: 0.9 }, 0.25)
     timeline.timeScale(motionScale)
     return () => { timeline.kill() }
   }

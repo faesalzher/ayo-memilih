@@ -25,7 +25,7 @@ type Props = {
 
 const PANEL_WIDTH = 1.68
 const PANEL_HEIGHT = 2
-const PAPER_THICKNESS = 0.012
+const PAPER_THICKNESS = 0.004
 
 function makeTornPaperHole() {
   const outer = new THREE.Shape()
@@ -117,7 +117,7 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
   const pin = useRef<THREE.Group>(null)
   const [holeVisible, setHoleVisible] = useState(false)
   const textures = usePrintedTextures()
-  const edgeMaterial = useMemo(() => new THREE.MeshStandardMaterial({ color: '#f1ede3', roughness: 0.96, metalness: 0 }), [])
+  const paperMaterial = useMemo(() => new THREE.MeshBasicMaterial({ color: '#f7f3e9', side: THREE.DoubleSide }), [])
   const shadowTexture = useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = 256
@@ -206,13 +206,13 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
   }, [punchState, selectedCandidate, punchTarget, onPunchComplete])
 
   useEffect(() => () => {
-    edgeMaterial.dispose()
+    paperMaterial.dispose()
     shadowTexture.dispose()
     nailMetal.dispose()
     nailHeadMaterial.dispose()
     holeFiberGeometry.dispose()
     holeCenterGeometry.dispose()
-  }, [edgeMaterial, shadowTexture, nailMetal, nailHeadMaterial, holeFiberGeometry, holeCenterGeometry])
+  }, [paperMaterial, shadowTexture, nailMetal, nailHeadMaterial, holeFiberGeometry, holeCenterGeometry])
 
   const coverKind: PanelKind = phase === 'outer-open' || phase === 'flipping-inner' || phase === 'opened' || phase === 'refolding-outer' || phase === 'folding-cover'
     ? 'cover-open'
@@ -224,8 +224,8 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
       : undefined
     const dimCandidate = Boolean(selectedCandidate && candidateNumber && candidateNumber !== selectedCandidate)
     return <group position={position}>
-    <mesh castShadow receiveShadow material={edgeMaterial}><boxGeometry args={[PANEL_WIDTH, PANEL_HEIGHT, PAPER_THICKNESS]}/></mesh>
-    {textures[kind] && <mesh position={[0, 0, PAPER_THICKNESS / 2 + 0.001]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial key={textures[kind]!.uuid} map={textures[kind]} toneMapped={false}/></mesh>}
+    <mesh material={paperMaterial}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/></mesh>
+    {textures[kind] && <mesh position={[0, 0, PAPER_THICKNESS / 2 + 0.001]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial key={textures[kind]!.uuid} map={textures[kind]} toneMapped={false} side={THREE.DoubleSide}/></mesh>}
     {textures[backKind] && <mesh position={[0, 0, -PAPER_THICKNESS / 2 - 0.001]} rotation={[0, Math.PI, 0]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial key={textures[backKind]!.uuid} map={textures[backKind]} toneMapped={false} side={THREE.DoubleSide}/></mesh>}
     {dimCandidate && <mesh position={[0, 0, -PAPER_THICKNESS / 2 - 0.003]} rotation={[0, Math.PI, 0]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial color="#5b4a43" transparent opacity={0.24} depthWrite={false} side={THREE.DoubleSide}/></mesh>}
   </group>
@@ -268,23 +268,36 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
 export default function Ballot3D(props: Props) {
   const shellRef = useRef<HTMLDivElement>(null)
   const cameraRef = useRef<THREE.OrthographicCamera | null>(null)
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
   const fitCamera = useCallback((width: number, height: number) => {
     const camera = cameraRef.current
     if (!camera || width <= 0 || height <= 0) return
-    camera.zoom = Math.min(width / 5.45, height / 4.45)
+    camera.zoom = Math.min(width / 5.3, height / 4.4)
     camera.updateProjectionMatrix()
+    rendererRef.current?.setSize(width, height, false)
   }, [])
   const handleCreated = useCallback((state: RootState) => {
     cameraRef.current = state.camera as THREE.OrthographicCamera
-    fitCamera(state.size.width, state.size.height)
+    rendererRef.current = state.gl
+    const bounds = shellRef.current?.getBoundingClientRect()
+    fitCamera(bounds?.width ?? state.size.width, bounds?.height ?? state.size.height)
   }, [fitCamera])
 
   useEffect(() => {
     const shell = shellRef.current
     if (!shell) return
-    const observer = new ResizeObserver(([entry]) => fitCamera(entry.contentRect.width, entry.contentRect.height))
+    const syncSize = (width = shell.clientWidth, height = shell.clientHeight) => fitCamera(width, height)
+    const observer = new ResizeObserver(([entry]) => syncSize(entry.contentRect.width, entry.contentRect.height))
+    const handleWindowResize = () => syncSize()
     observer.observe(shell)
-    return () => observer.disconnect()
+    window.addEventListener('resize', handleWindowResize)
+    // Prompt R3F to measure the fixed-size kiosk viewport on its first mount.
+    const initialResize = window.setTimeout(() => window.dispatchEvent(new Event('resize')), 0)
+    return () => {
+      window.clearTimeout(initialResize)
+      window.removeEventListener('resize', handleWindowResize)
+      observer.disconnect()
+    }
   }, [fitCamera])
 
   return <div ref={shellRef} className={`ballot-3d-shell phase-${props.phase}`}>

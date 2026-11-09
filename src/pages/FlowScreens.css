@@ -1,0 +1,784 @@
+.figma-screen-host {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  background: #fff4e5;
+}
+
+.figma-page {
+  position: relative;
+  width: min(100vw, 56.25svh);
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+  color: #a8000a;
+  background: #fff4e5;
+  font-family: 'Nunito', sans-serif;
+}
+
+.figma-background,
+.figma-footer-wave,
+.figma-page-sparkle,
+.figma-header-wave img {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.figma-background {
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.figma-header-wave {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 38cqw;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.figma-header-wave img {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+.figma-header-wave .figma-wave-crescent {
+  width: 31.67%;
+}
+
+.figma-header-wave-results {
+  height: 61.5cqw;
+}
+
+.figma-header-wave-results .figma-wave-cream,
+.figma-header-wave-results .figma-wave-red,
+.figma-header-wave-results .figma-wave-dark,
+.figma-header-wave-results .figma-wave-crescent {
+  width: 100%;
+}
+
+.figma-brand {
+  position: absolute;
+  z-index: 2;
+  top: 2.96cqw;
+  left: 3.7cqw;
+  display: flex;
+  align-items: center;
+  gap: 1.3cqw;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.85cqw;
+  line-height: 1.15;
+}
+
+.figma-brand img {
+  display: block;
+  width: 6.67cqw;
+  height: 6.67cqw;
+  border-radius: 50%;
+  object-fit: cover;
+  filter: drop-shadow(0 4px 5px #00000029);
+}
+
+.figma-brand span {
+  display: flex;
+  flex-direction: column;
+}
+
+.figma-brand strong {
+  font-weight: 700;
+}
+
+.figma-page-heading {
+  position: absolute;
+  z-index: 1;
+  top: 11.57cqw;
+  left: 5.2cqw;
+  width: 89cqw;
+  color: #fff;
+}
+
+.figma-page-heading h1 {
+  margin: 0;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 5.75cqw;
+  font-weight: 800;
+  line-height: 1.1;
+  text-shadow: 0 3px 0 #a8000a29;
+}
+
+.figma-page-heading p {
+  margin: 0.8cqw 0 0;
+  font-size: 2.5cqw;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.figma-page-heading:has(p) {
+  top: 13.98cqw;
+  left: 5.2cqw;
+}
+
+.figma-page-heading:has(p) h1 {
+  font-size: 5.75cqw;
+}
+
+.figma-page-heading:has(p) p {
+  margin-top: 0;
+}
+
+.figma-page-results .figma-page-heading {
+  top: 15.65cqw;
+  left: 7.04cqw;
+  width: 85.18cqw;
+  border-radius: 4cqw;
+  text-align: center;
+}
+
+.figma-page-results .figma-page-heading h1 {
+  font-size: 6.67cqw;
+}
+
+.figma-page-results .figma-page-heading p {
+  margin-top: 1.85cqw;
+  font-size: 2.6cqw;
+}
+
+.figma-page-sparkle-top {
+  z-index: 1;
+  top: 37.5cqw;
+  right: 3.7cqw;
+  width: 2cqw;
+}
+
+.figma-page-sparkle-left {
+  z-index: 1;
+  top: 90.74cqw;
+  left: 1.85cqw;
+  width: 1.67cqw;
+}
+
+.figma-page-sparkle-bottom {
+  z-index: 1;
+  right: 4.26cqw;
+  bottom: 4.9cqw;
+  width: 2.22cqw;
+}
+
+.figma-footer-wave {
+  z-index: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 9.26cqw;
+}
+
+.learning-cards {
+  position: absolute;
+  z-index: 1;
+  top: 42.59cqw;
+  left: 5.19cqw;
+  display: flex;
+  width: 89.63cqw;
+  flex-direction: column;
+  gap: 5.19cqw;
+}
+
+.learning-card {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 22.22cqw;
+  align-items: center;
+  gap: 2.59cqw;
+  padding: 2.96cqw;
+  border: 0.28cqw solid #ffd54a;
+  border-radius: 3.9cqw 2.6cqw 3.9cqw 2.6cqw;
+  background: #fff;
+  box-shadow: 0 0.56cqw 1.1cqw #00000012;
+}
+
+.learning-number {
+  display: grid;
+  width: 6.67cqw;
+  height: 6.67cqw;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 3.33cqw;
+  color: #fff;
+  background: #e30613;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.96cqw;
+  font-weight: 800;
+}
+
+.learning-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.learning-copy h2 {
+  margin: 0;
+  color: #1a1a1a;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.96cqw;
+  font-weight: 800;
+  letter-spacing: 0.09cqw;
+  line-height: 1.15;
+}
+
+.learning-copy p {
+  margin: 1.1cqw 0 0;
+  color: #a8000a;
+  font-size: 2.22cqw;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.learning-art {
+  display: grid;
+  width: 14.07cqw;
+  height: 14.07cqw;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.learning-art-yellow { background: #ffd54a; }
+.learning-art-blue { background: #d6efff; }
+.learning-art-cream { background: #fff3cd; }
+
+.learning-art img {
+  width: 10.19cqw;
+  height: 10.19cqw;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.figma-primary-button {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2cqw;
+  border: 0.18cqw solid #fff;
+  min-height: 64px;
+  border-radius: 999px;
+  color: #7a180e;
+  background: #f0991f;
+  box-shadow: 0 0.45cqw 1cqw #a8000a20;
+  cursor: pointer;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.96cqw;
+  font-weight: 700;
+  line-height: 1;
+  transition: background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.figma-primary-button:focus-visible,
+.figma-back-button:focus-visible,
+.candidate-card button:focus-visible {
+  outline: 0.45cqw solid #7a180e;
+  outline-offset: 0.4cqw;
+}
+
+.figma-primary-button:hover,
+.figma-back-button:hover,
+.candidate-card-copy button:hover {
+  background-color: #ffb738;
+}
+
+.figma-primary-button:active,
+.figma-back-button:active,
+.candidate-card-copy button:active {
+  box-shadow: 0 0.2cqw 0.5cqw #a8000a1c;
+  transform: translateY(0.3cqw);
+}
+
+.learning-next {
+  top: 138.89cqw;
+  left: 8.15cqw;
+  width: 83.7cqw;
+  height: 10cqw;
+}
+
+.figma-disclaimer,
+.candidate-instruction {
+  position: absolute;
+  z-index: 1;
+  top: 156.67cqw;
+  left: 8.33cqw;
+  width: 83.34cqw;
+  margin: 0;
+  color: #a8000a;
+  font-size: 2.04cqw;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.figma-back-button {
+  position: absolute;
+  z-index: 3;
+  bottom: 5.56cqw;
+  left: 5.2cqw;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55cqw;
+  min-width: 64px;
+  min-height: max(9cqw, 64px);
+  padding: 1cqw 0;
+  border: 0;
+  border-radius: 0;
+  color: #a8000a;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.25cqw;
+  font-weight: 700;
+  line-height: 1;
+  transition: background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.figma-back-button:first-letter {
+  font-size: 1.5em;
+}
+
+.figma-back-button:hover,
+.figma-back-button:active {
+  color: #7a180e;
+  background: transparent;
+  box-shadow: none;
+}
+
+.candidate-list {
+  position: absolute;
+  z-index: 1;
+  top: 41.48cqw;
+  left: 5.56cqw;
+  display: flex;
+  width: 88.89cqw;
+  flex-direction: column;
+  gap: 3.15cqw;
+}
+
+.candidate-card {
+  display: flex;
+  width: 100%;
+  height: 26.85cqw;
+  align-items: center;
+  gap: 2.22cqw;
+  padding: 2.59cqw;
+  border: 0.19cqw solid #fff;
+  border-radius: 3.9cqw 2.6cqw 3.9cqw 2.6cqw;
+  background: #fff;
+  box-shadow: 0 0.93cqw 2.6cqw #e3061329;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.candidate-card-selected {
+  box-shadow: 0 0 0 0.28cqw var(--candidate-accent), 0 0.93cqw 2.6cqw #e3061329;
+}
+
+.candidate-art {
+  position: relative;
+  width: 17.96cqw;
+  height: 21.67cqw;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 2.6cqw;
+  background: var(--candidate-accent);
+}
+
+.candidate-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.candidate-art span {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  height: 42.74%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: color-mix(in srgb, var(--candidate-accent) 72%, transparent);
+  font-family: 'Baloo 2', sans-serif;
+  line-height: 1;
+}
+
+.candidate-art strong {
+  font-size: 3.7cqw;
+  font-weight: 800;
+}
+
+.candidate-art small {
+  font-size: 1.67cqw;
+  font-weight: 600;
+}
+
+.candidate-card-copy {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex: 1;
+  align-items: stretch;
+  gap: 1.5cqw;
+}
+
+.candidate-card-copy h2 {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+  color: #1a1a1a;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 3.15cqw;
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.candidate-card-copy h2 span {
+  color: #5c5c5c;
+  font-size: 2.04cqw;
+  line-height: 1.3;
+}
+
+.candidate-card-copy button {
+  width: 24cqw;
+  min-height: max(9cqw, 64px);
+  flex: 0 0 auto;
+  align-self: center;
+  padding: 1cqw 1.5cqw;
+  border: 0;
+  border-radius: 999px;
+  color: #7a180e;
+  background: #f0991f;
+  cursor: pointer;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.22cqw;
+  font-weight: 700;
+  line-height: 1.2;
+  transition: background-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.candidate-instruction {
+  top: 136.11cqw;
+  font-size: 2.22cqw;
+}
+
+.candidate-next {
+  top: 145.37cqw;
+  left: 8.89cqw;
+  width: 82.22cqw;
+  height: 10cqw;
+}
+
+.candidate-profile {
+  position: absolute;
+  z-index: 1;
+  top: 41.11cqw;
+  left: 5.19cqw;
+  display: flex;
+  width: 89.63cqw;
+  height: 52.78cqw;
+  flex-direction: column;
+  padding: 1.48cqw;
+  border: 0.28cqw solid #b20913;
+  border-radius: 3.7cqw 2.6cqw 3.7cqw 2.6cqw;
+  background: #fffcf5;
+  box-shadow: 0 0.37cqw 1.1cqw #0000000f, 0 1.85cqw 4.44cqw #b2091321;
+}
+
+.candidate-profile header {
+  display: flex;
+  flex: 0 0 13.43cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.48cqw 1.48cqw 0 0;
+  color: #fff;
+  background: #b20913;
+  text-align: center;
+}
+
+.candidate-profile header strong {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 3.15cqw;
+  line-height: 1.05;
+}
+
+.candidate-profile header span {
+  color: #ffd8a8;
+  font-size: 1.85cqw;
+  line-height: 1.4;
+}
+
+.candidate-profile header small {
+  color: #ffd026;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.67cqw;
+}
+
+.profile-visual {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 2.22cqw;
+  min-height: 0;
+  padding: 1.2cqw 0;
+  border-bottom: 0.2cqw dashed #b20913;
+}
+
+.profile-visual img {
+  width: 25.93cqw;
+  height: 23cqw;
+  border-radius: 2.22cqw;
+  object-fit: cover;
+}
+
+.profile-visual-pair img {
+  width: 40cqw;
+  height: 27cqw;
+  object-position: center 32%;
+}
+
+.profile-names {
+  display: flex;
+  flex: 0 0 7.3cqw;
+  justify-content: center;
+  gap: 2.22cqw;
+  padding-top: 0.55cqw;
+  text-align: center;
+}
+
+.profile-names div {
+  display: flex;
+  width: 25.93cqw;
+  flex-direction: column;
+}
+
+.profile-names strong {
+  color: #421214;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.59cqw;
+  line-height: 1.15;
+}
+
+.profile-names span {
+  color: #b20913;
+  font-size: 2.04cqw;
+  line-height: 1.25;
+}
+
+.candidate-principles {
+  position: absolute;
+  z-index: 1;
+  top: 97.22cqw;
+  left: 5.19cqw;
+  display: flex;
+  width: 89.63cqw;
+  flex-direction: column;
+  gap: 2.22cqw;
+}
+
+.candidate-principles article {
+  display: flex;
+  min-height: 16.67cqw;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.74cqw;
+  padding: 1.85cqw 2.22cqw;
+  border: 0.37cqw solid #b20913;
+  border-radius: 3.7cqw 2.6cqw 3.7cqw 2.6cqw;
+  background: #fff;
+  box-shadow: 0 1.48cqw 1.48cqw #b2091321;
+}
+
+.candidate-principles h2 {
+  margin: 0;
+  color: #b20913;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.96cqw;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.candidate-principles p {
+  margin: 0;
+  color: #a8000a;
+  font-size: 2.5cqw;
+  font-weight: 600;
+  line-height: 1.27;
+}
+
+.detail-next {
+  right: 5.56cqw;
+  bottom: 5.56cqw;
+  left: auto;
+  width: 70cqw;
+  height: 10cqw;
+}
+
+.results-chart-card {
+  position: absolute;
+  z-index: 1;
+  top: 55.56cqw;
+  left: 5.56cqw;
+  display: flex;
+  width: 88.89cqw;
+  height: 58.24cqw;
+  flex-direction: column;
+  padding: 3.7cqw;
+  border: 0.19cqw solid #fff;
+  border-radius: 3.9cqw 2.6cqw 3.9cqw 2.6cqw;
+  background: #fff;
+  box-shadow: 0 0.37cqw 0.56cqw #a8000a0d, 0 1.48cqw 1.67cqw #a8000a14;
+}
+
+.results-chart-card header {
+  text-align: center;
+}
+
+.results-chart-card header h2 {
+  margin: 0;
+  color: #e30613;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 2.78cqw;
+  font-weight: 800;
+}
+
+.results-chart-card header p {
+  margin: 0.93cqw 0 0;
+  color: #a8000a;
+  font-size: 2.04cqw;
+  font-weight: 600;
+}
+
+.results-bars {
+  display: grid;
+  min-height: 0;
+  flex: 1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  margin-top: 2.96cqw;
+}
+
+.results-bar-column {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.3cqw;
+}
+
+.results-bar-column strong {
+  color: #e30613;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 3.33cqw;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.results-bar {
+  width: 18.52cqw;
+  max-height: 27.78cqw;
+  flex: 0 0 auto;
+  border-radius: 2.96cqw;
+}
+
+.results-bar-column span {
+  color: #421214;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.85cqw;
+  font-weight: 700;
+  text-align: center;
+}
+
+.results-total {
+  position: absolute;
+  z-index: 1;
+  top: 122.22cqw;
+  left: 5.56cqw;
+  display: flex;
+  width: 88.89cqw;
+  height: 23.43cqw;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.74cqw;
+  border: 0.19cqw solid #fff;
+  border-radius: 3.9cqw 2.6cqw 3.9cqw 2.6cqw;
+  color: #e30613;
+  background: #fff;
+  box-shadow: 0 1.48cqw 1.67cqw #a8000a14;
+  font-family: 'Baloo 2', sans-serif;
+}
+
+.results-total strong {
+  font-size: 2.59cqw;
+  font-weight: 800;
+}
+
+.results-total span {
+  font-size: 7.4cqw;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.results-home {
+  top: 146.3cqw;
+  left: 5.56cqw;
+  width: 88.89cqw;
+  height: 8.8cqw;
+  font-size: 2.96cqw;
+}
+
+@media (max-width: 600px) {
+  .candidate-next {
+    right: 5.56cqw;
+    left: auto;
+    width: 68cqw;
+  }
+
+  .detail-next {
+    width: 68cqw;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .figma-back-button:hover {
+    transform: translateY(-0.2cqw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .candidate-card,
+  .figma-primary-button {
+    transition-duration: 0.01ms;
+  }
+}

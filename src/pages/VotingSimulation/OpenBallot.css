@@ -1,4 +1,5 @@
 .fold-button { position: relative; z-index: 3; margin: 12px auto 0; }
+.app-shell { overflow-x: hidden; overflow-y: auto; }
 .ballot-stage { position: relative; }
 
 .delivery-stage {
@@ -46,10 +47,10 @@
 .ballot-box-slot-hit {
   position: absolute;
   /* Align to the dark horizontal slot in src/img/ballot-box.png. */
-  left: 31%;
-  top: 18%;
-  width: 38%;
-  height: 4.5%;
+  left: calc(50% - max(19%, 32px));
+  top: calc(20.25% - clamp(16%, 64px, 80px) / 2);
+  width: max(38%, 64px);
+  height: clamp(16%, 64px, 80px);
   border-radius: 999px;
   pointer-events: none;
   opacity: 0;
@@ -62,6 +63,10 @@
 .ballot-drop-scene-final { grid-column: auto; width: min(48vw, 510px); }
 .ballot-drop-scene-final .ballot-box { width: min(40vw, 420px); }
 .thank-you-panel { width: min(90vw, 820px); text-align: center; color: var(--ink); }
+.finale-stage .thank-you-panel {
+  align-self: center;
+  margin: 0 auto;
+}
 .thank-you-check { display: grid; place-items: center; width: clamp(52px, 7vw, 86px); aspect-ratio: 1; margin: 0 auto 12px; border: 5px solid #fff; border-radius: 50%; color: white; background: #55a76a; box-shadow: 0 0 0 7px #55a76a27, 0 10px 20px #4b95623b; font-size: clamp(30px, 4.5vw, 55px); font-weight: 1000; }
 .thank-you-panel h2 { margin: 0; color: var(--red-dark); font-family: 'Baloo 2', sans-serif; font-size: clamp(28px, 4.3vw, 60px); font-weight: 900; line-height: 1; text-shadow: 2px 2px 0 #f6c8ae; }
 .thank-you-panel p { margin: 12px auto 0; max-width: 650px; color: var(--muted); font-size: clamp(16px, 1.8vw, 25px); font-weight: 800; }
@@ -79,4 +84,146 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ballot-box, .ballot-box-slot-hit { transition-duration: 0.01ms !important; }
+}
+
+.app-content {
+  min-height: 100svh;
+  padding-top: 0;
+  padding-bottom: clamp(18px, 3svh, 36px);
+}
+
+.voting-content-spacer {
+  flex: 0 0 38cqw;
+}
+
+.ballot-stage {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.ballot-touch-wrapper {
+  width: min(92cqw, 960px);
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.ballot-touch-wrapper .ballot-3d-shell,
+.delivery-stage .ballot-touch-wrapper .ballot-3d-shell {
+  width: 100%;
+  height: min(45svh, 760px);
+  min-height: 340px;
+  margin-inline: auto;
+}
+
+.ballot-instruction {
+  width: min(94%, 720px);
+  margin: 0 auto;
+  color: var(--red-dark);
+  font-size: clamp(12px, 1.3cqw, 14px);
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.delivery-stage {
+  display: grid;
+  flex: 1 1 0;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-content: center;
+  justify-content: stretch;
+}
+
+.finale-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.5svh, 16px);
+  padding-bottom: 12px;
+}
+
+.finale-stage .ballot-drop-scene-final {
+  align-self: center;
+  margin: 0;
+}
+
+.delivery-stage .ballot-instruction {
+  grid-column: 1 / -1;
+}
+
+.delivery-stage .ballot-3d-shell {
+  height: min(45svh, 760px);
+  min-height: 340px;
+}
+
+.fold-button {
+  margin-top: 0;
+}
+
+.continue-button {
+  flex: 0 0 auto;
+  margin: 4px auto 0;
+  min-width: min(84%, 360px);
+  min-height: 64px;
+}
+
+.delivery-stage .continue-button {
+  grid-column: 1 / -1;
+}
+
+.hint {
+  display: none;
+}
+
+.thank-you-panel h2 {
+  font-size: clamp(24px, 4.3cqw, 44px);
+}
+
+.thank-you-panel p {
+  font-size: clamp(14px, 1.5cqw, 16px);
+}
+
+@media (max-width: 600px) {
+  .app-content {
+    padding-inline: clamp(16px, 5cqw, 22px);
+  }
+
+  .ballot-stage {
+    min-height: 0;
+  }
+
+  .ballot-touch-wrapper {
+    width: 96cqw;
+  }
+
+  .ballot-touch-wrapper .ballot-3d-shell,
+  .delivery-stage .ballot-touch-wrapper .ballot-3d-shell {
+    height: min(45svh, 420px);
+    min-height: 300px;
+  }
+
+  .delivery-stage {
+    gap: 6px;
+  }
+
+  .finale-stage {
+    gap: clamp(8px, 1.5svh, 12px);
+    padding-bottom: 8px;
+  }
+
+  .delivery-stage .ballot-touch-wrapper {
+    width: 43vw;
+  }
+
+  .fold-button,
+  .continue-button {
+    margin-top: 0;
+  }
 }

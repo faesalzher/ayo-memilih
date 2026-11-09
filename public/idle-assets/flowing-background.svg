@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="KPU Organic / Flowing background" clip-path="url(#clip0_0_49)">
+<path id="Left pink organic field" opacity="0.7" d="M0 590C120 551 164 655 113 743C56 838 146 910 75 1026C31 1094 0 1103 0 1103V590Z" fill="#FFE1E1"/>
+<path id="Right yellow organic field" opacity="0.2" d="M1080 1050C933 1080 1044 1232 935 1350C872 1428 974 1528 1080 1510V1050Z" fill="#FFD54A"/>
+<path id="Lower flowing pink field" opacity="0.65" d="M0 1630C203 1542 255 1748 470 1705C650 1666 763 1814 1080 1722V1920H0V1630Z" fill="#FFE1E1"/>
+<path id="Lower white curling underlay" opacity="0.62" d="M0 1770C214 1700 300 1850 504 1800C705 1746 843 1900 1080 1840V1920H0V1770Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_0_49">
+<rect width="1080" height="1920" fill="white"/>
+</clipPath>
+</defs>
+</svg>
