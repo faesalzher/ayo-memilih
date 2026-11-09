@@ -2,6 +2,23 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Aplikasi desktop Windows
+
+Proyek ini juga dapat dijalankan sebagai aplikasi desktop melalui Electron.
+
+```bash
+npm install
+npm run desktop:dev
+```
+
+Untuk membuat installer Windows 64-bit (NSIS):
+
+```bash
+npm run desktop:win
+```
+
+Installer akan dibuat di folder `release`. Untuk membuat build aplikasi tanpa installer, jalankan `npm run desktop:dir`.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
