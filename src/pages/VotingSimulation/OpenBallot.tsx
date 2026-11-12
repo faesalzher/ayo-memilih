@@ -7,6 +7,9 @@ import type { BallotPhase, PunchState, PunchTarget } from '../../components/Ball
 import BallotBoxImage from '../../img/ballot-box.png'
 import { SIMULATION_CANDIDATES } from '../../config/candidates'
 import KPUBackground from '../../components/KPUBackground/KPUBackground'
+import ScreenBackground from '../../components/layout/ScreenBackground'
+import ScreenHeader from '../../components/layout/ScreenHeader'
+import HeaderWave from '../../components/layout/HeaderWave'
 import '../../components/KPUBackground/KPUBackground.css'
 import '../../App.css'
 import './OpenBallot.css'
@@ -210,21 +213,15 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
   const boxCentered = finaleStage === 'centering-box' || finaleStage === 'showing-thanks' || finaleStage === 'voting-finished'
   const showThanks = finaleStage === 'showing-thanks' || finaleStage === 'voting-finished'
 
-  return <main className="app-shell">
+  return <ScreenBackground as="main" className="app-shell" backgroundImage="/idle-assets/flowing-background.svg">
     <KPUBackground />
     <div className="app-content">
-      <div className="figma-header-wave figma-header-wave-standard" aria-hidden="true">
-        <img className="figma-wave-cream" src="/figma-ui/header-cream.svg" alt="" />
-        <img className="figma-wave-white" src="/figma-ui/header-white.svg" alt="" />
-        <img className="figma-wave-red" src="/figma-ui/header-red.svg" alt="" />
-        <img className="figma-wave-dark" src="/figma-ui/header-dark.svg" alt="" />
-        <img className="figma-wave-crescent" src="/figma-ui/header-crescent.svg" alt="" />
-      </div>
-      <header className="figma-brand">
-        <img src="/idle-assets/kpu-logo.png" alt="" />
-        <span><strong>KOMISI PEMILIHAN UMUM</strong><strong>KOTA BATU</strong></span>
-      </header>
-      <section className="figma-page-heading voting-page-heading"><h1>Simulasi Surat Suara</h1></section>
+      <HeaderWave />
+      <ScreenHeader
+        title="Simulasi Surat Suara"
+        brandClassName="figma-brand"
+        titleWrapperClassName="figma-page-heading voting-page-heading"
+      />
       <div className="voting-content-spacer" aria-hidden="true" />
       <section className={`ballot-stage${deliveryReady ? ' delivery-stage' : ''}${boxCentered ? ' finale-stage' : ''}`} aria-live="polite">
         <motion.div
@@ -283,7 +280,7 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
         {!deposited && <p className="ballot-instruction">{instruction}</p>}
         <AnimatePresence>
           {opened && punchState === 'completed' && !deliveryReady && <motion.button
-            className="continue-button fold-button"
+            className="ui-button ui-button--primary ui-button--large continue-button fold-button"
             type="button"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -294,7 +291,7 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
         </AnimatePresence>
         <AnimatePresence>
           {outerOpen && <motion.button
-            className="continue-button"
+            className="ui-button ui-button--primary ui-button--large continue-button"
             type="button"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -303,5 +300,5 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
         </AnimatePresence>
       </section>
     </div>
-  </main>
+  </ScreenBackground>
 }

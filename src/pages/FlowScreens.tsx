@@ -1,13 +1,28 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import type { SimulationCandidate } from '../config/candidates'
+import Button from '../components/common/Button'
+import Card from '../components/common/Card'
+import Badge from '../components/common/Badge'
+import CandidateCard from '../components/candidate/CandidateCard'
+import DecorativeElements from '../components/layout/DecorativeElements'
+import ScreenBackground from '../components/layout/ScreenBackground'
+import ScreenHeader from '../components/layout/ScreenHeader'
+import HeaderWave from '../components/layout/HeaderWave'
+import { Text } from '../components/common/Typography'
+import { BackButton, NavigationControls } from '../components/navigation/NavigationControls'
 import './FlowScreens.css'
 
-const uiAssets = '/figma-ui'
 const sharedAssets = '/idle-assets'
 
 type ScreenActions = {
   onBack: () => void
 }
+
+const learningSteps = [
+  { title: 'Kenali Kandidat', description: 'Cari tahu siapa saja yang akan dipilih', image: 'learn-1.png', tint: 'yellow' },
+  { title: 'Tentukan Pilihan', description: 'Pilih kandidat yang menurutmu terbaik', image: 'learn-2.png', tint: 'blue' },
+  { title: 'Kirim Suara', description: 'Berikan langsung suaramu', image: 'learn-3.png', tint: 'cream' },
+]
 
 function PageFrame({
   title,
@@ -22,67 +37,52 @@ function PageFrame({
 }) {
   return (
     <main className="figma-screen-host">
-      <div className={`figma-page figma-page-${variant}`}>
-      <img className="figma-background" src={`${sharedAssets}/flowing-background.svg`} alt="" />
-      <div className={`figma-header-wave figma-header-wave-${variant}`} aria-hidden="true">
-        <img className="figma-wave-cream" src={`${uiAssets}/${variant === 'results' ? 'results-cream.svg' : 'header-cream.svg'}`} alt="" />
-        {variant !== 'results' && <img className="figma-wave-white" src={`${uiAssets}/header-white.svg`} alt="" />}
-        <img className="figma-wave-red" src={`${uiAssets}/${variant === 'results' ? 'results-red.svg' : 'header-red.svg'}`} alt="" />
-        <img className="figma-wave-dark" src={`${uiAssets}/${variant === 'results' ? 'results-dark.svg' : 'header-dark.svg'}`} alt="" />
-        <img className="figma-wave-crescent" src={`${uiAssets}/${variant === 'results' ? 'results-crescent.svg' : 'header-crescent.svg'}`} alt="" />
-      </div>
-      <img className="figma-page-sparkle figma-page-sparkle-top" src={`${sharedAssets}/sparkle.svg`} alt="" />
-      <img className="figma-page-sparkle figma-page-sparkle-left" src={`${sharedAssets}/sparkle.svg`} alt="" />
-      <img className="figma-page-sparkle figma-page-sparkle-bottom" src={`${sharedAssets}/sparkle.svg`} alt="" />
-      <header className="figma-brand">
-        <img src={`${sharedAssets}/kpu-logo.png`} alt="" />
-        <span><strong>KOMISI PEMILIHAN UMUM</strong><strong>KOTA BATU</strong></span>
-      </header>
-      <section className="figma-page-heading">
-        <h1>{title}</h1>
-        {subtitle && <p>{subtitle}</p>}
-      </section>
+      <ScreenBackground
+        as="div"
+        className={`figma-page figma-page-${variant}`}
+        backgroundImage={`${sharedAssets}/flowing-background.svg`}
+      >
+      <HeaderWave variant={variant} />
+      <DecorativeElements items={[
+        { className: 'figma-page-sparkle figma-page-sparkle-top', src: `${sharedAssets}/sparkle.svg` },
+        { className: 'figma-page-sparkle figma-page-sparkle-left', src: `${sharedAssets}/sparkle.svg` },
+        { className: 'figma-page-sparkle figma-page-sparkle-bottom', src: `${sharedAssets}/sparkle.svg` },
+      ]} />
+      <ScreenHeader
+        title={title}
+        subtitle={subtitle}
+        brandClassName="figma-brand"
+        titleWrapperClassName="figma-page-heading"
+      />
       {children}
         <img className="figma-footer-wave" src={`${sharedAssets}/footer-curve.svg`} alt="" />
-      </div>
+      </ScreenBackground>
     </main>
   )
 }
 
-function BackButton({ onBack }: ScreenActions) {
-  return (
-    <button className="figma-back-button" type="button" onClick={onBack}>
-      ‹ <span>Kembali</span>
-    </button>
-  )
-}
-
 export function LearningScreen({ onContinue, onBack }: ScreenActions & { onContinue: () => void }) {
-  const steps = [
-    { title: 'Kenali Kandidat', description: 'Cari tahu siapa saja yang akan dipilih', image: 'learn-1.png', tint: 'yellow' },
-    { title: 'Tentukan Pilihan', description: 'Pilih kandidat yang menurutmu terbaik', image: 'learn-2.png', tint: 'blue' },
-    { title: 'Kirim Suara', description: 'Berikan langsung suaramu', image: 'learn-3.png', tint: 'cream' },
-  ]
-
   return (
     <PageFrame title="Yuk, Belajar memilih!">
       <div className="learning-cards">
-        {steps.map((step, index) => (
-          <article className="learning-card" key={step.title}>
-            <span className="learning-number">{index + 1}</span>
+        {learningSteps.map((step, index) => (
+          <Card as="article" variant="information" className="learning-card" key={step.title}>
+            <Badge variant="number" className="learning-number">{index + 1}</Badge>
             <div className="learning-copy">
-              <h2>{step.title}</h2>
-              <p>{step.description}</p>
+              <Text as="h2" variant="section">{step.title}</Text>
+              <Text variant="body">{step.description}</Text>
             </div>
             <div className={`learning-art learning-art-${step.tint}`}>
-              <img src={`${uiAssets}/${step.image}`} alt="" />
+              <img src={`/figma-ui/${step.image}`} alt="" />
             </div>
-          </article>
+          </Card>
         ))}
       </div>
-      <BackButton onBack={onBack} />
+      <NavigationControls className="screen-navigation">
+        <BackButton onClick={onBack} className="figma-back-button">‹ <span>Kembali</span></BackButton>
+      </NavigationControls>
       <p className="figma-disclaimer">Simulasi edukasi • Bukan pemungutan suara resmi</p>
-      <button className="figma-primary-button learning-next" type="button" onClick={onContinue}>Lanjut <span aria-hidden="true">›</span></button>
+      <Button className="figma-primary-button learning-next" onClick={onContinue}>Lanjut <span aria-hidden="true">›</span></Button>
     </PageFrame>
   )
 }
@@ -101,27 +101,21 @@ export function CandidateSelectionScreen({
     <PageFrame title="Kenali Pilihanmu" subtitle="Kenali pilihan yang tersedia, lalu pilih satu kandidat.">
       <div className="candidate-list">
         {candidates.map((candidate, index) => (
-          <article
-            className={`candidate-card${selectedIndex === index ? ' candidate-card-selected' : ''}`}
+          <CandidateCard
             key={candidate.number}
-            style={{ '--candidate-accent': candidate.accent } as CSSProperties}
-          >
-            <div className="candidate-art">
-              <img src={candidate.cardArtwork} alt="" />
-              <span><strong>{candidate.number}</strong><small>PILIHAN</small></span>
-            </div>
-            <div className="candidate-card-copy">
-              <h2>{candidate.name}<span>dan</span>{candidate.runningMate}</h2>
-              <button type="button" onClick={() => onSelect(index)}>LIHAT KANDIDAT <span aria-hidden="true">→</span></button>
-            </div>
-          </article>
+            candidate={candidate}
+            selected={selectedIndex === index}
+            onSelect={() => onSelect(index)}
+          />
         ))}
       </div>
       <p className="candidate-instruction">Tekan satu pilihan untuk melihat visi, misi, dan program.</p>
-      <BackButton onBack={onBack} />
-      <button className="figma-primary-button candidate-next" type="button" onClick={() => onSelect(selectedIndex)}>
-        Lihat detail pilihan <span aria-hidden="true">→</span>
-      </button>
+      <NavigationControls className="screen-navigation">
+        <BackButton onClick={onBack} className="figma-back-button">‹ <span>Kembali</span></BackButton>
+        <Button className="figma-primary-button candidate-next" onClick={() => onSelect(selectedIndex)}>
+          Lihat detail pilihan <span aria-hidden="true">→</span>
+        </Button>
+      </NavigationControls>
     </PageFrame>
   )
 }
@@ -136,7 +130,7 @@ export function CandidateDetailScreen({
 }) {
   return (
     <PageFrame title="Kenali Pasangan Calon" subtitle="Baca visi, misi, dan program sebelum menentukan pilihan.">
-      <section className="candidate-profile">
+      <Card as="section" variant="information" className="candidate-profile">
         <header>
           <strong>PASLON {candidate.number}</strong>
           <span>PROFIL CALON WALIKOTA &amp; WAKIL WALIKOTA</span>
@@ -150,14 +144,16 @@ export function CandidateDetailScreen({
           <div><strong>{candidate.name}</strong><span>Calon</span></div>
           <div><strong>{candidate.runningMate}</strong><span>Wakil</span></div>
         </div>
-      </section>
+      </Card>
       <section className="candidate-principles" aria-label="Visi misi dan program">
-        <article><h2>VISI</h2><p>{candidate.vision}</p></article>
-        <article><h2>MISI</h2><p>{candidate.mission}</p></article>
-        <article><h2>PROGRAM</h2><p>{candidate.program}</p></article>
+        <Card as="article" variant="information"><Text as="h2" variant="section">VISI</Text><Text variant="body">{candidate.vision}</Text></Card>
+        <Card as="article" variant="information"><Text as="h2" variant="section">MISI</Text><Text variant="body">{candidate.mission}</Text></Card>
+        <Card as="article" variant="information"><Text as="h2" variant="section">PROGRAM</Text><Text variant="body">{candidate.program}</Text></Card>
       </section>
-      <BackButton onBack={onBack} />
-      <button className="figma-primary-button detail-next" type="button" onClick={onContinue}>Mulai memilih <span aria-hidden="true">→</span></button>
+      <NavigationControls className="screen-navigation">
+        <BackButton onClick={onBack} className="figma-back-button">‹ <span>Kembali</span></BackButton>
+        <Button className="figma-primary-button detail-next" onClick={onContinue}>Mulai memilih <span aria-hidden="true">→</span></Button>
+      </NavigationControls>
     </PageFrame>
   )
 }
@@ -180,7 +176,7 @@ export function ResultsScreen({
       subtitle="Perbandingan hasil simulasi dalam bentuk grafik."
       variant="results"
     >
-      <section className="results-chart-card">
+      <Card as="section" variant="result" className="results-chart-card">
         <header><h2>Grafik Hasil</h2><p>Lihat siapa yang paling banyak dapat suara di simulasi ini.</p></header>
         <div className="results-bars">
           {candidates.map((candidate, index) => {
@@ -195,11 +191,11 @@ export function ResultsScreen({
             )
           })}
         </div>
-      </section>
-      <section className="results-total"><strong>TOTAL SUARA</strong><span>{totalVotes}</span></section>
-      <button className="figma-primary-button results-home" type="button" onClick={onReturnHome}>
+      </Card>
+      <Card as="section" variant="result" className="results-total"><strong>TOTAL SUARA</strong><span>{totalVotes}</span></Card>
+      <Button className="figma-primary-button results-home" onClick={onReturnHome}>
         KEMBALI KE BERANDA <span aria-hidden="true">→</span>
-      </button>
+      </Button>
     </PageFrame>
   )
 }

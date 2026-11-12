@@ -1,0 +1,27 @@
+:where(.ui-card) {
+  border: var(--border-width) solid var(--color-border-soft);
+  border-radius: var(--radius-card);
+  background: var(--color-white);
+  box-shadow: var(--shadow-card);
+}
+
+:where(.ui-card--interactive) {
+  cursor: pointer;
+  transition: box-shadow var(--motion-fast) ease, transform var(--motion-fast) ease;
+}
+
+:where(.ui-card--interactive):active {
+  transform: translateY(0.2cqw);
+}
+
+:where(.ui-card--candidate) {
+  border-color: var(--color-white);
+}
+
+:where(.ui-card--information) {
+  padding: var(--card-padding);
+}
+
+:where(.ui-card--result) {
+  border-color: var(--color-white);
+}

@@ -3,20 +3,20 @@
   min-height: 100svh;
   place-items: center;
   overflow: hidden;
-  background: #fff4e5;
+  background: var(--color-cream);
 }
 
 .idle-screen {
   position: relative;
   display: block;
-  width: min(100vw, 56.25svh);
-  aspect-ratio: 9 / 16;
+  width: var(--portrait-screen-width);
+  aspect-ratio: var(--portrait-screen-ratio);
   overflow: hidden;
   padding: 0;
   border: 0;
-  color: #a8000a;
-  background: #fff4e5;
-  font-family: 'Nunito', sans-serif;
+  color: var(--color-primary-dark);
+  background: var(--color-cream);
+  font-family: var(--font-body);
   cursor: pointer;
   container-type: inline-size;
   touch-action: manipulation;
@@ -24,11 +24,10 @@
 }
 
 .idle-screen:focus-visible {
-  outline: 4px solid #e30613;
+  outline: 4px solid var(--color-primary);
   outline-offset: -6px;
 }
 
-.idle-background,
 .idle-footer-curve,
 .idle-sparkle,
 .idle-social-links,
@@ -38,12 +37,6 @@
   position: absolute;
   display: block;
   pointer-events: none;
-}
-
-.idle-background {
-  inset: 0;
-  width: 100%;
-  height: 100%;
 }
 
 .idle-social-links {
@@ -73,7 +66,7 @@
   gap: 0.2cqw;
   margin: 0;
   color: #000;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-label);
   font-size: 1.85cqw;
   font-weight: 700;
   line-height: 1.2;
@@ -107,9 +100,9 @@
   flex-direction: column;
   gap: 0.55cqw;
   margin: 0;
-  color: #a8000a;
-  font-family: 'Baloo 2', sans-serif;
-  font-size: 7.41cqw;
+  color: var(--color-primary-dark);
+  font-family: var(--font-heading);
+  font-size: var(--type-display);
   font-weight: 800;
   line-height: 1.1;
   text-align: center;
@@ -126,7 +119,7 @@
   left: 5%;
   width: 90%;
   margin: 0;
-  color: #e30613;
+  color: var(--color-primary);
   font-size: 3.52cqw;
   font-weight: 700;
   line-height: 1.4;
@@ -175,13 +168,13 @@
   align-items: center;
   justify-content: center;
   gap: 1.2cqw;
-  border: 0.28cqw solid #fff;
-  border-radius: 999px;
-  color: #a8000a;
-  background: #f0991f;
+  border: 0.28cqw solid var(--color-white);
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-dark);
+  background: var(--color-accent-orange);
   box-shadow: 0 8px 10px #a8000a29, inset 0 3px 0 #ffffff47;
-  font-family: 'Baloo 2', sans-serif;
-  font-size: 3.15cqw;
+  font-family: var(--font-heading);
+  font-size: var(--type-section-title);
   font-weight: 800;
   letter-spacing: 0.19cqw;
   line-height: 1;
@@ -192,7 +185,7 @@
   top: 92.71%;
   left: 8.33%;
   width: 83.34%;
-  color: #a8000a;
+  color: var(--color-primary-dark);
   font-size: 2.22cqw;
   font-weight: 600;
   line-height: 1.4;

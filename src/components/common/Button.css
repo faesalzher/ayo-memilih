@@ -1,0 +1,104 @@
+:where(.ui-button) {
+  display: inline-flex;
+  min-height: var(--button-height);
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-pill);
+  color: var(--ui-button-color, var(--color-white));
+  background: var(--ui-button-background, var(--color-primary));
+  box-shadow: var(--ui-button-shadow, none);
+  cursor: pointer;
+  font: inherit;
+  font-family: var(--font-heading);
+  font-size: var(--type-button);
+  font-weight: 700;
+  line-height: 1;
+  touch-action: manipulation;
+  transition:
+    background-color var(--motion-fast) ease,
+    box-shadow var(--motion-fast) ease,
+    transform var(--motion-fast) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(.ui-button--primary) {
+  --ui-button-background: var(--color-accent-orange);
+  --ui-button-color: var(--color-button-text);
+}
+
+:where(.ui-button--secondary) {
+  --ui-button-background: var(--color-white);
+  --ui-button-color: var(--color-primary-dark);
+  --ui-button-shadow: var(--shadow-raised);
+}
+
+:where(.ui-button--success) {
+  --ui-button-background: var(--color-green);
+  --ui-button-color: var(--color-white);
+}
+
+:where(.ui-button--outline) {
+  --ui-button-background: transparent;
+  --ui-button-color: var(--color-primary-dark);
+  border-color: currentColor;
+}
+
+:where(.ui-button--danger) {
+  --ui-button-background: var(--color-primary);
+  --ui-button-color: var(--color-white);
+}
+
+:where(.ui-button--icon-only) {
+  width: var(--button-height);
+  padding: 0;
+  aspect-ratio: 1;
+}
+
+:where(.ui-button--small) {
+  min-height: max(7cqw, 44px);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--type-caption);
+}
+
+:where(.ui-button--large) {
+  min-height: var(--button-height);
+  padding: var(--space-3) var(--space-5);
+}
+
+:where(.ui-button--full-width) {
+  width: 100%;
+}
+
+.ui-button--primary:hover:not(:disabled) {
+  background: var(--color-orange-hover);
+}
+
+.ui-button--secondary:hover:not(:disabled) {
+  filter: brightness(0.97);
+}
+
+.ui-button:focus-visible {
+  outline: 0.45cqw solid var(--color-primary-dark);
+  outline-offset: 0.35cqw;
+}
+
+.ui-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.ui-button:active:not(:disabled) {
+  transform: translateY(0.25cqw);
+}
+
+.ui-button__icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ui-button--loading {
+  cursor: progress;
+}

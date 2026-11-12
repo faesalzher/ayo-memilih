@@ -1,0 +1,40 @@
+:where(.ui-modal-overlay) {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4);
+  background: rgb(31 36 54 / 64%);
+}
+
+:where(.ui-modal-panel) {
+  position: relative;
+  width: min(100%, var(--modal-width));
+  border-radius: var(--radius-modal);
+  background: var(--color-white);
+  animation: ui-modal-enter var(--motion-normal) ease-out both;
+}
+
+:where(.ui-modal-panel--scrollable) {
+  max-height: 100%;
+  overflow: auto;
+}
+
+:where(.ui-modal-close) {
+  position: absolute;
+  z-index: 6;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+
+@keyframes ui-modal-enter {
+  from { opacity: 0; transform: translateY(1cqw) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-modal-panel {
+    animation: none;
+  }
+}

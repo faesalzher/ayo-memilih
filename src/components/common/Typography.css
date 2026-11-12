@@ -1,0 +1,32 @@
+:where(.ui-text--display) {
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+}
+
+:where(.ui-text--heading) {
+  font-family: var(--font-heading);
+  font-size: var(--type-screen-title);
+  font-weight: 800;
+}
+
+:where(.ui-text--section) {
+  font-family: var(--font-heading);
+  font-size: var(--type-section-title);
+  font-weight: 800;
+}
+
+:where(.ui-text--body) {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+}
+
+:where(.ui-text--caption) {
+  font-family: var(--font-body);
+  font-size: var(--type-caption);
+}
+
+:where(.ui-text--button) {
+  font-family: var(--font-heading);
+  font-size: var(--type-button);
+  font-weight: 700;
+}

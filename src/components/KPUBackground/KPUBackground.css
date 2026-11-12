@@ -1,6 +1,5 @@
 .kpu-background{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-.kpu-background-art,.kpu-background-footer,.kpu-background-sparkle{position:absolute;display:block;pointer-events:none}
-.kpu-background-art{inset:0;width:100%;height:100%;object-fit:fill}
+.kpu-background-footer,.kpu-background-sparkle{position:absolute;display:block;pointer-events:none}
 .kpu-background-footer{right:0;bottom:0;left:0;width:100%;height:5.21%;object-fit:fill}
 .kpu-background-sparkle-top{top:21.1%;right:3.33%;width:2.04%}
 .kpu-background-sparkle-left{top:51.04%;left:1.85%;width:1.67%}

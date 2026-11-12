@@ -1,0 +1,11 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="1080" height="100" viewBox="0 0 1080 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="KPU Organic / Footer curve" clip-path="url(#clip0_0_87)">
+<path id="Pink footer crest" d="M0 37C230 8 378 94 625 47C820 6 930 22 1080 0V100H0V37Z" fill="#FFE1E1"/>
+<path id="Red footer curve" d="M0 58C230 29 381 110 625 66C830 24 930 42 1080 24V100H0V58Z" fill="#E30613"/>
+</g>
+<defs>
+<clipPath id="clip0_0_87">
+<rect width="1080" height="100" fill="white"/>
+</clipPath>
+</defs>
+</svg>

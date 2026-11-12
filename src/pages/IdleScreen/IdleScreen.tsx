@@ -1,16 +1,23 @@
 import './IdleScreen.css'
+import Button from '../../components/common/Button'
+import ScreenBackground from '../../components/layout/ScreenBackground'
 
 type IdleScreenProps = {
   onStart: () => void
 }
 
-const assets = './idle-assets'
+const assets = '/idle-assets'
 
 export default function IdleScreen({ onStart }: IdleScreenProps) {
   return (
     <main className="idle-screen-page">
-      <button className="idle-screen" type="button" onClick={onStart} aria-label="Sentuh untuk memulai simulasi e-voting">
-        <img className="idle-background" src={`${assets}/flowing-background.svg`} alt="" />
+      <ScreenBackground
+        as={Button}
+        className="idle-screen"
+        backgroundImage={`${assets}/flowing-background.svg`}
+        onClick={onStart}
+        aria-label="Sentuh untuk memulai simulasi e-voting"
+      >
         <img className="idle-social-links" src={`${assets}/social-links.png`} alt="Situs dan media sosial KPU Kota Batu" />
         <img className="idle-kpu-logo" src={`${assets}/kpu-logo.png`} alt="Logo Komisi Pemilihan Umum" />
         <p className="idle-kpu-name">
@@ -38,7 +45,7 @@ export default function IdleScreen({ onStart }: IdleScreenProps) {
         <span className="idle-start-label">SENTUH UNTUK MEMULAI <span aria-hidden="true">→</span></span>
         <span className="idle-footer">Simulasi edukasi pemilu • Gratis untuk belajar</span>
         <img className="idle-footer-curve" src={`${assets}/footer-curve.svg`} alt="" />
-      </button>
+      </ScreenBackground>
     </main>
   )
 }

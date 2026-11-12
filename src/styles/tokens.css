@@ -1,0 +1,79 @@
+:root {
+  color-scheme: light;
+  --color-primary: #e30613;
+  --color-primary-dark: #a8000a;
+  --color-primary-deep: #c7001a;
+  --color-figma-primary: #e8051f;
+  --color-figma-primary-dark: #df021f;
+  --color-figma-orange: #f58f20;
+  --color-figma-canvas: #e8f4fa;
+  --color-cream-warm: #fff6e3;
+  --color-yellow-soft: #fff25b;
+  --color-candidate-red: #b20913;
+  --color-candidate-orange: #f0a500;
+  --color-candidate-blue: #2e86c1;
+  --color-accent-orange: #f0991f;
+  --color-orange-hover: #ffb738;
+  --color-button-text: #7a180e;
+  --color-accent-yellow: #ffd54a;
+  --color-cream: #fff4e5;
+  --color-cream-soft: #fffaed;
+  --color-sky: #d6efff;
+  --color-green: #55a76a;
+  --color-white: #fff;
+  --color-text: #421214;
+  --color-text-primary: #2c2c2c;
+  --color-text-secondary: #664036;
+  --color-border: #edbdb5;
+  --color-border-soft: #e5ccad;
+  --color-shadow: #a8000a20;
+  --color-neutral-ink: #2c2c2c;
+  --color-neutral-muted: #7d614f;
+  --color-accent-brown: #915214;
+  --color-accent-wine: #8c1521;
+
+  --font-display: 'Arial Black', 'Arial Narrow', Impact, sans-serif;
+  --font-heading: 'Baloo 2', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+  --font-label: 'Montserrat', sans-serif;
+  --font-digital: 'Arial Black', Impact, sans-serif;
+
+  --type-display: 7.41cqw;
+  --type-screen-title: 5.75cqw;
+  --type-section-title: 3.15cqw;
+  --type-body: 2.5cqw;
+  --type-caption: 2.04cqw;
+  --type-button: 2.96cqw;
+
+  --radius-small: 1.48cqw;
+  --radius-card: 3.9cqw;
+  --radius-modal: 5.56cqw;
+  --radius-pill: 999px;
+  --border-width: 0.19cqw;
+  --shadow-card: 0 0.93cqw 2.6cqw #e3061329;
+  --shadow-raised: 0 0.45cqw 0 #d9d9d9;
+  --shadow-card-soft: 0 0.56cqw 1.1cqw #00000012;
+  --shadow-card-strong: 0 1.48cqw 1.67cqw #a8000a14;
+  --shadow-button: 0 4px 10px #a8000a20;
+
+  --space-1: 0.74cqw;
+  --space-2: 1.48cqw;
+  --space-3: 2.22cqw;
+  --space-4: 2.96cqw;
+  --space-5: 3.7cqw;
+  --button-height: 10cqw;
+  --card-padding: 2.96cqw;
+  --modal-width: 91.85cqw;
+  --modal-height: 145.14cqw;
+  --portrait-screen-width: min(100vw, 56.25svh);
+  --portrait-screen-ratio: 9 / 16;
+  --motion-fast: 140ms;
+  --motion-normal: 220ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0.01ms;
+    --motion-normal: 0.01ms;
+  }
+}
