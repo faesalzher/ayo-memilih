@@ -24,7 +24,7 @@ type CandidateCardProps = StandardCandidateCardProps | FigmaCandidateCardProps
 
 export default function CandidateCard(props: CandidateCardProps) {
   if (props.variant === 'figma') {
-    const { candidate, index, onSelect } = props
+    const { candidate, onSelect } = props
     return (
       <Card className="candidate-visual" variant="candidate">
         <FigmaAsset file="39063.svg" {...position(113, candidate.rowY + 2, 844, 252)} />
@@ -32,14 +32,14 @@ export default function CandidateCard(props: CandidateCardProps) {
         <span className="candidate-name" style={position(414, candidate.rowY + 75, 310, 100)}>
           <strong>{candidate.firstName}</strong><strong>{candidate.runningMate}</strong>
         </span>
-        <FigmaAsset file={candidate.numberBack} {...position(728 - index * 4, candidate.rowY, 225, 264)} />
-        <FigmaAsset file={candidate.numberFront} {...position(728 - index * 4, candidate.rowY, 225, 254)} />
-        <span className="candidate-number-label" style={position(777 - index * 4, candidate.rowY + 56, 140, 50)}>NOMOR URUT</span>
-        <span className="candidate-number" style={position(816 - index * 4, candidate.rowY + 96, 80, 110)}>{candidate.number}</span>
+        <FigmaAsset file={candidate.numberBack} {...position(740, candidate.rowY, 225, 264)} />
+        <FigmaAsset file={candidate.numberFront} {...position(740, candidate.rowY, 225, 254)} />
+        <span className="candidate-number-label" style={position(782.5, candidate.rowY + 49, 140, 50)}>NOMOR URUT</span>
+        <span className="candidate-number" style={position(812.5, candidate.rowY + 96, 80, 110)}>{candidate.number}</span>
         <Button
           variant="icon-only"
           className="candidate-hitarea"
-          style={position(109, candidate.rowY, 844, 264)}
+          style={position(109, candidate.rowY, 856, 264)}
           aria-label={`Lihat visi, misi, dan program ${candidate.firstName} dan ${candidate.runningMate}`}
           onClick={onSelect}
         />

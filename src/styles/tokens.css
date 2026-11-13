@@ -1,10 +1,25 @@
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DigitalT';
+  src: url('/fonts/Digitalt.ttf') format('truetype');
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   color-scheme: light;
-  --color-primary: #e30613;
-  --color-primary-dark: #a8000a;
-  --color-primary-deep: #c7001a;
-  --color-figma-primary: #e8051f;
-  --color-figma-primary-dark: #df021f;
+  --color-primary: #7b0d14;
+  --color-primary-dark: #5c0a10;
+  --color-primary-deep: #6a0c12;
+  --color-figma-primary: #7b0d14;
+  --color-figma-primary-dark: #5c0a10;
   --color-figma-orange: #f58f20;
   --color-figma-canvas: #e8f4fa;
   --color-cream-warm: #fff6e3;
@@ -32,11 +47,15 @@
   --color-accent-brown: #915214;
   --color-accent-wine: #8c1521;
 
-  --font-display: 'Arial Black', 'Arial Narrow', Impact, sans-serif;
-  --font-heading: 'Baloo 2', sans-serif;
-  --font-body: 'Nunito', sans-serif;
-  --font-label: 'Montserrat', sans-serif;
-  --font-digital: 'Arial Black', Impact, sans-serif;
+  --font-display: 'DigitalT', sans-serif;
+  --font-heading: 'DigitalT', sans-serif;
+  --font-body: 'DigitalT', sans-serif;
+  --font-label: 'DigitalT', sans-serif;
+  --font-digital: 'DigitalT', sans-serif;
+  --font-digitalt: 'DigitalT', sans-serif;
+  --font-brand: 'Montserrat', sans-serif;
+  --font-figma-heading: 'Baloo 2', sans-serif;
+  --font-figma-body: 'Nunito', sans-serif;
 
   --type-display: 7.41cqw;
   --type-screen-title: 5.75cqw;

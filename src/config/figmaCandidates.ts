@@ -5,6 +5,11 @@ export type FigmaCandidate = {
   runningMate: string
   numberBack: string
   numberFront: string
+  theme: {
+    accent: string
+    shadow: string
+    text: string
+  }
   vision: string
   mission: string
   program: string
@@ -19,6 +24,7 @@ export const FIGMA_CANDIDATES: FigmaCandidate[] = [
     runningMate: 'WAHYU UTAMI',
     numberBack: '1ecee.svg',
     numberFront: 'cbaf7.svg',
+    theme: { accent: '#de0900', shadow: '#af0700', text: '#ffffff' },
     vision: 'Mewujudkan Kota Batu yang maju, nyaman, dan berdaya saing.',
     mission: 'Meningkatkan pelayanan publik, memperluas kesempatan, dan menjaga lingkungan Kota Batu.',
     program: 'Ruang publik ramah keluarga, pendidikan kreatif, serta lingkungan yang bersih dan berkelanjutan.',
@@ -31,6 +37,7 @@ export const FIGMA_CANDIDATES: FigmaCandidate[] = [
     runningMate: 'SARI RENGGITA',
     numberBack: '4d45e.svg',
     numberFront: '82ea6.svg',
+    theme: { accent: '#ffd54a', shadow: '#f5a614', text: '#2c2c2c' },
     vision: 'Mewujudkan Kota Batu yang sejahtera, inklusif, dan tangguh.',
     mission: 'Memperkuat layanan publik dan membuka peluang bagi seluruh warga.',
     program: 'Dukungan UMKM, layanan kesehatan dekat warga, dan transportasi yang nyaman.',
@@ -43,6 +50,7 @@ export const FIGMA_CANDIDATES: FigmaCandidate[] = [
     runningMate: 'DARA PERTIWI',
     numberBack: '73471.svg',
     numberFront: 'c0838.svg',
+    theme: { accent: '#4099e0', shadow: '#2e7ac2', text: '#2c2c2c' },
     vision: 'Menjaga Kota Batu tetap lestari sekaligus berkembang berkelanjutan.',
     mission: 'Merawat alam, memperkuat ekonomi lokal, dan melibatkan masyarakat.',
     program: 'Wisata hijau, pengelolaan sampah terpadu, dan pertanian berkelanjutan.',

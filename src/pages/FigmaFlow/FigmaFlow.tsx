@@ -37,17 +37,14 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
         brandTextClassName="idle-brand-copy"
       />
       <p className="idle-tagline">SIMULASI EDUKASI PEMILIHAN UMUM</p>
-      <div className="idle-logo" aria-label="Ayo Memilih">
-        <FigmaAsset file="c2335.svg" {...position(66, 155, 332, 162)} />
-        <span className="idle-ayo">AYO</span>
-        <span className="idle-memilih">MEMILIH</span>
-      </div>
+      <img className="idle-title" src="/idle-assets/ayo-memilih-title.svg" alt="Ayo Memilih" />
       <FigmaAsset file="a2f45.png" {...position(110, 947, 429, 677)} />
       <FigmaAsset file="d918e.png" {...position(501, 863, 433, 761)} />
       <FlatButton className="idle-start" onClick={onStart}>
         <FigmaAsset file="a2ccf.svg" {...position(39, 10, 53, 53)} />
         <span>MULAI</span>
       </FlatButton>
+      <img className="idle-social" src="/idle-assets/sosmed-kpu.png" alt="Media sosial KPU Kota Batu" />
     </ScreenBackground>
   )
 }
@@ -56,7 +53,7 @@ function FlowHeader({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <>
       <div className="flow-header">
-        <FigmaAsset file="e4513.svg" {...position(0, 0, 1111, 365)} />
+        <FigmaAsset file="e4513.svg" {...position(0, 0, 1080, 365)} />
         <FigmaAsset file="6dbac.svg" {...position(0, 0, 1099, 347)} />
         <FigmaAsset file="9931e.svg" {...position(0, 0, 1099, 105)} />
         <FigmaAsset file="1ab6a.svg" {...position(0, 0, 348, 143)} />
@@ -64,6 +61,7 @@ function FlowHeader({ title, subtitle }: { title: string; subtitle: string }) {
       <ScreenHeader
         title={title}
         subtitle={subtitle}
+        brandLines={['KOMISI PEMILIHAN UMUM', 'KOTA BATU']}
         brandClassName="flow-brand"
         logoClassName="flow-brand-logo"
         brandTextClassName="flow-brand-copy"
@@ -82,7 +80,7 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
       <FlowHeader title="YUK, BELAJAR MEMILIH!" subtitle="Dengan memilih, kita ikut menentukan pemimpin dan masa depan bersama." />
       <FigmaAsset file="ed193.svg" {...position(0, 1820, 1080, 100)} />
       <FigmaAsset file="14fbd.svg" {...position(72, 490, 322, 245)} />
-      <FigmaAsset file="8733d.png" {...position(133, 525, 199, 191)} />
+      <FigmaAsset file="8733d.png" {...position(114, 485, 239, 229)} />
       <FigmaAsset file="53b0a.svg" {...position(426, 551, 449, 91)} />
       <FigmaAsset file="35e5f.svg" {...position(425, 544, 449, 91)} />
       <span className="guide-label guide-one">KENALI KANDIDAT</span>
@@ -93,7 +91,7 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
       <span className="guide-number guide-number-one">1</span>
 
       <FigmaAsset file="85241.svg" {...position(626, 927, 322, 245)} />
-      <FigmaAsset file="32d6e.png" {...position(713, 985, 149, 144)} />
+      <FigmaAsset file="32d6e.png" {...position(698, 952, 179, 173)} />
       <FigmaAsset file="f5789.svg" {...position(113, 1008, 476, 87)} />
       <FigmaAsset file="87d24.svg" {...position(112, 1001, 476, 87)} />
       <span className="guide-label guide-two">TENTUKAN PILIHAN</span>
@@ -104,7 +102,7 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
       <span className="guide-number guide-number-two">2</span>
 
       <FigmaAsset file="66e75.svg" {...position(113, 1347, 330, 253)} />
-      <FigmaAsset file="24a63.png" {...position(206, 1394, 133, 110)} />
+      <FigmaAsset file="24a63.png" {...position(192, 1387, 173, 143)} />
       <FigmaAsset file="f5789.svg" {...position(523, 1409, 476, 87)} />
       <FigmaAsset file="87d24.svg" {...position(522, 1402, 476, 87)} />
       <span className="guide-label guide-three">LIHAT HASIL</span>
@@ -113,8 +111,6 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
       <FigmaAsset file="ac019.svg" {...position(484, 1403, 92, 93)} />
       <FigmaAsset file="18913.svg" {...position(487, 1469, 85, 27)} />
       <span className="guide-number guide-number-three">3</span>
-      <FigmaAsset file="b92ba.svg" {...position(75, 1670, 144, 138)} />
-      <FigmaAsset file="d4790.svg" {...position(862, 1667, 144, 138)} />
       <NavigationControls className="guide-navigation">
         <Button
           variant="icon-only"
@@ -122,24 +118,30 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
           style={position(65, 1666, 155, 145)}
           aria-label="Kembali ke halaman awal"
           onClick={onBack}
-        >‹</Button>
+        >
+          <FigmaAsset file="b92ba.svg" {...position(10, 4, 144, 138)} />
+        </Button>
         <Button
           variant="icon-only"
           className="guide-arrow guide-arrow-next"
           style={position(857, 1663, 155, 145)}
           aria-label="Lanjut ke daftar kandidat"
           onClick={onNext}
-        >›</Button>
+        >
+          <FigmaAsset file="d4790.svg" {...position(5, 4, 144, 138)} />
+        </Button>
       </NavigationControls>
     </ScreenBackground>
   )
 }
 
 function CandidateScreen({
+  onBack,
   onSelect,
   onChoose,
   children,
 }: {
+  onBack: () => void
   onSelect: (index: number) => void
   onChoose: () => void
   children?: ReactNode
@@ -159,10 +161,26 @@ function CandidateScreen({
         />
       ))}
       <p className="candidate-instruction">Tekan satu pilihan untuk melihat visi, misi, dan program.</p>
-      <FlatButton className="candidate-choose" onClick={onChoose}>
-        <FigmaAsset file="3a78d.svg" {...position(34, 7, 55, 58)} />
-        <span className="choose-label">PILIH</span>
-      </FlatButton>
+      <NavigationControls className="guide-navigation">
+        <Button
+          variant="icon-only"
+          className="guide-arrow guide-arrow-back"
+          style={position(65, 1666, 155, 145)}
+          aria-label="Kembali ke panduan"
+          onClick={onBack}
+        >
+          <FigmaAsset file="b92ba.svg" {...position(10, 4, 144, 138)} />
+        </Button>
+        <Button
+          variant="icon-only"
+          className="guide-arrow guide-arrow-next"
+          style={position(857, 1663, 155, 145)}
+          aria-label="Lanjut ke simulasi surat suara"
+          onClick={onChoose}
+        >
+          <FigmaAsset file="d4790.svg" {...position(5, 4, 144, 138)} />
+        </Button>
+      </NavigationControls>
       {children}
     </ScreenBackground>
   )
@@ -187,6 +205,7 @@ function FigmaFlow({ onStartVoting }: { onStartVoting: () => void }) {
       {screen === 'guide' && <GuideScreen onBack={() => setScreen('idle')} onNext={() => setScreen('candidates')} />}
       {(screen === 'candidates' || screen === 'details') && (
         <CandidateScreen
+          onBack={() => setScreen('guide')}
           onChoose={onStartVoting}
           onSelect={(index) => {
             setSelectedCandidate(index)

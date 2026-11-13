@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { CSSProperties } from 'react'
 import type { FigmaCandidate } from '../../config/figmaCandidates'
 import Button from '../common/Button'
 import BaseModal from '../modal/BaseModal'
@@ -36,7 +37,14 @@ export default function CandidateDetailModal({
       onClose={onClose}
     >
       <div className="detail-card-shadow" />
-      <div className="detail-card-surface">
+      <div
+        className="detail-card-surface"
+        style={{
+          '--detail-accent': candidate.theme.accent,
+          '--detail-accent-shadow': candidate.theme.shadow,
+          '--detail-accent-text': candidate.theme.text,
+        } as CSSProperties}
+      >
         <FigmaAsset file="a34c2.svg" {...position(0, 0, 992, 1567)} />
         <header className="detail-header">
           <FigmaAsset file="8f11a.png" {...position(48, 43, 222, 203)} />
