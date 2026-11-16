@@ -159,6 +159,19 @@ export function CandidateDetailScreen({
   )
 }
 
+export function VoteRecordedScreen({ onContinue }: { onContinue: () => void }) {
+  return (
+    <PageFrame title="Suara Berhasil Dicatat" subtitle="Terima kasih sudah ikut belajar memilih!" variant="results">
+      <div className="recorded-message" role="status">
+        <span className="recorded-check" aria-hidden="true">✓</span>
+        <h2>SUARAMU BERHASIL DICATAT!</h2>
+        <p>Terima kasih telah menyelesaikan simulasi pemungutan suara.</p>
+      </div>
+      <Button className="flow-button recorded-next" onClick={onContinue}>LIHAT HASIL</Button>
+    </PageFrame>
+  )
+}
+
 export function ResultsScreen({
   candidates,
   votes,

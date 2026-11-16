@@ -762,6 +762,32 @@
   flex: 0 0 auto;
 }
 
+.recorded-message {
+  position: absolute;
+  top: 60cqw;
+  left: 8%;
+  width: 84%;
+  color: var(--color-primary-dark);
+  text-align: center;
+}
+
+.recorded-check {
+  display: grid;
+  width: 16cqw;
+  height: 16cqw;
+  margin: 0 auto 4cqw;
+  place-items: center;
+  border: 0.6cqw solid white;
+  border-radius: 50%;
+  color: white;
+  background: var(--color-green);
+  font-size: 9cqw;
+}
+
+.recorded-message h2 { margin: 0; font-family: var(--font-display); font-size: 4.5cqw; }
+.recorded-message p { font-family: var(--font-figma-body); font-size: 2.8cqw; font-weight: 700; }
+.recorded-next { top: 145cqw; left: 25%; width: 50%; height: 10cqw; text-shadow: none; }
+
 .figma-page-results,
 .figma-page-results * {
   text-shadow: none;

@@ -16,7 +16,7 @@ import '../../App.css'
 import './OpenBallot.css'
 
 const PANEL_WIDTH = 1.68
-type FinaleStage = 'idle' | 'ballot-inserted' | 'centering-box' | 'showing-thanks' | 'voting-finished'
+type FinaleStage = 'idle' | 'ballot-inserted' | 'centering-box' | 'voting-finished'
 
 type OpenBallotProps = {
   onComplete?: (candidateNumber: string) => void
@@ -91,9 +91,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
     if (finaleStage === 'ballot-inserted') {
       timer = window.setTimeout(() => setFinaleStage('centering-box'), reduceMotion ? 50 : 520)
     } else if (finaleStage === 'centering-box') {
-      timer = window.setTimeout(() => setFinaleStage('showing-thanks'), reduceMotion ? 50 : 850)
-    } else if (finaleStage === 'showing-thanks') {
-      timer = window.setTimeout(() => setFinaleStage('voting-finished'), reduceMotion ? 50 : 1700)
+      timer = window.setTimeout(() => setFinaleStage('voting-finished'), reduceMotion ? 50 : 850)
     }
     return () => { if (timer !== undefined) window.clearTimeout(timer) }
   }, [finaleStage, reduceMotion])
@@ -212,8 +210,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
               : 'Sentuh surat suara untuk membuka lipatannya.'
 
   const finaleInProgress = finaleStage === 'ballot-inserted'
-  const boxCentered = finaleStage === 'centering-box' || finaleStage === 'showing-thanks' || finaleStage === 'voting-finished'
-  const showThanks = finaleStage === 'showing-thanks' || finaleStage === 'voting-finished'
+  const boxCentered = finaleStage === 'centering-box' || finaleStage === 'voting-finished'
 
   return <ScreenBackground as="main" className="app-shell" backgroundImage="/figma-assets/519df.svg">
     <div className="app-content">
@@ -268,11 +265,6 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
               <div ref={dropSlotRef} className="ballot-box-slot-hit" role="img" aria-label="Lubang kotak suara" />
             </div>
           </motion.div>
-        </motion.div>}
-        {showThanks && <motion.div className="thank-you-panel" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduceMotion ? 0.01 : 0.55, ease: 'easeOut' }}>
-          <span className="thank-you-check" aria-hidden="true">✓</span>
-          <h2>TERIMA KASIH TELAH MEMILIH</h2>
-          <p>Suara Anda telah berhasil dimasukkan ke dalam kotak suara.</p>
         </motion.div>}
         {!deposited && <p className="ballot-instruction">{instruction}</p>}
       </section>

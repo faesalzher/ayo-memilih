@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import OpenBallot from './pages/VotingSimulation/OpenBallot'
+import InkDipScreen from './pages/InkDip/InkDipScreen'
 import IdleScreen from './pages/IdleScreen/IdleScreen'
 import { SIMULATION_CANDIDATES } from './config/candidates'
 import {
@@ -7,9 +8,10 @@ import {
   CandidateSelectionScreen,
   LearningScreen,
   ResultsScreen,
+  VoteRecordedScreen,
 } from './pages/FlowScreens'
 
-type AppScreen = 'idle' | 'learning' | 'candidates' | 'details' | 'ballot' | 'results'
+type AppScreen = 'idle' | 'learning' | 'candidates' | 'details' | 'ballot' | 'ink' | 'recorded' | 'results'
 
 type LegacyAppProps = {
   initialScreen?: AppScreen
@@ -53,10 +55,13 @@ export default function LegacyApp({ initialScreen = 'idle', onBackFromBallot, on
       onComplete={(candidateNumber) => {
         const index = SIMULATION_CANDIDATES.findIndex((candidate) => candidate.number === candidateNumber)
         if (index >= 0) setVotes((current) => current.map((count, candidateIndex) => count + Number(index === candidateIndex)))
-        setScreen('results')
+        setScreen('ink')
       }}
     />
   }
+
+  if (screen === 'ink') return <InkDipScreen onComplete={() => setScreen('recorded')} />
+  if (screen === 'recorded') return <VoteRecordedScreen onContinue={() => setScreen('results')} />
 
   return <ResultsScreen
     candidates={SIMULATION_CANDIDATES}
