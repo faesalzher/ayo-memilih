@@ -68,23 +68,42 @@ function GuideStep({ number, label, x, y, barOffset, barWidth }: { number: numbe
 }
 
 function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+  const roadmapPath = 'M240 671.5C218 999.5 765 715.5 783.5 1000.5C783.5 1504.5 228 1015.5 240 1480'
   return (
     <ScreenBackground as="section" className="figma-frame guide-frame" aria-label="Yuk, belajar memilih">
       <FigmaAsset file="519df.svg" {...position(0, 0, 1080, 1920)} />
-      <FigmaAsset file="fccb0.svg" {...position(0, 0, 1080, 1920)} />
+      <svg className="guide-roadmap" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <mask id="guide-roadmap-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920">
+            <path className="guide-roadmap-mask-path" d={roadmapPath} pathLength="1" fill="none" stroke="white" strokeWidth="110" strokeLinecap="round" />
+          </mask>
+        </defs>
+        <image href="/figma-assets/fccb0.svg" width="1080" height="1920" mask="url(#guide-roadmap-mask)" />
+        <g className="guide-roadmap-marker">
+          <circle r="24" fill="#f58f20" stroke="white" strokeWidth="7" />
+          <circle r="7" fill="white" />
+          <animateMotion path={roadmapPath} begin="0.65s" dur="3.4s" fill="freeze" />
+        </g>
+      </svg>
       <FlowHeader title="YUK, BELAJAR MEMILIH!" subtitle="Dengan memilih, kita ikut menentukan pemimpin dan masa depan bersama." />
       <FigmaAsset file="ed193.svg" {...position(0, 1820, 1080, 100)} />
-      <FigmaAsset file="14fbd.svg" {...position(72, 490, 322, 245)} />
-      <FigmaAsset file="8733d.png" {...position(114, 485, 239, 229)} />
-      <GuideStep number={1} label="KENALI KANDIDAT" x={397} y={544} barOffset={28} barWidth={449} />
+      <div className="guide-roadmap-step guide-roadmap-step-one">
+        <FigmaAsset file="14fbd.svg" {...position(72, 490, 322, 245)} />
+        <FigmaAsset file="8733d.png" {...position(114, 485, 239, 229)} />
+        <GuideStep number={1} label="KENALI KANDIDAT" x={397} y={544} barOffset={28} barWidth={449} />
+      </div>
 
-      <FigmaAsset file="85241.svg" {...position(626, 927, 322, 245)} />
-      <FigmaAsset file="32d6e.png" {...position(698, 952, 179, 173)} />
-      <GuideStep number={2} label="TENTUKAN PILIHAN" x={67} y={1001} barOffset={45} barWidth={476} />
+      <div className="guide-roadmap-step guide-roadmap-step-two">
+        <FigmaAsset file="85241.svg" {...position(626, 927, 322, 245)} />
+        <FigmaAsset file="32d6e.png" {...position(698, 952, 179, 173)} />
+        <GuideStep number={2} label="TENTUKAN PILIHAN" x={67} y={1001} barOffset={45} barWidth={476} />
+      </div>
 
-      <FigmaAsset file="66e75.svg" {...position(113, 1347, 330, 253)} />
-      <FigmaAsset file="24a63.png" {...position(192, 1387, 173, 143)} />
-      <GuideStep number={3} label="LIHAT HASIL" x={482} y={1401} barOffset={40} barWidth={476} />
+      <div className="guide-roadmap-step guide-roadmap-step-three">
+        <FigmaAsset file="66e75.svg" {...position(113, 1347, 330, 253)} />
+        <FigmaAsset file="24a63.png" {...position(192, 1387, 173, 143)} />
+        <GuideStep number={3} label="LIHAT HASIL" x={482} y={1401} barOffset={40} barWidth={476} />
+      </div>
       <NavigationControls className="guide-navigation">
         <Button
           variant="icon-only"

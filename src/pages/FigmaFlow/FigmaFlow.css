@@ -42,6 +42,24 @@
   background: var(--color-cream-warm);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .idle-frame > .figma-asset[src$='a2f45.png'],
+  .idle-frame > .figma-asset[src$='d918e.png'] {
+    transform-origin: 50% 95%;
+    animation: idle-character-sway 4.5s ease-in-out infinite;
+  }
+
+  .idle-frame > .figma-asset[src$='d918e.png'] {
+    animation-duration: 5.2s;
+    animation-delay: -2.6s;
+  }
+}
+
+@keyframes idle-character-sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg) translateY(-0.7cqw); }
+}
+
 .idle-kpu-header {
   position: absolute;
   z-index: 2;
@@ -269,6 +287,54 @@
 
 .guide-frame > .figma-asset[src$='ed193.svg'] {
   z-index: 1;
+}
+
+.guide-roadmap,
+.guide-roadmap-step {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.guide-roadmap { z-index: 0; }
+.guide-roadmap-step { z-index: 1; }
+.guide-roadmap-marker { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .guide-roadmap-step {
+    animation: guide-stop-appear 0.6s ease-out both;
+  }
+
+  .guide-roadmap-step-one { animation-delay: 0.1s; }
+  .guide-roadmap-step-two { animation-delay: 2.2s; }
+  .guide-roadmap-step-three { animation-delay: 4s; }
+
+  .guide-roadmap-mask-path {
+    stroke-dasharray: 1;
+    animation: guide-route-draw 3.4s linear 0.65s both;
+  }
+
+  .guide-roadmap-marker {
+    animation: guide-marker-visibility 4.35s linear both;
+  }
+}
+
+@keyframes guide-stop-appear {
+  from { opacity: 0; transform: translateY(2cqw) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes guide-route-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes guide-marker-visibility {
+  0%, 14% { opacity: 0; }
+  16%, 91% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 .guide-step {
