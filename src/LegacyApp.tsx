@@ -13,9 +13,11 @@ type AppScreen = 'idle' | 'learning' | 'candidates' | 'details' | 'ballot' | 're
 
 type LegacyAppProps = {
   initialScreen?: AppScreen
+  onBackFromBallot?: () => void
+  onReturnHome?: () => void
 }
 
-export default function LegacyApp({ initialScreen = 'idle' }: LegacyAppProps) {
+export default function LegacyApp({ initialScreen = 'idle', onBackFromBallot, onReturnHome }: LegacyAppProps) {
   const [screen, setScreen] = useState<AppScreen>(initialScreen)
   const [selectedCandidateIndex, setSelectedCandidateIndex] = useState(0)
   const [votes, setVotes] = useState(() => SIMULATION_CANDIDATES.map(() => 0))
@@ -47,6 +49,7 @@ export default function LegacyApp({ initialScreen = 'idle' }: LegacyAppProps) {
   }
   if (screen === 'ballot') {
     return <OpenBallot
+      onBack={onBackFromBallot ?? (() => setScreen('details'))}
       onComplete={(candidateNumber) => {
         const index = SIMULATION_CANDIDATES.findIndex((candidate) => candidate.number === candidateNumber)
         if (index >= 0) setVotes((current) => current.map((count, candidateIndex) => count + Number(index === candidateIndex)))
@@ -61,7 +64,8 @@ export default function LegacyApp({ initialScreen = 'idle' }: LegacyAppProps) {
     onReturnHome={() => {
       setVotes(SIMULATION_CANDIDATES.map(() => 0))
       setSelectedCandidateIndex(0)
-      setScreen('idle')
+      if (onReturnHome) onReturnHome()
+      else setScreen('idle')
     }}
   />
 }

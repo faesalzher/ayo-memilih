@@ -14,3 +14,8 @@
   height: 100%;
   pointer-events: none;
 }
+
+.app-shell > .ui-screen-background__image,
+.figma-page-results > .ui-screen-background__image {
+  filter: brightness(0.82);
+}

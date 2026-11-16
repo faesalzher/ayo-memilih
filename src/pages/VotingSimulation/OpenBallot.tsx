@@ -1,16 +1,17 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
-import { AnimatePresence, animate, motion, useAnimationControls, useMotionValue, useReducedMotion } from 'framer-motion'
+import { animate, motion, useAnimationControls, useMotionValue, useReducedMotion } from 'framer-motion'
 import gsap from 'gsap'
 const Ballot3D = lazy(() => import('../../components/Ballot3D/Ballot3D'))
 import type { BallotPhase, PunchState, PunchTarget } from '../../components/Ballot3D/ballotTypes'
 import BallotBoxImage from '../../img/ballot-box.png'
 import { SIMULATION_CANDIDATES } from '../../config/candidates'
-import KPUBackground from '../../components/KPUBackground/KPUBackground'
 import ScreenBackground from '../../components/layout/ScreenBackground'
-import ScreenHeader from '../../components/layout/ScreenHeader'
-import HeaderWave from '../../components/layout/HeaderWave'
-import '../../components/KPUBackground/KPUBackground.css'
+import FlowHeader from '../../components/layout/FlowHeader'
+import Button from '../../components/common/Button'
+import FigmaAsset from '../../components/figma/FigmaAsset'
+import { NavigationControls } from '../../components/navigation/NavigationControls'
+import { position } from '../../utils/figmaPosition'
 import '../../App.css'
 import './OpenBallot.css'
 
@@ -19,9 +20,10 @@ type FinaleStage = 'idle' | 'ballot-inserted' | 'centering-box' | 'showing-thank
 
 type OpenBallotProps = {
   onComplete?: (candidateNumber: string) => void
+  onBack?: () => void
 }
 
-export default function OpenBallot({ onComplete }: OpenBallotProps) {
+export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const [phase, setPhase] = useState<BallotPhase>('folded-cover')
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
   const [punchState, setPunchState] = useState<PunchState>('idle')
@@ -202,7 +204,7 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
               ? 'Pilihan terkunci. Paku bersiap mencoblos...'
               : 'Sentuh langsung gambar pasangan calon untuk mencoblos.'
         : outerOpen
-          ? 'Lipatan terbuka. Tekan LANJUTKAN untuk melihat sisi dalam surat suara.'
+          ? 'Lipatan terbuka. Tekan panah kanan untuk melihat sisi dalam surat suara.'
           : phase === 'flipping-inner'
             ? 'Membalik surat suara...'
             : phase === 'opening-outer-fold'
@@ -213,15 +215,9 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
   const boxCentered = finaleStage === 'centering-box' || finaleStage === 'showing-thanks' || finaleStage === 'voting-finished'
   const showThanks = finaleStage === 'showing-thanks' || finaleStage === 'voting-finished'
 
-  return <ScreenBackground as="main" className="app-shell" backgroundImage="/idle-assets/flowing-background.svg">
-    <KPUBackground />
+  return <ScreenBackground as="main" className="app-shell" backgroundImage="/figma-assets/519df.svg">
     <div className="app-content">
-      <HeaderWave />
-      <ScreenHeader
-        title="Simulasi Surat Suara"
-        brandClassName="figma-brand"
-        titleWrapperClassName="figma-page-heading voting-page-heading"
-      />
+      <FlowHeader title="SIMULASI SURAT SUARA" subtitle="Yuk, praktikkan pilihanmu dan jadilah pemilih cerdas!" />
       <div className="voting-content-spacer" aria-hidden="true" />
       <section className={`ballot-stage${deliveryReady ? ' delivery-stage' : ''}${boxCentered ? ' finale-stage' : ''}`} aria-live="polite">
         <motion.div
@@ -278,27 +274,22 @@ export default function OpenBallot({ onComplete }: OpenBallotProps) {
           <p>Suara Anda telah berhasil dimasukkan ke dalam kotak suara.</p>
         </motion.div>}
         {!deposited && <p className="ballot-instruction">{instruction}</p>}
-        <AnimatePresence>
-          {opened && punchState === 'completed' && !deliveryReady && <motion.button
-            className="ui-button ui-button--primary ui-button--large continue-button fold-button"
-            type="button"
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileHover={reduceMotion ? undefined : { scale: 1.035, y: -2 }}
-            whileTap={reduceMotion ? undefined : { scale: 0.97, y: 3 }}
-            onClick={startRefold}
-          >LIPAT SURAT SUARA</motion.button>}
-        </AnimatePresence>
-        <AnimatePresence>
-          {outerOpen && <motion.button
-            className="ui-button ui-button--primary ui-button--large continue-button"
-            type="button"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            onClick={startFlip}
-          >LANJUTKAN <span aria-hidden="true">→</span></motion.button>}
-        </AnimatePresence>
       </section>
+      {!deposited && <NavigationControls className="voting-navigation">
+        {onBack && <Button variant="icon-only" className="guide-arrow voting-arrow" aria-label="Kembali ke daftar kandidat" title="Kembali ke daftar kandidat" onClick={onBack}>
+          <FigmaAsset file="b92ba.svg" {...position(10, 4, 144, 138)} />
+        </Button>}
+        <Button
+          variant="icon-only"
+          className="guide-arrow voting-arrow voting-arrow-next"
+          aria-label={outerOpen ? 'Lihat sisi dalam surat suara' : 'Lipat surat suara'}
+          title={outerOpen ? 'Lihat sisi dalam surat suara' : 'Lipat surat suara'}
+          disabled={!outerOpen && !(opened && punchState === 'completed' && !deliveryReady)}
+          onClick={outerOpen ? startFlip : startRefold}
+        >
+          <FigmaAsset file="d4790.svg" {...position(5, 4, 144, 138)} />
+        </Button>
+      </NavigationControls>}
     </div>
   </ScreenBackground>
 }

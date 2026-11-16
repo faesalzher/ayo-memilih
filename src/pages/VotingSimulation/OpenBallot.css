@@ -96,6 +96,30 @@
   flex: 0 0 38cqw;
 }
 
+.voting-navigation {
+  display: flex;
+  flex: 0 0 14.35cqw;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.voting-navigation .voting-arrow {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 14.35cqw;
+  height: 13.42cqw;
+}
+
+.voting-arrow-next {
+  margin-left: auto;
+}
+
+.voting-arrow:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .ballot-stage {
   display: flex;
   flex: 1 1 0;
@@ -125,6 +149,7 @@
   width: min(94%, 720px);
   margin: 0 auto;
   color: var(--color-primary-dark);
+  font-family: var(--font-figma-body);
   font-size: clamp(12px, 1.3cqw, 14px);
   font-weight: 800;
   line-height: 1.35;
@@ -187,6 +212,7 @@
 }
 
 .thank-you-panel p {
+  font-family: var(--font-figma-body);
   font-size: clamp(14px, 1.5cqw, 16px);
 }
 

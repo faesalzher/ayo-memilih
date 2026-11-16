@@ -8,6 +8,7 @@ import DecorativeElements from '../components/layout/DecorativeElements'
 import ScreenBackground from '../components/layout/ScreenBackground'
 import ScreenHeader from '../components/layout/ScreenHeader'
 import HeaderWave from '../components/layout/HeaderWave'
+import FlowHeader from '../components/layout/FlowHeader'
 import { Text } from '../components/common/Typography'
 import { BackButton, NavigationControls } from '../components/navigation/NavigationControls'
 import './FlowScreens.css'
@@ -40,20 +41,20 @@ function PageFrame({
       <ScreenBackground
         as="div"
         className={`figma-page figma-page-${variant}`}
-        backgroundImage={`${sharedAssets}/flowing-background.svg`}
+        backgroundImage={variant === 'results' ? '/figma-assets/519df.svg' : `${sharedAssets}/flowing-background.svg`}
       >
-      <HeaderWave variant={variant} />
+      {variant === 'results' ? <FlowHeader title={title.toUpperCase()} subtitle={subtitle} /> : <HeaderWave variant={variant} />}
       <DecorativeElements items={[
         { className: 'figma-page-sparkle figma-page-sparkle-top', src: `${sharedAssets}/sparkle.svg` },
         { className: 'figma-page-sparkle figma-page-sparkle-left', src: `${sharedAssets}/sparkle.svg` },
         { className: 'figma-page-sparkle figma-page-sparkle-bottom', src: `${sharedAssets}/sparkle.svg` },
       ]} />
-      <ScreenHeader
+      {variant !== 'results' && <ScreenHeader
         title={title}
         subtitle={subtitle}
         brandClassName="figma-brand"
         titleWrapperClassName="figma-page-heading"
-      />
+      />}
       {children}
         <img className="figma-footer-wave" src={`${sharedAssets}/footer-curve.svg`} alt="" />
       </ScreenBackground>
@@ -180,11 +181,13 @@ export function ResultsScreen({
         <header><h2>Grafik Hasil</h2><p>Lihat siapa yang paling banyak dapat suara di simulasi ini.</p></header>
         <div className="results-bars">
           {candidates.map((candidate, index) => {
-            const percentage = totalVotes === 0 ? 0 : Math.round((votes[index] / totalVotes) * 100)
-            const height = Math.max(14, (votes[index] / maxVotes) * 300)
+            const voteCount = votes[index] ?? 0
+            const percentage = totalVotes === 0 ? 0 : Math.round((voteCount / totalVotes) * 100)
+            const height = Math.max(14, (voteCount / maxVotes) * 300)
             return (
               <article className="results-bar-column" key={candidate.number}>
                 <strong>{percentage}%</strong>
+                <span className="results-vote-count">{voteCount} suara</span>
                 <div className="results-bar" style={{ height: `${height / 10.8}cqw`, backgroundColor: ['#c0392b', '#f0a500', '#2e86c1'][index] }} />
                 <span>{candidate.party}</span>
               </article>
@@ -193,8 +196,9 @@ export function ResultsScreen({
         </div>
       </Card>
       <Card as="section" variant="result" className="results-total"><strong>TOTAL SUARA</strong><span>{totalVotes}</span></Card>
-      <Button className="figma-primary-button results-home" onClick={onReturnHome}>
-        KEMBALI KE BERANDA <span aria-hidden="true">→</span>
+      <Button className="flow-button results-home" onClick={onReturnHome}>
+        <img className="results-home-icon" src="/assets/home.svg" alt="" />
+        KEMBALI KE BERANDA
       </Button>
     </PageFrame>
   )

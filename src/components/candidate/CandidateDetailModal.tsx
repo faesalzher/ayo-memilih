@@ -23,7 +23,7 @@ export default function CandidateDetailModal({
   const content = {
     visi: { title: 'VISI', copy: candidate.vision },
     misi: { title: 'MISI', copy: candidate.mission },
-    program: { title: 'PROGRAM', copy: candidate.program },
+    program: { title: 'PROGRAM', copy: '' },
   }[tab]
 
   return (
@@ -72,8 +72,21 @@ export default function CandidateDetailModal({
         </nav>
         <div className="detail-content" aria-live="polite">
           <h3>{content.title}</h3>
-          <p className="detail-copy">{content.copy}</p>
-          <FigmaAsset file="3799e.svg" {...position(28, 258, 880, 2)} />
+          {tab === 'program' ? (
+            <ol className="detail-program-list" aria-label="Daftar program">
+              {candidate.program.map((program, index) => (
+                <li key={program}>
+                  <span className="detail-program-number" aria-hidden="true">{index + 1}</span>
+                  <span>{program}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <>
+              <p className="detail-copy">{content.copy}</p>
+              <FigmaAsset file="3799e.svg" {...position(28, 258, 880, 2)} />
+            </>
+          )}
           {tab === 'visi' && (
             <>
               <h4>NILAI UTAMA</h4>

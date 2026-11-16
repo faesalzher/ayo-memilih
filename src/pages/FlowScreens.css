@@ -665,6 +665,7 @@
 .results-chart-card header p {
   margin: 0.93cqw 0 0;
   color: var(--color-primary-dark);
+  font-family: var(--font-figma-body);
   font-size: var(--type-caption);
   font-weight: 600;
 }
@@ -705,10 +706,15 @@
 
 .results-bar-column span {
   color: var(--color-text);
-  font-family: var(--font-heading);
+  font-family: var(--font-figma-body);
   font-size: 1.85cqw;
   font-weight: 700;
   text-align: center;
+}
+
+.results-bar-column .results-vote-count {
+  font-size: 2cqw;
+  line-height: 1;
 }
 
 .results-total {
@@ -743,11 +749,22 @@
 }
 
 .results-home {
-  top: 146.3cqw;
-  left: 5.56cqw;
-  width: 88.89cqw;
-  height: 8.8cqw;
+  top: 150cqw;
+  left: 20cqw;
+  width: 60cqw;
+  height: 9cqw;
   font-size: var(--type-button);
+}
+
+.results-home-icon {
+  width: 5.5cqw;
+  height: 5.16cqw;
+  flex: 0 0 auto;
+}
+
+.figma-page-results,
+.figma-page-results * {
+  text-shadow: none;
 }
 
 @media (max-width: 600px) {

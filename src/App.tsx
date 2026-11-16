@@ -4,10 +4,17 @@ import LegacyApp from './LegacyApp'
 
 function App() {
   const [votingStarted, setVotingStarted] = useState(false)
+  const [returningToCandidates, setReturningToCandidates] = useState(false)
 
-  if (votingStarted) return <LegacyApp initialScreen="ballot" />
+  if (votingStarted) return <LegacyApp initialScreen="ballot" onBackFromBallot={() => {
+    setReturningToCandidates(true)
+    setVotingStarted(false)
+  }} onReturnHome={() => {
+    setReturningToCandidates(false)
+    setVotingStarted(false)
+  }} />
 
-  return <FigmaFlow onStartVoting={() => setVotingStarted(true)} />
+  return <FigmaFlow initialScreen={returningToCandidates ? 'candidates' : 'idle'} onStartVoting={() => setVotingStarted(true)} />
 }
 
 export default App
