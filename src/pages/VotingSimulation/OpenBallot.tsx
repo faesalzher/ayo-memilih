@@ -223,7 +223,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
         <motion.div
           ref={ballotDragRef}
           className={`ballot-touch-wrapper${deliveryReady && !deposited ? ' draggable-ballot' : ''}${deposited ? ' ballot-inserting' : ''}`}
-          layout
+          layout="position"
           transition={{ layout: { type: 'spring', stiffness: 230, damping: 26 } }}
           onPointerDownCapture={handlePaperTouch}
           drag={deliveryReady && !deposited}
@@ -238,6 +238,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
           <Suspense fallback={<div className="ballot-3d-shell" aria-label="Memuat surat suara" />}>
             <Ballot3D
               phase={phase}
+              compact={deliveryReady}
               selectedCandidate={selectedCandidate}
               punchTarget={punchTarget}
               punchState={punchState}
@@ -251,14 +252,14 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
         </motion.div>
         {deliveryReady && <motion.div
           className={`ballot-drop-scene${boxCentered ? ' ballot-drop-scene-final' : ''}`}
-          layout
+          layout="position"
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ layout: { type: 'spring', stiffness: 180, damping: 24 }, opacity: { duration: reduceMotion ? 0.01 : 0.28 } }}
         >
           <motion.div
             className={`ballot-box${targetActive ? ' target-active' : ''}${deposited ? ' ballot-box-success' : ''}`}
-            layout
+            layout="position"
             animate={finaleInProgress ? { scale: [1, 1.07, 1], y: [0, -10, 0] } : { scale: boxCentered ? 1.12 : 1, y: 0 }}
             transition={{ duration: reduceMotion ? 0.01 : finaleInProgress ? 0.48 : 0.65, ease: 'easeInOut' }}
           >

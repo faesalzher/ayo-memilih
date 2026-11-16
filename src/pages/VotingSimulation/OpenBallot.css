@@ -188,6 +188,29 @@
   min-height: 340px;
 }
 
+.delivery-stage .ballot-touch-wrapper {
+  width: 100%;
+  max-width: 100%;
+  justify-self: center;
+}
+
+.delivery-stage .ballot-touch-wrapper .ballot-3d-shell {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 1 / 1.16;
+}
+
+.delivery-stage .ballot-drop-scene {
+  width: 100%;
+  max-width: 100%;
+}
+
+.delivery-stage .ballot-box {
+  width: 100%;
+  max-width: 100%;
+}
+
 .fold-button {
   margin-top: 0;
 }
@@ -245,11 +268,20 @@
   }
 
   .delivery-stage .ballot-touch-wrapper {
-    width: 43vw;
+    width: 100%;
+  }
+
+  .delivery-stage .ballot-touch-wrapper .ballot-3d-shell {
+    height: auto;
+    min-height: 0;
   }
 
   .fold-button,
   .continue-button {
     margin-top: 0;
   }
+}
+
+.delivery-stage.finale-stage .ballot-drop-scene-final {
+  width: min(60%, 300px);
 }

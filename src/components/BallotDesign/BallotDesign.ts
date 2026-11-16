@@ -34,9 +34,15 @@ function inlineLogo(source: string, x: number, y: number, width: number, height:
   return `<svg x="${x}" y="${y}" width="${width}" height="${height}" viewBox="${viewBox}">${content}</svg>`
 }
 
-function applyBrandMarks(svg: string, largeHeader = false) {
+function applyBrandMarks(svg: string, logo: string, largeHeader = false) {
+  const x = largeHeader ? 38 : 34
+  const y = largeHeader ? 70 : 48
+  const size = largeHeader ? 110 : 94
+  const kpuLogo = logo
+    ? `<image href="${logo}" x="${x}" y="${y}" width="${size}" height="${size}" preserveAspectRatio="xMidYMid meet"/>`
+    : inlineLogo(kpuLogoSvg, x, y, size, size)
   return svg
-    .replace('<g id="kpu-logo-slot"/>', inlineLogo(kpuLogoSvg, largeHeader ? 38 : 34, largeHeader ? 70 : 48, largeHeader ? 110 : 94, largeHeader ? 110 : 94))
+    .replace('<g id="kpu-logo-slot"/>', kpuLogo)
     .replace('<g id="ayo-logo-slot"/>', inlineLogo(ayoLogoSvg, largeHeader ? 1388 : 380, largeHeader ? 70 : 48, largeHeader ? 110 : 94, largeHeader ? 90 : 78))
 }
 
@@ -57,12 +63,13 @@ function makeHeaderPanelTextures(canvas: HTMLCanvasElement) {
 }
 
 export async function createStaticBallotTextures(): Promise<BallotTextures> {
+  const kpuLogo = await photoAsDataUri('/idle-assets/kpu-logo.png')
   const [blank, foldedCover, openCover, info, header] = await Promise.all([
     rasterizeSvg(outerLeftSvg, 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
-    rasterizeSvg(applyBrandMarks(ballotCoverSvg), 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
-    rasterizeSvg(applyBrandMarks(outerCoverSvg), 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
+    rasterizeSvg(applyBrandMarks(ballotCoverSvg, kpuLogo), 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
+    rasterizeSvg(applyBrandMarks(outerCoverSvg, kpuLogo), 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
     rasterizeSvg(outerInformationSvg, 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
-    rasterizeSvg(applyBrandMarks(innerHeaderSvg, true), 1536 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
+    rasterizeSvg(applyBrandMarks(innerHeaderSvg, kpuLogo, true), 1536 * TEXTURE_SCALE, 640 * TEXTURE_SCALE),
   ])
   const headerTextures = makeHeaderPanelTextures(header.canvas)
   const textures: BallotTextures = {
@@ -82,7 +89,7 @@ function escapeXml(value: string) {
   return value.replace(/[<>&"']/g, (character) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[character] ?? character)
 }
 
-function textLines(value: string, x: number, startY = 458, maximumCharacters = 17) {
+function textLines(value: string, x: number, maximumCharacters = 15) {
   const words = value.trim().split(/\s+/)
   const lines: string[] = []
   let line = ''
@@ -94,7 +101,9 @@ function textLines(value: string, x: number, startY = 458, maximumCharacters = 1
     } else line = next
   })
   if (line) lines.push(line)
-  return lines.slice(0, 3).map((text, index) => `<tspan x="${x}" y="${startY + index * 21}">${escapeXml(text)}</tspan>`).join('')
+  const visibleLines = lines.slice(0, 3)
+  const startY = 526 - (visibleLines.length - 1) * 13
+  return visibleLines.map((text, index) => `<tspan x="${x}" y="${startY + index * 26}">${escapeXml(text)}</tspan>`).join('')
 }
 
 const candidatePhotoData = new Map<string, Promise<string>>()

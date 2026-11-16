@@ -21,11 +21,37 @@ type Props = {
   onFoldComplete?: () => void
   punchState: PunchState
   onPunchComplete?: () => void
+  compact?: boolean
 }
 
 const PANEL_WIDTH = 1.68
 const PANEL_HEIGHT = 2
 const PAPER_THICKNESS = 0.004
+
+function makePaperGeometry(width: number, height: number, corners: readonly boolean[], radius = 0.08) {
+  const left = -width / 2
+  const right = width / 2
+  const bottom = -height / 2
+  const top = height / 2
+  const [topLeft, topRight, bottomRight, bottomLeft] = corners.map((corner) => corner ? radius : 0)
+  const shape = new THREE.Shape()
+  shape.moveTo(left + bottomLeft, bottom)
+  shape.lineTo(right - bottomRight, bottom)
+  shape.quadraticCurveTo(right, bottom, right, bottom + bottomRight)
+  shape.lineTo(right, top - topRight)
+  shape.quadraticCurveTo(right, top, right - topRight, top)
+  shape.lineTo(left + topLeft, top)
+  shape.quadraticCurveTo(left, top, left, top - topLeft)
+  shape.lineTo(left, bottom + bottomLeft)
+  shape.quadraticCurveTo(left, bottom, left + bottomLeft, bottom)
+  const geometry = new THREE.ShapeGeometry(shape, 12)
+  const positions = geometry.getAttribute('position')
+  const uvs = geometry.getAttribute('uv')
+  for (let index = 0; index < positions.count; index += 1) {
+    uvs.setXY(index, positions.getX(index) / width + 0.5, positions.getY(index) / height + 0.5)
+  }
+  return geometry
+}
 
 function makeTornPaperHole() {
   const outer = new THREE.Shape()
@@ -117,7 +143,29 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
   const pin = useRef<THREE.Group>(null)
   const [holeVisible, setHoleVisible] = useState(false)
   const textures = usePrintedTextures()
-  const paperMaterial = useMemo(() => new THREE.MeshBasicMaterial({ color: '#f7f3e9', side: THREE.DoubleSide }), [])
+  const paperMaterial = useMemo(() => new THREE.MeshBasicMaterial({ color: '#fcfbf9', side: THREE.DoubleSide }), [])
+  const paperGeometries = useMemo(() => {
+    const corners = [[true, false, false, false], [false, true, false, false], [false, false, true, false], [false, false, false, true]]
+    return {
+      folded: makePaperGeometry(PANEL_WIDTH, PANEL_HEIGHT, [true, true, true, true], 0.12),
+      corners: corners.map((corner) => makePaperGeometry(PANEL_WIDTH, PANEL_HEIGHT, corner)),
+    }
+  }, [])
+  const creaseTexture = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 128
+    canvas.height = 1
+    const context = canvas.getContext('2d')!
+    const gradient = context.createLinearGradient(0, 0, canvas.width, 0)
+    gradient.addColorStop(0, 'rgba(0,0,0,0)')
+    gradient.addColorStop(0.42, 'rgba(0,0,0,0.06)')
+    gradient.addColorStop(0.5, 'rgba(255,255,255,0.55)')
+    gradient.addColorStop(0.58, 'rgba(0,0,0,0.015)')
+    gradient.addColorStop(1, 'rgba(0,0,0,0)')
+    context.fillStyle = gradient
+    context.fillRect(0, 0, canvas.width, 1)
+    return new THREE.CanvasTexture(canvas)
+  }, [])
   const shadowTexture = useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = 256
@@ -207,27 +255,45 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
 
   useEffect(() => () => {
     paperMaterial.dispose()
+    paperGeometries.folded.dispose()
+    paperGeometries.corners.forEach((geometry) => geometry.dispose())
+    creaseTexture.dispose()
     shadowTexture.dispose()
     nailMetal.dispose()
     nailHeadMaterial.dispose()
     holeFiberGeometry.dispose()
     holeCenterGeometry.dispose()
-  }, [paperMaterial, shadowTexture, nailMetal, nailHeadMaterial, holeFiberGeometry, holeCenterGeometry])
+  }, [paperMaterial, paperGeometries, creaseTexture, shadowTexture, nailMetal, nailHeadMaterial, holeFiberGeometry, holeCenterGeometry])
 
   const coverKind: PanelKind = phase === 'outer-open' || phase === 'flipping-inner' || phase === 'opened' || phase === 'refolding-outer' || phase === 'folding-cover'
     ? 'cover-open'
     : 'cover-folded'
 
-  const panel = (kind: PanelKind, backKind: PanelKind, position: [number, number, number]) => {
+  const panel = (kind: PanelKind, backKind: PanelKind, position: [number, number, number], corner?: number, edges: readonly ('left' | 'right' | 'top' | 'bottom')[] = []) => {
     const candidateNumber = backKind.startsWith('candidate-')
       ? SIMULATION_CANDIDATES[Number(backKind.slice(-2)) - 1]?.number
       : undefined
     const dimCandidate = Boolean(selectedCandidate && candidateNumber && candidateNumber !== selectedCandidate)
+    const geometry = kind === 'cover-folded' ? paperGeometries.folded : corner === undefined ? undefined : paperGeometries.corners[corner]
+    const backGeometry = kind === 'cover-folded' ? paperGeometries.folded : corner === undefined ? undefined : paperGeometries.corners[[1, 0, 3, 2][corner]]
     return <group position={position}>
-    <mesh material={paperMaterial}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/></mesh>
-    {textures[kind] && <mesh position={[0, 0, PAPER_THICKNESS / 2 + 0.001]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial key={textures[kind]!.uuid} map={textures[kind]} toneMapped={false} side={THREE.DoubleSide}/></mesh>}
-    {textures[backKind] && <mesh position={[0, 0, -PAPER_THICKNESS / 2 - 0.001]} rotation={[0, Math.PI, 0]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial key={textures[backKind]!.uuid} map={textures[backKind]} toneMapped={false} side={THREE.DoubleSide}/></mesh>}
-    {dimCandidate && <mesh position={[0, 0, -PAPER_THICKNESS / 2 - 0.003]} rotation={[0, Math.PI, 0]}><planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/><meshBasicMaterial color="#5b4a43" transparent opacity={0.24} depthWrite={false} side={THREE.DoubleSide}/></mesh>}
+    {phase !== 'folded-cover' && <>
+      <mesh position={[0, -0.08, -0.012]} geometry={geometry}>{!geometry && <planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/>}<meshBasicMaterial color="#D3C9B6" side={THREE.FrontSide} depthWrite={false}/></mesh>
+      <mesh position={[0, -0.08, 0.012]} geometry={geometry}>{!geometry && <planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/>}<meshBasicMaterial color="#D3C9B6" side={THREE.BackSide} depthWrite={false}/></mesh>
+    </>}
+    <mesh material={paperMaterial} geometry={geometry}>{!geometry && <planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/>}</mesh>
+    {textures[kind] && <mesh position={[0, 0, PAPER_THICKNESS / 2 + 0.001]} geometry={geometry}>{!geometry && <planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/>}<meshBasicMaterial key={textures[kind]!.uuid} map={textures[kind]} toneMapped={false} side={THREE.DoubleSide}/></mesh>}
+    {textures[backKind] && <mesh position={[0, 0, -PAPER_THICKNESS / 2 - 0.001]} rotation={[0, Math.PI, 0]} geometry={backGeometry}>{!backGeometry && <planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/>}<meshBasicMaterial key={textures[backKind]!.uuid} map={textures[backKind]} toneMapped={false} side={THREE.DoubleSide}/></mesh>}
+    {dimCandidate && <mesh position={[0, 0, -PAPER_THICKNESS / 2 - 0.003]} rotation={[0, Math.PI, 0]} geometry={backGeometry}>{!backGeometry && <planeGeometry args={[PANEL_WIDTH, PANEL_HEIGHT]}/>}<meshBasicMaterial color="#5b4a43" transparent opacity={0.24} depthWrite={false} side={THREE.DoubleSide}/></mesh>}
+    {phase !== 'folded-cover' && edges.flatMap((edge) => [1, -1].map((side) => {
+      const vertical = edge === 'left' || edge === 'right'
+      const x = edge === 'left' ? -PANEL_WIDTH / 2 : edge === 'right' ? PANEL_WIDTH / 2 : 0
+      const y = edge === 'top' ? PANEL_HEIGHT / 2 : edge === 'bottom' ? -PANEL_HEIGHT / 2 : 0
+      return <mesh key={`${edge}-${side}`} position={[x, y, side * 0.008]} rotation={[0, 0, vertical ? 0 : Math.PI / 2]}>
+        <planeGeometry args={[0.16, vertical ? PANEL_HEIGHT : PANEL_WIDTH]} />
+        <meshBasicMaterial map={creaseTexture} transparent depthWrite={false} side={side === 1 ? THREE.FrontSide : THREE.BackSide} />
+      </mesh>
+    }))}
   </group>
   }
 
@@ -239,13 +305,17 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
   // while SVG artwork is still rasterizing or if a texture hasn't arrived yet.
   return <>
   <group ref={root} visible={Boolean(textures['cover-folded'])}>
-    <group ref={leftTop} position={[-PANEL_WIDTH / 2, PANEL_HEIGHT / 2, 0]}>{panel('blank', 'header-right', [-PANEL_WIDTH / 2, 0, 0])}</group>
-    {panel(coverKind, 'header-center', [0, PANEL_HEIGHT / 2, 0])}
-    <group ref={rightTop} position={[PANEL_WIDTH / 2, PANEL_HEIGHT / 2, 0]}>{panel('info', 'header-left', [PANEL_WIDTH / 2, 0, 0])}</group>
-    <group ref={bottomRow}>
-      <group ref={leftBottom} position={[-PANEL_WIDTH / 2, -PANEL_HEIGHT / 2, 0]}>{panel('blank', 'candidate-03', [-PANEL_WIDTH / 2, 0, 0])}</group>
-      {panel('blank', 'candidate-02', [0, -PANEL_HEIGHT / 2, 0])}
-      <group ref={rightBottom} position={[PANEL_WIDTH / 2, -PANEL_HEIGHT / 2, 0]}>{panel('blank', 'candidate-01', [PANEL_WIDTH / 2, 0, 0])}</group>
+    {(phase === 'folded-cover' || phase === 'opening-outer-fold' || phase === 'folding-cover') && <group position={[0, PANEL_HEIGHT / 2, -0.02]}>
+      <mesh geometry={paperGeometries.folded} position={[0, -0.1, -0.004]} scale={[1.02, 1.02, 1]}><meshBasicMaterial color="#b9aa91" side={THREE.DoubleSide} /></mesh>
+      <mesh geometry={paperGeometries.folded} scale={[1.02, 1.02, 1]}><meshBasicMaterial color="#ffffff" side={THREE.DoubleSide} /></mesh>
+    </group>}
+    <group ref={leftTop} visible={phase !== 'folded-cover'} position={[-PANEL_WIDTH / 2, PANEL_HEIGHT / 2, 0]}>{panel('blank', 'header-right', [-PANEL_WIDTH / 2, 0, 0], 0, ['right', 'bottom'])}</group>
+    {panel(coverKind, 'header-center', [0, PANEL_HEIGHT / 2, 0], undefined, ['left', 'right', 'bottom'])}
+    <group ref={rightTop} visible={phase !== 'folded-cover'} position={[PANEL_WIDTH / 2, PANEL_HEIGHT / 2, 0]}>{panel('info', 'header-left', [PANEL_WIDTH / 2, 0, 0], 1, ['left', 'bottom'])}</group>
+    <group ref={bottomRow} visible={phase !== 'folded-cover'}>
+      <group ref={leftBottom} position={[-PANEL_WIDTH / 2, -PANEL_HEIGHT / 2, 0]}>{panel('blank', 'candidate-03', [-PANEL_WIDTH / 2, 0, 0], 3, ['right', 'top'])}</group>
+      {panel('blank', 'candidate-02', [0, -PANEL_HEIGHT / 2, 0], undefined, ['left', 'right', 'top'])}
+      <group ref={rightBottom} position={[PANEL_WIDTH / 2, -PANEL_HEIGHT / 2, 0]}>{panel('blank', 'candidate-01', [PANEL_WIDTH / 2, 0, 0], 2, ['left', 'top'])}</group>
     </group>
     {phase === 'opened' && chosenIndex >= 0 && punchTarget && <group position={[holeX, punchTarget.screenY, holeZ]} rotation={[0, Math.PI, 0]} visible={holeVisible || punchState === 'punched' || punchState === 'completed'}>
       <mesh position={[0, 0, -0.002]} scale={1.16} geometry={holeFiberGeometry}><meshBasicMaterial color="#55483c" side={THREE.DoubleSide}/></mesh>
@@ -272,10 +342,14 @@ export default function Ballot3D(props: Props) {
   const fitCamera = useCallback((width: number, height: number) => {
     const camera = cameraRef.current
     if (!camera || width <= 0 || height <= 0) return
-    camera.zoom = Math.min(width / 5.3, height / 4.4)
+    camera.left = -width / 2
+    camera.right = width / 2
+    camera.top = height / 2
+    camera.bottom = -height / 2
+    camera.zoom = props.compact ? Math.min(width / 4, height / 4.65) : Math.min(width / 5.3, height / 4.4)
     camera.updateProjectionMatrix()
     rendererRef.current?.setSize(width, height, false)
-  }, [])
+  }, [props.compact])
   const handleCreated = useCallback((state: RootState) => {
     cameraRef.current = state.camera as THREE.OrthographicCamera
     rendererRef.current = state.gl

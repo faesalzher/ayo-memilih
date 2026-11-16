@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 640" width="512" height="640">
- <rect width="512" height="640" fill="#f7f3e9"/>
- <path d="M0 0h512v236c-90-28-130 17-215-2S91 260 0 229Z" fill="#c92724"/>
+ <rect width="512" height="640" fill="#fcfbf9"/>
+ <path d="M0 0h512v236c-90-28-130 17-215-2S91 260 0 229Z" fill="#c8102e"/>
  <g id="kpu-logo-slot"/>
  <g id="ayo-logo-slot"/>
  <g fill="#fff" font-family="Arial,sans-serif" font-weight="700"><text x="155" y="88" font-size="18">KOMISI</text><text x="155" y="114" font-size="18">PEMILIHAN UMUM</text><text x="155" y="140" font-size="18">KOTA BATU</text></g>
