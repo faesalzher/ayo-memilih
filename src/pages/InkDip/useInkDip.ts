@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent, PointerEvent } from 'react'
 
-export type InkDipState = 'ready' | 'dragging' | 'dipping' | 'lifting' | 'success'
+export type InkDipState = 'ready' | 'dragging' | 'dipping' | 'lifting' | 'flipping' | 'success'
 
 type Point = { x: number; y: number }
 
@@ -52,12 +52,14 @@ export function useInkDip() {
   }
 
   useEffect(() => {
-    if (state !== 'lifting') return
+    if (state !== 'lifting' && state !== 'flipping') return
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const next: InkDipState = state === 'lifting' ? 'flipping' : 'success'
+    const duration = reduced ? 50 : state === 'lifting' ? 700 : 750
     const timer = window.setTimeout(() => {
-      stateRef.current = 'success'
-      setState('success')
-    }, reduced ? 50 : 700)
+      stateRef.current = next
+      setState(next)
+    }, duration)
     return () => window.clearTimeout(timer)
   }, [state])
 
@@ -104,7 +106,7 @@ export function useInkDip() {
   }
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (stateRef.current === 'lifting' || stateRef.current === 'success') return
+    if (stateRef.current === 'lifting' || stateRef.current === 'flipping' || stateRef.current === 'success') return
     if (event.key === 'Escape') { event.preventDefault(); cancel(); return }
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()

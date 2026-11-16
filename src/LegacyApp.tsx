@@ -8,10 +8,9 @@ import {
   CandidateSelectionScreen,
   LearningScreen,
   ResultsScreen,
-  VoteRecordedScreen,
 } from './pages/FlowScreens'
 
-type AppScreen = 'idle' | 'learning' | 'candidates' | 'details' | 'ballot' | 'ink' | 'recorded' | 'results'
+type AppScreen = 'idle' | 'learning' | 'candidates' | 'details' | 'ballot' | 'ink' | 'results'
 
 type LegacyAppProps = {
   initialScreen?: AppScreen
@@ -60,8 +59,7 @@ export default function LegacyApp({ initialScreen = 'idle', onBackFromBallot, on
     />
   }
 
-  if (screen === 'ink') return <InkDipScreen onComplete={() => setScreen('recorded')} />
-  if (screen === 'recorded') return <VoteRecordedScreen onContinue={() => setScreen('results')} />
+  if (screen === 'ink') return <InkDipScreen onComplete={() => setScreen('results')} />
 
   return <ResultsScreen
     candidates={SIMULATION_CANDIDATES}

@@ -1,4 +1,5 @@
 import type { CSSProperties, RefObject } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Button from '../../components/common/Button'
 import FlowHeader from '../../components/layout/FlowHeader'
 import ScreenBackground from '../../components/layout/ScreenBackground'
@@ -8,13 +9,28 @@ import './InkDipScreen.css'
 
 const HAND = '/assets/Cartoon%20Hand%20with%20Downward%20Pinky.png'
 const INKED_HAND = '/assets/Purple-Inked%20Pinky%20Finger.png'
+const CONFETTI: { dx: string; dy: string; rot: string; delay: string; color: string }[] = [
+  { dx: '-30cqw', dy: '-22cqw', rot: '240deg', delay: '0s', color: '#f0991f' },
+  { dx: '-18cqw', dy: '-30cqw', rot: '-200deg', delay: '0.05s', color: '#ffd54a' },
+  { dx: '-6cqw', dy: '-34cqw', rot: '180deg', delay: '0.1s', color: '#7b0d14' },
+  { dx: '8cqw', dy: '-32cqw', rot: '260deg', delay: '0.02s', color: '#55a76a' },
+  { dx: '20cqw', dy: '-26cqw', rot: '-220deg', delay: '0.08s', color: '#792489' },
+  { dx: '30cqw', dy: '-14cqw', rot: '200deg', delay: '0.12s', color: '#f0991f' },
+  { dx: '-34cqw', dy: '-6cqw', rot: '-160deg', delay: '0.15s', color: '#2e86c1' },
+  { dx: '34cqw', dy: '-4cqw', rot: '230deg', delay: '0.04s', color: '#ffd54a' },
+  { dx: '-24cqw', dy: '-8cqw', rot: '300deg', delay: '0.18s', color: '#55a76a' },
+  { dx: '24cqw', dy: '-10cqw', rot: '-280deg', delay: '0.06s', color: '#7b0d14' },
+  { dx: '-10cqw', dy: '-24cqw', rot: '320deg', delay: '0.2s', color: '#2e86c1' },
+  { dx: '12cqw', dy: '-20cqw', rot: '-300deg', delay: '0.14s', color: '#792489' },
+]
 
 function DraggableHand({ state, offset, handRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onKeyDown }: Omit<ReturnType<typeof useInkDip>, 'targetRef'>) {
-  const inked = state === 'lifting' || state === 'success'
+  const inked = state === 'lifting' || state === 'flipping' || state === 'success'
+  const flipped = state === 'flipping' || state === 'success'
   const moving = state === 'dragging' || state === 'dipping'
   return (
     <div
-      className={`ink-hand${moving ? ' is-dragging' : ''}${inked ? ' is-inked' : ''}`}
+      className={`ink-hand${moving ? ' is-dragging' : ''}${inked ? ' is-inked' : ''}${flipped ? ' is-flipped' : ''}`}
       style={{ '--hand-x': `${offset.x}px`, '--hand-y': `${offset.y}px` } as CSSProperties}
       role="button"
       tabIndex={inked ? -1 : 0}
@@ -26,7 +42,7 @@ function DraggableHand({ state, offset, handRef, onPointerDown, onPointerMove, o
       onPointerCancel={onPointerCancel}
       onKeyDown={onKeyDown}
     >
-      <img ref={handRef} className="ink-hand-image" src={HAND} alt="" draggable={false} />
+      <img ref={handRef} className="ink-hand-image ink-hand-base" src={HAND} alt="" draggable={false} />
       <img className={`ink-hand-image ink-hand-colored${inked ? ' is-visible' : ''}`} src={INKED_HAND} alt="" draggable={false} />
     </div>
   )
@@ -34,45 +50,63 @@ function DraggableHand({ state, offset, handRef, onPointerDown, onPointerMove, o
 
 function InkBottleDropZone({ targetRef, state }: { targetRef: RefObject<HTMLDivElement | null>; state: InkDipState }) {
   return (
-    <div className={`ink-bottle${state === 'dragging' || state === 'dipping' ? ' is-target' : ''}${state === 'dipping' ? ' is-dipping' : ''}`}>
+    <div className={`ink-bottle${state === 'dragging' || state === 'dipping' ? ' is-target' : ''}${state === 'dipping' ? ' is-dipping' : ''}${state === 'flipping' ? ' is-flipping' : ''}`}>
       <img src="/assets/botol_tinta_pemilu.png" alt="Botol tinta pemilu" draggable={false} />
       <div ref={targetRef} className="ink-target" aria-hidden="true"><span className="ink-ripple" /></div>
     </div>
   )
 }
 
-function InkDipSuccess() {
-  return <div className="ink-success" role="status">
-    <h2>YEAY! JARIMU SUDAH BERTINTA!</h2>
-    <p>Kamu sudah menyelesaikan simulasi pemungutan suara!</p>
-  </div>
-}
-
 export default function InkDipScreen({ onComplete }: { onComplete: () => void }) {
   const { state, offset, handRef, targetRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onKeyDown } = useInkDip()
+  const reduceMotion = useReducedMotion()
   const success = state === 'success'
+  const dipPhase = state === 'ready' || state === 'dragging' || state === 'dipping'
   const message = state === 'dipping' ? 'Sedikit lagi! Angkat jarimu!' : 'Seret jari kelingkingmu ke dalam tinta!'
 
   return (
     <main className="figma-host">
       <ScreenBackground as="section" className="figma-frame ink-frame" backgroundImage="/figma-assets/519df.svg" aria-label="Celupkan jari ke tinta">
-        <FlowHeader title="SATU TANDA, BUKTI SUDAH MEMILIH!" subtitle="Celupkan jari kelingkingmu ke dalam tinta pemilu." />
+        <FlowHeader
+          title={success ? 'SUARA BERHASIL DICATAT' : 'SATU TANDA, BUKTI SUDAH MEMILIH!'}
+          subtitle={success ? 'Terima kasih sudah ikut belajar memilih!' : 'Celupkan jari kelingkingmu ke dalam tinta pemilu.'}
+        />
         <div className="ink-interaction">
-          {!success && <div className="ink-path" aria-hidden="true" />}
-          <InkBottleDropZone targetRef={targetRef} state={state} />
+          {dipPhase && <div className="ink-path" aria-hidden="true" />}
+          {!success && <InkBottleDropZone targetRef={targetRef} state={state} />}
           <DraggableHand state={state} offset={offset} handRef={handRef} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerCancel} onKeyDown={onKeyDown} />
+          <AnimatePresence>
+            {success && <motion.div
+              key="ink-notice"
+              className="ink-notice"
+              role="status"
+              initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.45, ease: 'easeOut' }}
+            >
+              <span className="ink-notice-badge" aria-hidden="true"><img src="/assets/Group%20257.png" alt="" draggable={false} /></span>
+              <h2>SUARAMU BERHASIL DICATAT!</h2>
+              <p>Terima kasih telah menyelesaikan simulasi pemungutan suara.</p>
+            </motion.div>}
+          </AnimatePresence>
           {success && <>
-            <img className="ink-mascot ink-mascot-left" src="/figma-assets/a2f45.png" alt="" />
-            <img className="ink-mascot ink-mascot-right" src="/figma-assets/d918e.png" alt="" />
+            {CONFETTI.map((piece, index) => (
+              <span
+                key={index}
+                className="ink-confetti"
+                aria-hidden="true"
+                style={{ '--dx': piece.dx, '--dy': piece.dy, '--rot': piece.rot, '--delay': piece.delay, '--confetti-color': piece.color } as CSSProperties}
+              />
+            ))}
             <span className="ink-sparkle ink-sparkle-one" aria-hidden="true">✦</span>
             <span className="ink-sparkle ink-sparkle-two" aria-hidden="true">✦</span>
           </>}
         </div>
-        {success ? <InkDipSuccess /> : <div className="ink-instructions" aria-live="polite">
+        {dipPhase && <div className="ink-instructions" aria-live="polite">
           <strong>{message}</strong>
           <p>Sentuh dan seret jarimu ke botol tinta.</p>
         </div>}
-        {success && <Button className="flow-button ink-finish" onClick={onComplete}>SELESAI</Button>}
+        {success && <Button className="flow-button ink-finish" onClick={onComplete}>LIHAT HASIL</Button>}
       </ScreenBackground>
     </main>
   )
