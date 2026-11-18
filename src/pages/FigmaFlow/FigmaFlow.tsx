@@ -9,7 +9,9 @@ import { position } from '../../utils/figmaPosition'
 import ScreenBackground from '../../components/layout/ScreenBackground'
 import ScreenHeader from '../../components/layout/ScreenHeader'
 import FlowHeader from '../../components/layout/FlowHeader'
+import FlowFooter from '../../components/layout/FlowFooter'
 import { NavigationControls } from '../../components/navigation/NavigationControls'
+import GuideArrowButton from '../../components/navigation/GuideArrowButton'
 import './FigmaFlow.css'
 
 type Screen = 'idle' | 'guide' | 'candidates' | 'details'
@@ -85,12 +87,12 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
           <animateMotion path={roadmapPath} begin="0.65s" dur="3.4s" fill="freeze" />
         </g>
       </svg>
-      <FlowHeader title="YUK, BELAJAR MEMILIH!" subtitle="Dengan memilih, kita ikut menentukan pemimpin dan masa depan bersama." />
-      <FigmaAsset file="ed193.svg" {...position(0, 1820, 1080, 100)} />
+      <FlowHeader title="YUK, BELAJAR MEMILIH!" subtitle="Yuk ikut menentukan pemimpin dan masa depan bersama." />
+      <FlowFooter />
       <div className="guide-roadmap-step guide-roadmap-step-one">
         <FigmaAsset file="14fbd.svg" {...position(72, 490, 322, 245)} />
         <FigmaAsset file="8733d.png" {...position(114, 485, 239, 229)} />
-        <GuideStep number={1} label="KENALI KANDIDAT" x={397} y={544} barOffset={28} barWidth={449} />
+        <GuideStep number={1} label="KENALI PILIHANMU" x={397} y={544} barOffset={28} barWidth={449} />
       </div>
 
       <div className="guide-roadmap-step guide-roadmap-step-two">
@@ -105,24 +107,20 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
         <GuideStep number={3} label="LIHAT HASIL" x={482} y={1401} barOffset={40} barWidth={476} />
       </div>
       <NavigationControls className="guide-navigation">
-        <Button
-          variant="icon-only"
-          className="guide-arrow guide-arrow-back"
+        <GuideArrowButton
+          direction="back"
+          className="guide-arrow-back"
           style={position(65, 1666, 155, 145)}
           aria-label="Kembali ke halaman awal"
           onClick={onBack}
-        >
-          <FigmaAsset file="b92ba.svg" {...position(10, 4, 144, 138)} />
-        </Button>
-        <Button
-          variant="icon-only"
-          className="guide-arrow guide-arrow-next"
+        />
+        <GuideArrowButton
+          direction="next"
+          className="guide-arrow-next"
           style={position(857, 1663, 155, 145)}
           aria-label="Lanjut ke daftar kandidat"
           onClick={onNext}
-        >
-          <FigmaAsset file="d4790.svg" {...position(5, 4, 144, 138)} />
-        </Button>
+        />
       </NavigationControls>
     </ScreenBackground>
   )
@@ -154,25 +152,22 @@ function CandidateScreen({
       ))}
       <p className="candidate-instruction">Tekan satu pilihan untuk melihat visi, misi, dan program.</p>
       <NavigationControls className="guide-navigation">
-        <Button
-          variant="icon-only"
-          className="guide-arrow guide-arrow-back"
+        <GuideArrowButton
+          direction="back"
+          className="guide-arrow-back"
           style={position(65, 1666, 155, 145)}
           aria-label="Kembali ke panduan"
           onClick={onBack}
-        >
-          <FigmaAsset file="b92ba.svg" {...position(10, 4, 144, 138)} />
-        </Button>
-        <Button
-          variant="icon-only"
-          className="guide-arrow guide-arrow-next"
+        />
+        <GuideArrowButton
+          direction="next"
+          className="guide-arrow-next"
           style={position(857, 1663, 155, 145)}
           aria-label="Lanjut ke simulasi surat suara"
           onClick={onChoose}
-        >
-          <FigmaAsset file="d4790.svg" {...position(5, 4, 144, 138)} />
-        </Button>
+        />
       </NavigationControls>
+      <FlowFooter />
       {children}
     </ScreenBackground>
   )

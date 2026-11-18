@@ -101,7 +101,7 @@
 .idle-tagline {
   position: absolute;
   z-index: 2;
-  top: 56.1cqw;
+  top: 64cqw;
   left: 0;
   width: 100%;
   margin: 0;
@@ -154,8 +154,9 @@
   cursor: pointer;
   font-family: var(--font-display);
   font-size: var(--type-button);
+  font-weight: 700;
   letter-spacing: 0.08cqw;
-  text-shadow: 0 0 0.4cqw #0008;
+  text-shadow: none;
 }
 
 .flow-button:active {
@@ -175,23 +176,24 @@
 .idle-start {
   z-index: 3;
   top: 149.6cqw;
-  left: 37.04cqw;
-  width: 24.54cqw;
-  height: 6.76cqw;
+  left: 50cqw;
+  translate: -50% 0;
+  width: 32cqw;
+  height: 10cqw;
+  padding: 0;
+  justify-content: center;
+  gap: 2cqw;
 }
 
 .idle-start .figma-asset {
-  left: 3.61cqw;
-  top: 0.93cqw;
+  position: static;
+  flex: 0 0 auto;
   width: 4.91cqw;
   height: 4.91cqw;
 }
 
 .idle-start span {
-  margin-left: 5.2cqw;
-  font-family: var(--font-label);
-  font-weight: 400;
-  letter-spacing: 0.15cqw;
+  font-family: var(--font-display);
 }
 
 .guide-frame,
@@ -250,14 +252,14 @@
 .flow-subtitle {
   position: absolute;
   z-index: 3;
-  left: 5.19cqw;
+  left: 11cqw;
   width: 88.9cqw;
   margin: 0;
   color: var(--color-white);
 }
 
 .flow-title {
-  top: 10.6cqw;
+  top: 12cqw;
   font-family: var(--font-digitalt);
   font-size: 5.1cqw;
   font-weight: 400;
@@ -274,6 +276,27 @@
   line-height: 1.35;
 }
 
+.flow-header-icon {
+  position: absolute;
+  z-index: 4;
+  left: 79.02cqw;
+  top: 5.6cqw;
+  width: 14.5cqw;
+  height: 13.92cqw;
+}
+
+.flow-header-icon--results {
+  height: 11.98cqw;
+}
+
+.flow-header-icon .figma-asset {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
 .guide-frame > .figma-asset {
   z-index: 0;
 }
@@ -283,10 +306,6 @@
 .guide-frame > .flow-title,
 .guide-frame > .flow-subtitle {
   z-index: 2;
-}
-
-.guide-frame > .figma-asset[src$='ed193.svg'] {
-  z-index: 1;
 }
 
 .guide-roadmap,
@@ -694,7 +713,7 @@
   border-radius: 4.63cqw;
   color: var(--color-neutral-ink);
   background: var(--color-cream-soft);
-  font-family: var(--font-figma-body);
+  font-family: var(--font-digitalt);
   font-size: 2.78cqw;
   font-weight: 600;
   line-height: 1.25;
@@ -775,29 +794,26 @@
 .detail-return {
   z-index: 3;
   top: 124.17cqw;
-  left: 32.5cqw;
-  width: 24.54cqw;
-  height: 6.76cqw;
-  justify-content: initial;
+  left: 44.77cqw;
+  translate: -50% 0;
+  width: auto;
+  height: 10cqw;
+  padding: 0 5cqw;
+  justify-content: center;
+  gap: 2cqw;
 }
 
 .detail-return .figma-asset {
-  left: 3.7cqw;
-  top: 1.67cqw;
+  position: static;
+  flex: 0 0 auto;
   width: 2.78cqw;
   height: 3.7cqw;
-}
-
-.return-label {
-  position: absolute;
-  top: 1.67cqw;
-  left: 8.33cqw;
 }
 
 .detail-counter {
   position: absolute;
   z-index: 3;
-  top: 133.52cqw;
+  top: 140cqw;
   left: 22.2cqw;
   width: 46cqw;
   margin: 0;

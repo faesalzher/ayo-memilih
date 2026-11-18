@@ -643,28 +643,34 @@
   width: 88.89cqw;
   height: 58.24cqw;
   flex-direction: column;
-  padding: 3.7cqw;
-  border: 0.19cqw solid var(--color-white);
-  border-radius: 3.9cqw 2.6cqw 3.9cqw 2.6cqw;
+  padding: 0 3.7cqw 3.7cqw;
+  border: 0;
+  border-radius: 5.56cqw;
   background: var(--color-white);
-  box-shadow: 0 0.37cqw 0.56cqw #a8000a0d, 0 1.48cqw 1.67cqw #a8000a14;
+  box-shadow: 0 2.13cqw 0 rgb(0 0 0 / 25%);
 }
 
 .results-chart-card header {
+  margin: 0 -3.7cqw;
+  padding: 3.7cqw 3.7cqw 3.33cqw;
+  border-radius: 5.56cqw 5.56cqw 0 0;
+  color: var(--color-white);
   text-align: center;
+  background: var(--color-primary);
 }
 
 .results-chart-card header h2 {
   margin: 0;
-  color: var(--color-primary);
-  font-family: var(--font-heading);
+  color: var(--color-white);
+  font-family: var(--font-display);
   font-size: 2.78cqw;
   font-weight: 800;
+  line-height: 1.18;
 }
 
 .results-chart-card header p {
   margin: 0.93cqw 0 0;
-  color: var(--color-primary-dark);
+  color: var(--color-white);
   font-family: var(--font-figma-body);
   font-size: var(--type-caption);
   font-weight: 600;
@@ -750,15 +756,17 @@
 
 .results-home {
   top: 150cqw;
-  left: 20cqw;
-  width: 60cqw;
-  height: 9cqw;
+  left: 50cqw;
+  translate: -50% 0;
+  width: auto;
+  height: 10cqw;
+  padding: 0 5cqw;
   font-size: var(--type-button);
 }
 
 .results-home-icon {
-  width: 5.5cqw;
-  height: 5.16cqw;
+  width: 3.84cqw;
+  height: 3.6cqw;
   flex: 0 0 auto;
 }
 

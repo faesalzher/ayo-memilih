@@ -8,10 +8,10 @@ import BallotBoxImage from '../../img/ballot-box.png'
 import { SIMULATION_CANDIDATES } from '../../config/candidates'
 import ScreenBackground from '../../components/layout/ScreenBackground'
 import FlowHeader from '../../components/layout/FlowHeader'
-import Button from '../../components/common/Button'
 import FigmaAsset from '../../components/figma/FigmaAsset'
 import { NavigationControls } from '../../components/navigation/NavigationControls'
-import { position } from '../../utils/figmaPosition'
+import FlowFooter from '../../components/layout/FlowFooter'
+import GuideArrowButton from '../../components/navigation/GuideArrowButton'
 import '../../App.css'
 import './OpenBallot.css'
 
@@ -212,9 +212,12 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const finaleInProgress = finaleStage === 'ballot-inserted'
   const boxCentered = finaleStage === 'centering-box' || finaleStage === 'voting-finished'
 
-  return <ScreenBackground as="main" className="app-shell" backgroundImage="/figma-assets/519df.svg">
+  return <ScreenBackground as="main" className="app-shell voting-screen" backgroundImage="/figma-assets/519df.svg">
     <div className="app-content">
-      <FlowHeader title="SIMULASI SURAT SUARA" subtitle="Yuk, praktikkan pilihanmu dan jadilah pemilih cerdas!" />
+      <FlowHeader title="TENTUKAN PILIHANMU" subtitle="Yuk, praktikkan pilihanmu dan jadilah pemilih cerdas!" />
+      <div className="flow-header-icon" aria-hidden="true">
+        <FigmaAsset file="32d6e.png" left="0" top="0" width="100%" height="100%" />
+      </div>
       <div className="voting-content-spacer" aria-hidden="true" />
       <section className={`ballot-stage${deliveryReady ? ' delivery-stage' : ''}${boxCentered ? ' finale-stage' : ''}`} aria-live="polite">
         <motion.div
@@ -269,20 +272,17 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
         {!deposited && <p className="ballot-instruction">{instruction}</p>}
       </section>
       {!deposited && <NavigationControls className="voting-navigation">
-        {onBack && <Button variant="icon-only" className="guide-arrow voting-arrow" aria-label="Kembali ke daftar kandidat" title="Kembali ke daftar kandidat" onClick={onBack}>
-          <FigmaAsset file="b92ba.svg" {...position(10, 4, 144, 138)} />
-        </Button>}
-        <Button
-          variant="icon-only"
-          className="guide-arrow voting-arrow voting-arrow-next"
+        {onBack && <GuideArrowButton direction="back" className="voting-arrow" aria-label="Kembali ke daftar kandidat" title="Kembali ke daftar kandidat" onClick={onBack} />}
+        <GuideArrowButton
+          direction="next"
+          className="voting-arrow voting-arrow-next"
           aria-label={outerOpen ? 'Lihat sisi dalam surat suara' : 'Lipat surat suara'}
           title={outerOpen ? 'Lihat sisi dalam surat suara' : 'Lipat surat suara'}
           disabled={!outerOpen && !(opened && punchState === 'completed' && !deliveryReady)}
           onClick={outerOpen ? startFlip : startRefold}
-        >
-          <FigmaAsset file="d4790.svg" {...position(5, 4, 144, 138)} />
-        </Button>
+        />
       </NavigationControls>}
     </div>
+    <FlowFooter />
   </ScreenBackground>
 }

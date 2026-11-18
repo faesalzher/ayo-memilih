@@ -2,6 +2,7 @@ import type { CSSProperties, RefObject } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Button from '../../components/common/Button'
 import FlowHeader from '../../components/layout/FlowHeader'
+import FlowFooter from '../../components/layout/FlowFooter'
 import ScreenBackground from '../../components/layout/ScreenBackground'
 import { useInkDip } from './useInkDip'
 import type { InkDipState } from './useInkDip'
@@ -68,9 +69,10 @@ export default function InkDipScreen({ onComplete }: { onComplete: () => void })
     <main className="figma-host">
       <ScreenBackground as="section" className="figma-frame ink-frame" backgroundImage="/figma-assets/519df.svg" aria-label="Celupkan jari ke tinta">
         <FlowHeader
-          title={success ? 'SUARA BERHASIL DICATAT' : 'SATU TANDA, BUKTI SUDAH MEMILIH!'}
+          title={success ? 'SUARA BERHASIL DICATAT' : 'TENTUKAN PILIHANMU!'}
           subtitle={success ? 'Terima kasih sudah ikut belajar memilih!' : 'Celupkan jari kelingkingmu ke dalam tinta pemilu.'}
         />
+        <FlowFooter />
         <div className="ink-interaction">
           {dipPhase && <div className="ink-path" aria-hidden="true" />}
           {!success && <InkBottleDropZone targetRef={targetRef} state={state} />}
