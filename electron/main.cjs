@@ -1,14 +1,17 @@
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
-const { app, BrowserWindow, shell } = require('electron')
+const { app, BrowserWindow, shell, protocol, net } = require('electron')
 
 const devServerUrl = process.env.VITE_DEV_SERVER_URL || 'http://127.0.0.1:5173'
+const distDir = path.join(__dirname, '../dist')
 let mainWindow
 
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true } },
+])
+
 async function createWindow() {
-  const appUrl = app.isPackaged
-    ? pathToFileURL(path.join(__dirname, '../dist/index.html')).href
-    : devServerUrl
+  const appUrl = app.isPackaged ? 'app://app/index.html' : devServerUrl
 
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -45,14 +48,23 @@ async function createWindow() {
   })
 
   if (app.isPackaged) {
-    await mainWindow.loadFile(path.join(__dirname, '../dist/index.html'))
+    await mainWindow.loadURL(appUrl)
   } else {
     await mainWindow.loadURL(devServerUrl)
   }
 }
 
 app.whenReady()
-  .then(createWindow)
+  .then(() => {
+    protocol.handle('app', (request) => {
+      const { pathname } = new URL(request.url)
+      const requested = decodeURIComponent(pathname === '/' ? '/index.html' : pathname)
+      const file = path.join(distDir, requested)
+      if (!file.startsWith(distDir)) return new Response('Forbidden', { status: 403 })
+      return net.fetch(pathToFileURL(file).href)
+    })
+    return createWindow()
+  })
   .catch((error) => {
     console.error('Failed to launch Ayo Memilih:', error)
     app.quit()
