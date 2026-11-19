@@ -8,7 +8,7 @@ export default function FlowHeader({ title, subtitle }: { title: string; subtitl
     <>
       <div className="flow-header">
         <FigmaAsset file="e4513.svg" {...position(0, 0, 1080, 365)} />
-        <FigmaAsset file="6dbac.svg" {...position(0, 0, 1099, 347)} />
+        <FigmaAsset file="6dbac.svg" {...position(-9.5, 0, 1099, 347)} />
         <FigmaAsset file="9931e.svg" {...position(0, 0, 1099, 105)} />
         <FigmaAsset file="1ab6a.svg" {...position(0, 0, 348, 143)} />
       </div>

@@ -13,9 +13,6 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-}
-
-.app-shell > .ui-screen-background__image,
-.figma-page-results > .ui-screen-background__image {
-  filter: brightness(0.82);
+  opacity: var(--scene-opacity, 1);
+  filter: brightness(calc(1 - var(--scene-dim, 0)));
 }

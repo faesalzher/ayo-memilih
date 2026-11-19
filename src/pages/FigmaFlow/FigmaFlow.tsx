@@ -12,6 +12,7 @@ import FlowHeader from '../../components/layout/FlowHeader'
 import FlowFooter from '../../components/layout/FlowFooter'
 import { NavigationControls } from '../../components/navigation/NavigationControls'
 import GuideArrowButton from '../../components/navigation/GuideArrowButton'
+import TutorialBubble from '../../components/tutorial/TutorialBubble'
 import './FigmaFlow.css'
 
 type Screen = 'idle' | 'guide' | 'candidates' | 'details'
@@ -28,7 +29,21 @@ function FlatButton({
   return <Button className={`flow-button ${className}`} onClick={onClick}>{children}</Button>
 }
 
+const IDLE_TAGLINE = 'SIMULASI EDUKASI PEMILIHAN UMUM'
+const IDLE_TYPE_INTERVAL_MS = 28
+
 function IdleScreen({ onStart }: { onStart: () => void }) {
+  const [typedCount, setTypedCount] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? IDLE_TAGLINE.length : 0,
+  )
+  const isTyping = typedCount < IDLE_TAGLINE.length
+
+  useEffect(() => {
+    if (!isTyping) return
+    const timer = window.setTimeout(() => setTypedCount((count) => count + 1), IDLE_TYPE_INTERVAL_MS)
+    return () => window.clearTimeout(timer)
+  }, [isTyping, typedCount])
+
   return (
     <ScreenBackground as="section" className="figma-frame idle-frame" aria-label="Ayo Memilih">
       <FigmaAsset file="4345b.png" {...position(-27, -55, 1112, 1975)} />
@@ -39,7 +54,11 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
         logoClassName="idle-brand-logo"
         brandTextClassName="idle-brand-copy"
       />
-      <p className="idle-tagline">SIMULASI EDUKASI PEMILIHAN UMUM</p>
+      <p className="idle-tagline">
+        <span>{IDLE_TAGLINE.slice(0, typedCount)}</span>
+        {isTyping && <span className="idle-caret" aria-hidden="true" />}
+        <span className="idle-tagline-rest" aria-hidden="true">{IDLE_TAGLINE.slice(typedCount)}</span>
+      </p>
       <img className="idle-title" src="/idle-assets/ayo-memilih-title.svg" alt="Ayo Memilih" />
       <FigmaAsset file="a2f45.png" {...position(110, 947, 429, 677)} />
       <FigmaAsset file="d918e.png" {...position(501, 863, 433, 761)} />
@@ -130,15 +149,21 @@ function CandidateScreen({
   onBack,
   onSelect,
   onChoose,
+  showTutorial,
+  canContinue,
+  viewedCandidates,
   children,
 }: {
   onBack: () => void
   onSelect: (index: number) => void
   onChoose: () => void
+  showTutorial: boolean
+  canContinue: boolean
+  viewedCandidates: boolean[]
   children?: ReactNode
 }) {
   return (
-    <ScreenBackground as="section" className="figma-frame candidate-frame" aria-label="Kenali pilihanmu" backgroundImage="/figma-assets/519df.svg">
+    <ScreenBackground as="section" className="figma-frame candidate-frame" aria-label="Kenali pilihanmu">
       <FlowHeader title="KENALI PILIHANMU" subtitle="Kenali pilihan yang tersedia, lalu pilih satu kandidat." />
       <FigmaAsset file="8733d.png" {...position(811, 40, 199, 191)} />
       {FIGMA_CANDIDATES.map((candidate, index) => (
@@ -147,10 +172,19 @@ function CandidateScreen({
           variant="figma"
           candidate={candidate}
           index={index}
+          viewed={viewedCandidates[index]}
           onSelect={() => onSelect(index)}
         />
       ))}
-      <p className="candidate-instruction">Tekan satu pilihan untuk melihat visi, misi, dan program.</p>
+      {showTutorial && (
+        <div className="candidate-tutorial">
+          <TutorialBubble speaker="angga">
+            {canContinue
+              ? 'Klik panah untuk memilih kandidat.'
+              : 'Sentuh ketiga kartu kandidat untuk mengenal visi dan misinya sebelum lanjut.'}
+          </TutorialBubble>
+        </div>
+      )}
       <NavigationControls className="guide-navigation">
         <GuideArrowButton
           direction="back"
@@ -164,6 +198,7 @@ function CandidateScreen({
           className="guide-arrow-next"
           style={position(857, 1663, 155, 145)}
           aria-label="Lanjut ke simulasi surat suara"
+          disabled={!canContinue}
           onClick={onChoose}
         />
       </NavigationControls>
@@ -176,6 +211,7 @@ function CandidateScreen({
 function FigmaFlow({ onStartVoting, initialScreen = 'idle' }: { onStartVoting: () => void; initialScreen?: 'idle' | 'candidates' }) {
   const [screen, setScreen] = useState<Screen>(initialScreen)
   const [selectedCandidate, setSelectedCandidate] = useState(0)
+  const [viewedCandidates, setViewedCandidates] = useState<boolean[]>(() => FIGMA_CANDIDATES.map(() => false))
 
   useEffect(() => {
     if (screen !== 'details') return
@@ -194,8 +230,12 @@ function FigmaFlow({ onStartVoting, initialScreen = 'idle' }: { onStartVoting: (
         <CandidateScreen
           onBack={() => setScreen('guide')}
           onChoose={onStartVoting}
+          showTutorial={screen === 'candidates'}
+          canContinue={viewedCandidates.every(Boolean)}
+          viewedCandidates={viewedCandidates}
           onSelect={(index) => {
             setSelectedCandidate(index)
+            setViewedCandidates((current) => current.map((viewed, viewedIndex) => viewed || viewedIndex === index))
             setScreen('details')
           }}
         >

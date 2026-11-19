@@ -115,6 +115,50 @@
   text-transform: uppercase;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .idle-tagline {
+    opacity: 0;
+    animation: idle-fade-in 0.6s ease 0.2s forwards;
+  }
+
+  .idle-title {
+    opacity: 0;
+    animation: idle-fade-in 0.8s ease 0.8s forwards;
+  }
+
+  .idle-social {
+    opacity: 0;
+    animation: idle-slide-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 1s forwards;
+  }
+}
+
+@keyframes idle-fade-in {
+  to { opacity: 1; }
+}
+
+@keyframes idle-slide-up {
+  from { opacity: 0; transform: translateY(6cqw); }
+  to { opacity: 1; transform: none; }
+}
+
+.idle-tagline-rest {
+  visibility: hidden;
+}
+
+.idle-caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.1em;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: idle-caret-blink 0.8s steps(1) infinite;
+}
+
+@keyframes idle-caret-blink {
+  50% { opacity: 0; }
+}
+
 .idle-social {
   position: absolute;
   z-index: 2;
@@ -414,6 +458,11 @@
   transform: translateY(0.35cqw);
 }
 
+.guide-arrow:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .guide-arrow-back {
   left: 6cqw;
   top: 154.5cqw;
@@ -441,6 +490,18 @@
 
 .candidate-visual {
   display: contents;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .candidate-visual > :not(.candidate-tap-hint) {
+    animation: candidate-fade-in 0.6s ease backwards;
+    animation-delay: var(--card-delay, 0s);
+  }
+}
+
+@keyframes candidate-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .candidate-visual > .figma-asset[src$='39063.svg'] {
@@ -508,19 +569,87 @@
   border-radius: 6cqw;
 }
 
-.candidate-frame .candidate-instruction {
+.candidate-tap-hint {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  filter: drop-shadow(0 0.4cqw 0.3cqw #67443c66);
+}
+
+.candidate-visual.is-viewed > * {
+  opacity: 0.5;
+}
+
+.candidate-visual.is-viewed .candidate-tap-hint {
+  display: none;
+}
+
+.candidate-tap-hint svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: var(--color-accent-orange);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .candidate-tap-hint { animation: candidate-tap-blink 1.1s ease-in-out infinite; }
+}
+
+@keyframes candidate-tap-blink {
+  0%, 100% { opacity: 0.25; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(-1.5cqw); }
+}
+
+.candidate-frame .candidate-tutorial {
   position: absolute;
   z-index: 4;
-  top: 146.7cqw;
-  left: 6.3cqw;
-  width: 87cqw;
-  margin: 0;
-  color: var(--color-primary);
-  font-family: var(--font-figma-body);
-  font-size: 2.22cqw;
-  font-weight: 600;
-  line-height: 1.4;
-  text-align: center;
+  top: 141cqw;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble {
+  flex-direction: row;
+  align-items: flex-end;
+  width: min(78%, 680px);
+  margin: 0 6cqw 0 auto;
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble-box {
+  flex: 1;
+  margin-top: 0;
+  opacity: 1;
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble-box.is-collapsed {
+  transform: translateX(4cqw);
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble-box::before,
+.candidate-frame .candidate-tutorial .tutorial-bubble-box::after {
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  margin-top: -1.8cqw;
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble-box::before {
+  right: -2.9cqw;
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble-box::after {
+  right: -2.4cqw;
+}
+
+.candidate-frame .candidate-tutorial .tutorial-bubble-avatar {
+  margin: 0 2cqw 0 0;
+  width: 9cqw;
+  height: 9cqw;
 }
 
 .detail-backdrop {

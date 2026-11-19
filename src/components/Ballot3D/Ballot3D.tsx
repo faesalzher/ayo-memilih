@@ -22,6 +22,7 @@ type Props = {
   punchState: PunchState
   onPunchComplete?: () => void
   compact?: boolean
+  onReady?: () => void
 }
 
 const PANEL_WIDTH = 1.68
@@ -132,7 +133,7 @@ function usePrintedTextures() {
   return textures
 }
 
-function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFlipComplete, onRefoldOuterComplete, onFoldComplete, punchState, onPunchComplete }: Props) {
+function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFlipComplete, onRefoldOuterComplete, onFoldComplete, punchState, onPunchComplete, onReady }: Props) {
   const root = useRef<THREE.Group>(null)
   const leftTop = useRef<THREE.Group>(null)
   const rightTop = useRef<THREE.Group>(null)
@@ -143,6 +144,10 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
   const pin = useRef<THREE.Group>(null)
   const [holeVisible, setHoleVisible] = useState(false)
   const textures = usePrintedTextures()
+  const paperReady = Boolean(textures['cover-folded'])
+  useEffect(() => {
+    if (paperReady) onReady?.()
+  }, [paperReady, onReady])
   const paperMaterial = useMemo(() => new THREE.MeshBasicMaterial({ color: '#fcfbf9', side: THREE.DoubleSide }), [])
   const paperGeometries = useMemo(() => {
     const corners = [[true, false, false, false], [false, true, false, false], [false, false, true, false], [false, false, false, true]]

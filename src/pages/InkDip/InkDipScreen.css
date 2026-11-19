@@ -25,8 +25,19 @@
 
 .ink-hand:focus-visible { outline: 0.6cqw solid #153f8a; outline-offset: -1cqw; }
 .ink-hand.is-dragging { cursor: grabbing; filter: drop-shadow(0 1.5cqw 1cqw #582b1a55); }
-.ink-hand:not(.is-dragging) { transition: transform 0.5s ease-out; }
+.ink-hand:not(.is-dragging) { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 .ink-hand.is-inked { pointer-events: none; }
+
+.ink-hand:not(.is-dragging):not(.is-inked) { animation: ink-hand-glow 1.6s ease-in-out infinite; }
+
+@keyframes ink-hand-glow {
+  0%, 100% { filter: drop-shadow(0 0 0.6cqw #f58f20); }
+  50% { filter: drop-shadow(0 0 2.4cqw #f58f20) drop-shadow(0 0 1cqw #ffd54a); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ink-hand:not(.is-dragging):not(.is-inked) { animation: none; }
+}
 
 .ink-hand-image {
   position: absolute;
@@ -52,7 +63,7 @@
   width: 36%;
   aspect-ratio: 498 / 676;
   perspective: 160cqw;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  transition: filter 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ink-bottle img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; transform-style: preserve-3d; backface-visibility: hidden; }
@@ -84,6 +95,66 @@
 
 .ink-instructions strong { margin: 0; font-family: var(--font-display); font-size: clamp(15px, 3.5cqw, 26px); line-height: 1.2; }
 .ink-instructions p { margin: 1.5cqw 0 0; font-family: var(--font-figma-body); font-size: clamp(14px, 2.7cqw, 20px); font-weight: 700; line-height: 1.35; }
+
+.ink-tutorial {
+  position: absolute;
+  top: 142cqw;
+  left: 8%;
+  width: 84%;
+}
+
+.ink-tutorial .tutorial-bubble {
+  width: 100%;
+  margin: 0;
+}
+
+.ink-tutorial .tutorial-bubble-box {
+  opacity: 1;
+  border-color: transparent;
+  border-radius: 2cqw;
+  background: var(--color-primary);
+  box-shadow: none;
+}
+
+.ink-tutorial .tutorial-bubble-box::before {
+  background: var(--color-primary);
+}
+
+.ink-tutorial .tutorial-bubble-box::after {
+  background: var(--color-primary);
+}
+
+.ink-tutorial .tutorial-bubble-text {
+  color: var(--color-white);
+  font-family: var(--font-figma-body);
+  font-size: 2.5cqw;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.ink-tutorial .tutorial-bubble-name {
+  background: var(--color-white);
+  color: var(--color-primary);
+  font-size: 2.2cqw;
+}
+
+.ink-tutorial .tutorial-bubble-avatar {
+  width: 11cqw;
+  height: 11cqw;
+}
+
+.ink-frame::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: rgb(31 36 54 / 64%);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.7s ease;
+}
+
+.ink-frame.is-success::before { opacity: 0.35; }
 
 .ink-notice {
   position: absolute;
@@ -155,6 +226,9 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .ink-hand:not(.is-dragging):not(.is-inked) { animation: ink-part-in 0.6s ease-out backwards, ink-hand-glow 1.6s ease-in-out infinite; }
+  .ink-bottle { animation: ink-part-in 0.6s ease-out backwards; }
+  .ink-path, .ink-tutorial { animation: ink-fade-in 0.6s ease-out backwards; }
   .ink-notice { animation: ink-notice-in 0.6s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
   .ink-notice-badge { animation: ink-seal-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s both; }
   .ink-sparkle { animation: ink-sparkle-in 0.55s ease-out both; }
@@ -165,6 +239,15 @@
 @keyframes ink-notice-in {
   from { opacity: 0; transform: translateY(4cqw) scale(0.9); }
   to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ink-part-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ink-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes ink-seal-in {

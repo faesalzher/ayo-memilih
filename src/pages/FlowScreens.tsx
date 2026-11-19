@@ -6,6 +6,7 @@ import ScreenBackground from '../components/layout/ScreenBackground'
 import FlowHeader from '../components/layout/FlowHeader'
 import FlowFooter from '../components/layout/FlowFooter'
 import FigmaAsset from '../components/figma/FigmaAsset'
+import TutorialBubble from '../components/tutorial/TutorialBubble'
 import './FlowScreens.css'
 
 const sharedAssets = '/idle-assets'
@@ -24,7 +25,7 @@ export function ResultsScreen({
 
   return (
     <main className="figma-screen-host">
-      <ScreenBackground as="div" className="figma-page figma-page-results" backgroundImage="/figma-assets/519df.svg">
+      <ScreenBackground as="div" className="figma-page figma-page-results" sceneDim={0.18}>
         <FlowHeader title="HASIL SEMENTARA" subtitle="Perbandingan hasil simulasi dalam bentuk grafik." />
         <div className="flow-header-icon flow-header-icon--results" aria-hidden="true">
           <FigmaAsset file="24a63.png" />
@@ -46,13 +47,19 @@ export function ResultsScreen({
                   <strong>{percentage}%</strong>
                   <span className="results-vote-count">{voteCount} suara</span>
                   <div className="results-bar" style={{ height: `${height / 10.8}cqw`, backgroundColor: ['#c0392b', '#f0a500', '#2e86c1'][index] }} />
-                  <span>{candidate.party}</span>
+                  <span className="results-candidate-label"><b>{candidate.name}</b><small>Wakil: {candidate.runningMate}</small></span>
                 </article>
               )
             })}
           </div>
         </Card>
-        <Card as="section" variant="result" className="results-total"><strong>TOTAL SUARA</strong><span>{totalVotes}</span></Card>
+        <Card as="section" variant="result" className="results-total">
+          <div className="results-total-main"><strong>TOTAL SUARA</strong><span>{totalVotes}</span></div>
+          <div className="results-total-note"><strong>SUARA TERCATAT</strong><small>DALAM SIMULASI EDUKASI</small></div>
+        </Card>
+        <div className="results-disclaimer">
+          <TutorialBubble speaker="angga">Hasil ini hanya simulasi edukasi, bukan hasil pemungutan suara resmi.</TutorialBubble>
+        </div>
         <Button className="flow-button results-home" onClick={onReturnHome}>
           <img className="results-home-icon" src="/assets/home.svg" alt="" />
           KEMBALI KE BERANDA

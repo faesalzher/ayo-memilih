@@ -12,6 +12,7 @@ import FigmaAsset from '../../components/figma/FigmaAsset'
 import { NavigationControls } from '../../components/navigation/NavigationControls'
 import FlowFooter from '../../components/layout/FlowFooter'
 import GuideArrowButton from '../../components/navigation/GuideArrowButton'
+import TutorialBubble from '../../components/tutorial/TutorialBubble'
 import '../../App.css'
 import './OpenBallot.css'
 
@@ -31,6 +32,8 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const [deliveryReady, setDeliveryReady] = useState(false)
   const [finaleStage, setFinaleStage] = useState<FinaleStage>('idle')
   const [targetActive, setTargetActive] = useState(false)
+  const [ballotReady, setBallotReady] = useState(false)
+  const markBallotReady = useCallback(() => setBallotReady(true), [])
   const transitionLocked = useRef(false)
   const dropSlotRef = useRef<HTMLDivElement>(null)
   const ballotDragRef = useRef<HTMLDivElement>(null)
@@ -195,7 +198,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
       ? 'Surat suara sedang dilipat kembali.'
       : opened
         ? punchState === 'completed'
-          ? `Coblosan berhasil! Pilihanmu: ${selectedCandidateData?.name} ${selectedCandidateData?.runningMate}. Lipat kembali surat suara sebelum dimasukkan ke kotak suara.`
+          ? `Coblosan berhasil! Pilihanmu: ${selectedCandidateData?.name} ${selectedCandidateData?.runningMate}. Tekan panah kanan untuk melipat kembali surat suara.`
           : punchState === 'punching'
             ? 'Paku sedang mencoblos pilihanmu...'
             : punchState === 'candidate-selected'
@@ -212,7 +215,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const finaleInProgress = finaleStage === 'ballot-inserted'
   const boxCentered = finaleStage === 'centering-box' || finaleStage === 'voting-finished'
 
-  return <ScreenBackground as="main" className="app-shell voting-screen" backgroundImage="/figma-assets/519df.svg">
+  return <ScreenBackground as="main" className="app-shell voting-screen">
     <div className="app-content">
       <FlowHeader title="TENTUKAN PILIHANMU" subtitle="Yuk, praktikkan pilihanmu dan jadilah pemilih cerdas!" />
       <div className="flow-header-icon" aria-hidden="true">
@@ -222,7 +225,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
       <section className={`ballot-stage${deliveryReady ? ' delivery-stage' : ''}${boxCentered ? ' finale-stage' : ''}`} aria-live="polite">
         <motion.div
           ref={ballotDragRef}
-          className={`ballot-touch-wrapper${deliveryReady && !deposited ? ' draggable-ballot' : ''}${deposited ? ' ballot-inserting' : ''}`}
+          className={`ballot-touch-wrapper${ballotReady ? ' is-ready' : ''}${deliveryReady && !deposited ? ' draggable-ballot' : ''}${deposited ? ' ballot-inserting' : ''}`}
           layout="position"
           transition={{ layout: { type: 'spring', stiffness: 230, damping: 26 } }}
           onPointerDownCapture={handlePaperTouch}
@@ -247,6 +250,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
               onRefoldOuterComplete={startCoverFold}
               onFoldComplete={finishCoverFold}
               onPunchComplete={finishPunch}
+              onReady={markBallotReady}
             />
           </Suspense>
         </motion.div>
@@ -255,7 +259,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
           layout="position"
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ layout: { type: 'spring', stiffness: 180, damping: 24 }, opacity: { duration: reduceMotion ? 0.01 : 0.28 } }}
+          transition={{ layout: { type: 'spring', stiffness: 150, damping: 26 }, x: { type: 'spring', stiffness: 120, damping: 24 }, opacity: { duration: reduceMotion ? 0.01 : 0.6, ease: 'easeOut' } }}
         >
           <motion.div
             className={`ballot-box${targetActive ? ' target-active' : ''}${deposited ? ' ballot-box-success' : ''}`}
@@ -263,13 +267,18 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
             animate={finaleInProgress ? { scale: [1, 1.07, 1], y: [0, -10, 0] } : { scale: boxCentered ? 1.12 : 1, y: 0 }}
             transition={{ duration: reduceMotion ? 0.01 : finaleInProgress ? 0.48 : 0.65, ease: 'easeInOut' }}
           >
-            <div className="ballot-box-art">
+            <div ref={dropSlotRef} className="ballot-box-art">
               <img src={BallotBoxImage} alt="Kotak suara KPU simulasi" draggable={false} />
-              <div ref={dropSlotRef} className="ballot-box-slot-hit" role="img" aria-label="Lubang kotak suara" />
+              {deliveryReady && !deposited && <div className="ballot-box-hint" aria-hidden="true">
+                <svg viewBox="0 0 24 40" preserveAspectRatio="none">
+                  <path d="M12 0 V30 M4 22 L12 32 L20 22" />
+                </svg>
+              </div>}
+              <div className="ballot-box-slot-hit" role="img" aria-label="Lubang kotak suara" />
             </div>
           </motion.div>
         </motion.div>}
-        {!deposited && <p className="ballot-instruction">{instruction}</p>}
+        {!deposited && <TutorialBubble speaker="angga">{instruction}</TutorialBubble>}
       </section>
       {!deposited && <NavigationControls className="voting-navigation">
         {onBack && <GuideArrowButton direction="back" className="voting-arrow" aria-label="Kembali ke daftar kandidat" title="Kembali ke daftar kandidat" onClick={onBack} />}

@@ -4,6 +4,7 @@ import Button from '../../components/common/Button'
 import FlowHeader from '../../components/layout/FlowHeader'
 import FlowFooter from '../../components/layout/FlowFooter'
 import ScreenBackground from '../../components/layout/ScreenBackground'
+import TutorialBubble from '../../components/tutorial/TutorialBubble'
 import { useInkDip } from './useInkDip'
 import type { InkDipState } from './useInkDip'
 import './InkDipScreen.css'
@@ -67,7 +68,7 @@ export default function InkDipScreen({ onComplete }: { onComplete: () => void })
 
   return (
     <main className="figma-host">
-      <ScreenBackground as="section" className="figma-frame ink-frame" backgroundImage="/figma-assets/519df.svg" aria-label="Celupkan jari ke tinta">
+      <ScreenBackground as="section" className={`figma-frame ink-frame${success ? ' is-success' : ''}`} aria-label="Celupkan jari ke tinta">
         <FlowHeader
           title={success ? 'SUARA BERHASIL DICATAT' : 'TENTUKAN PILIHANMU!'}
           subtitle={success ? 'Terima kasih sudah ikut belajar memilih!' : 'Celupkan jari kelingkingmu ke dalam tinta pemilu.'}
@@ -84,7 +85,7 @@ export default function InkDipScreen({ onComplete }: { onComplete: () => void })
               role="status"
               initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.45, ease: 'easeOut' }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
               <span className="ink-notice-badge" aria-hidden="true"><img src="/assets/Group%20257.png" alt="" draggable={false} /></span>
               <h2>SUARAMU BERHASIL DICATAT!</h2>
@@ -104,9 +105,8 @@ export default function InkDipScreen({ onComplete }: { onComplete: () => void })
             <span className="ink-sparkle ink-sparkle-two" aria-hidden="true">✦</span>
           </>}
         </div>
-        {dipPhase && <div className="ink-instructions" aria-live="polite">
-          <strong>{message}</strong>
-          <p>Sentuh dan seret jarimu ke botol tinta.</p>
+        {dipPhase && <div className="ink-tutorial" aria-live="polite">
+          <TutorialBubble speaker="angga">{`${message} Sentuh dan seret jarimu ke botol tinta.`}</TutorialBubble>
         </div>}
         {success && <Button className="flow-button ink-finish" onClick={onComplete}>LIHAT HASIL</Button>}
       </ScreenBackground>

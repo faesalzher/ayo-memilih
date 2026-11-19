@@ -32,7 +32,7 @@
   width: min(34vw, 350px);
   aspect-ratio: 1;
   filter: drop-shadow(0 20px 15px #67443c35);
-  transition: filter .22s ease;
+  transition: filter .4s ease, transform .4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .ballot-box-art { position: absolute; inset: 0; }
 .ballot-box-art img {
@@ -43,6 +43,38 @@
   pointer-events: none;
   user-select: none;
   -webkit-user-drag: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ballot-touch-wrapper:not(.is-ready) { opacity: 0; }
+  .ballot-touch-wrapper.is-ready { animation: ballot-fade-in 1.2s cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .ballot-touch-wrapper.draggable-ballot { animation: ballot-glow 1.6s ease-in-out infinite; }
+}
+@keyframes ballot-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes ballot-glow {
+  0%, 100% { filter: drop-shadow(0 20px 18px #67443c35); }
+  50% { filter: drop-shadow(0 0 1.2vw #ffb11fcc) drop-shadow(0 0 2.4vw #ffd45a88) drop-shadow(0 20px 18px #67443c35); }
+}
+.ballot-box-hint {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  height: 30%;
+  width: clamp(24px, 5vw, 40px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px #67443c66);
+}
+.ballot-box-hint svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ballot-box-hint path { fill: none; stroke: var(--color-accent-orange); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .ballot-box-hint { animation: ballot-hint-bob 1.2s ease-in-out infinite; }
+}
+@keyframes ballot-hint-bob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, 6px); }
 }
 .ballot-box-slot-hit {
   position: absolute;
@@ -56,10 +88,13 @@
   opacity: 0;
 }
 .drop-caption { margin: 14px 0 0; padding: 8px 16px; border-radius: var(--radius-pill); color: #8c1521; background: #fff9ed; font-size: clamp(11px, 1.3vw, 18px); font-weight: 1000; letter-spacing: .1em; box-shadow: 0 4px 12px #67443c14; text-align: center; }
-.target-active { filter: drop-shadow(0 24px 18px #67443c45); }
+.ballot-box.target-active {
+  transform: scale(1.04);
+  filter: drop-shadow(0 0 1.2vw #ffb11fcc) drop-shadow(0 0 2.4vw #ffd45a88) drop-shadow(0 20px 18px #67443c45);
+}
 
 .finale-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(12px, 2.2svh, 30px); }
-.finale-stage .ballot-touch-wrapper { position: absolute; z-index: -1; pointer-events: none; }
+.finale-stage .ballot-touch-wrapper { position: absolute; z-index: -1; pointer-events: none; visibility: hidden; }
 .ballot-drop-scene-final { grid-column: auto; width: min(48vw, 510px); }
 .ballot-drop-scene-final .ballot-box { width: min(40vw, 420px); }
 .thank-you-panel { width: min(90vw, 820px); text-align: center; color: var(--color-text); }
@@ -128,8 +163,12 @@
   filter: none;
 }
 
-.voting-screen .ballot-stage > .ballot-instruction {
-  margin-bottom: 14cqw;
+.voting-screen .ballot-stage > .tutorial-bubble {
+  margin-bottom: 22cqw;
+}
+
+.voting-screen .tutorial-bubble-box {
+  opacity: 1;
 }
 
 .voting-arrow:disabled {
@@ -162,17 +201,6 @@
   margin-inline: auto;
 }
 
-.ballot-instruction {
-  width: min(94%, 720px);
-  margin: 0 auto;
-  color: var(--color-primary-dark);
-  font-family: var(--font-figma-body);
-  font-size: clamp(12px, 1.3cqw, 14px);
-  font-weight: 800;
-  line-height: 1.35;
-  text-align: center;
-}
-
 .delivery-stage {
   display: grid;
   flex: 1 1 0;
@@ -196,8 +224,44 @@
   margin: 0;
 }
 
-.delivery-stage .ballot-instruction {
+.delivery-stage .tutorial-bubble {
   grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: flex-end;
+  width: min(78%, 680px);
+  margin-left: auto;
+  margin-right: 6cqw;
+}
+
+.delivery-stage .tutorial-bubble-box {
+  flex: 1;
+  margin-top: 0;
+}
+
+.delivery-stage .tutorial-bubble-box.is-collapsed {
+  transform: translateX(4cqw);
+}
+
+.delivery-stage .tutorial-bubble-box::before,
+.delivery-stage .tutorial-bubble-box::after {
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  margin-top: -1.8cqw;
+}
+
+.delivery-stage .tutorial-bubble-box::before {
+  right: -2.9cqw;
+}
+
+.delivery-stage .tutorial-bubble-box::after {
+  right: -2.4cqw;
+}
+
+.delivery-stage .tutorial-bubble-avatar {
+  margin: 0 2cqw 0 0;
+  width: 9cqw;
+  height: 9cqw;
 }
 
 .delivery-stage .ballot-3d-shell {
