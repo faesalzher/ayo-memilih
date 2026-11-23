@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import type { SimulationCandidate } from '../config/candidates'
+import { audioManager } from '../services/audio/AudioManager'
 import Button from '../components/common/Button'
 import Card from '../components/common/Card'
 import DecorativeElements from '../components/layout/DecorativeElements'
@@ -20,6 +22,10 @@ export function ResultsScreen({
   votes: number[]
   onReturnHome: () => void
 }) {
+  useEffect(() => {
+    audioManager.playSfx('success')
+  }, [])
+
   const totalVotes = votes.reduce((sum, count) => sum + count, 0)
   const maxVotes = Math.max(...votes, 1)
 
@@ -47,7 +53,7 @@ export function ResultsScreen({
                   <strong>{percentage}%</strong>
                   <span className="results-vote-count">{voteCount} suara</span>
                   <div className="results-bar" style={{ height: `${height / 10.8}cqw`, backgroundColor: ['#c0392b', '#f0a500', '#2e86c1'][index] }} />
-                  <span className="results-candidate-label"><b>{candidate.name}</b><small>Wakil: {candidate.runningMate}</small></span>
+                  <span className="results-candidate-label"><b>{candidate.name}</b><small>{candidate.runningMate}</small></span>
                 </article>
               )
             })}

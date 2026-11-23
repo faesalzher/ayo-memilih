@@ -1,4 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { audioManager } from '../../services/audio/AudioManager'
+import type { SfxKey } from '../../services/audio/audioConfig'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'outline' | 'danger' | 'icon-only'
 export type ButtonSize = 'small' | 'medium' | 'large'
@@ -11,6 +13,7 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   rightIcon?: ReactNode
   fullWidth?: boolean
   loading?: boolean
+  sfx?: SfxKey
 }
 
 export default function Button({
@@ -24,6 +27,8 @@ export default function Button({
   loading = false,
   disabled,
   type = 'button',
+  onClick,
+  sfx = 'buttonClick',
   ...props
 }: ButtonProps) {
   const classes = [
@@ -39,6 +44,10 @@ export default function Button({
     <button
       {...props}
       className={classes}
+      onClick={(event) => {
+        audioManager.playSfx(sfx)
+        onClick?.(event)
+      }}
       type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}

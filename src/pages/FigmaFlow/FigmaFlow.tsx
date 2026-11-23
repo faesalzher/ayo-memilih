@@ -13,6 +13,7 @@ import FlowFooter from '../../components/layout/FlowFooter'
 import { NavigationControls } from '../../components/navigation/NavigationControls'
 import GuideArrowButton from '../../components/navigation/GuideArrowButton'
 import TutorialBubble from '../../components/tutorial/TutorialBubble'
+import { audioManager } from '../../services/audio/AudioManager'
 import './FigmaFlow.css'
 
 type Screen = 'idle' | 'guide' | 'candidates' | 'details'
@@ -33,6 +34,9 @@ const IDLE_TAGLINE = 'SIMULASI EDUKASI PEMILIHAN UMUM'
 const IDLE_TYPE_INTERVAL_MS = 28
 
 function IdleScreen({ onStart }: { onStart: () => void }) {
+  useEffect(() => {
+    audioManager.playBgm('idle')
+  }, [])
   const [typedCount, setTypedCount] = useState(() =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches ? IDLE_TAGLINE.length : 0,
   )
@@ -90,6 +94,7 @@ function GuideStep({ number, label, x, y, barOffset, barWidth }: { number: numbe
 
 function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
   const roadmapPath = 'M240 671.5C218 999.5 765 715.5 783.5 1000.5C783.5 1504.5 228 1015.5 240 1480'
+  const playStepReveal = () => audioManager.playSfx('stepReveal')
   return (
     <ScreenBackground as="section" className="figma-frame guide-frame" aria-label="Yuk, belajar memilih">
       <FigmaAsset file="519df.svg" {...position(0, 0, 1080, 1920)} />
@@ -103,24 +108,24 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
         <g className="guide-roadmap-marker">
           <circle r="24" fill="#f58f20" stroke="white" strokeWidth="7" />
           <circle r="7" fill="white" />
-          <animateMotion path={roadmapPath} begin="0.65s" dur="3.4s" fill="freeze" />
+          <animateMotion path={roadmapPath} begin="0.3s" dur="1.7s" fill="freeze" />
         </g>
       </svg>
       <FlowHeader title="YUK, BELAJAR MEMILIH!" subtitle="Yuk ikut menentukan pemimpin dan masa depan bersama." />
       <FlowFooter />
-      <div className="guide-roadmap-step guide-roadmap-step-one">
+      <div className="guide-roadmap-step guide-roadmap-step-one" onAnimationStart={playStepReveal}>
         <FigmaAsset file="14fbd.svg" {...position(72, 490, 322, 245)} />
         <FigmaAsset file="8733d.png" {...position(114, 485, 239, 229)} />
         <GuideStep number={1} label="KENALI PILIHANMU" x={397} y={544} barOffset={28} barWidth={449} />
       </div>
 
-      <div className="guide-roadmap-step guide-roadmap-step-two">
+      <div className="guide-roadmap-step guide-roadmap-step-two" onAnimationStart={playStepReveal}>
         <FigmaAsset file="85241.svg" {...position(626, 927, 322, 245)} />
         <FigmaAsset file="32d6e.png" {...position(698, 952, 179, 173)} />
         <GuideStep number={2} label="TENTUKAN PILIHAN" x={67} y={1001} barOffset={45} barWidth={476} />
       </div>
 
-      <div className="guide-roadmap-step guide-roadmap-step-three">
+      <div className="guide-roadmap-step guide-roadmap-step-three" onAnimationStart={playStepReveal}>
         <FigmaAsset file="66e75.svg" {...position(113, 1347, 330, 253)} />
         <FigmaAsset file="24a63.png" {...position(192, 1387, 173, 143)} />
         <GuideStep number={3} label="LIHAT HASIL" x={482} y={1401} barOffset={40} barWidth={476} />
@@ -145,6 +150,8 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
   )
 }
 
+const CANDIDATE_CARD_DELAY_MS = 300
+
 function CandidateScreen({
   onBack,
   onSelect,
@@ -162,6 +169,14 @@ function CandidateScreen({
   viewedCandidates: boolean[]
   children?: ReactNode
 }) {
+  useEffect(() => {
+    if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return
+    const timers = FIGMA_CANDIDATES.map((_, index) =>
+      window.setTimeout(() => audioManager.playSfx('stepReveal'), index * CANDIDATE_CARD_DELAY_MS),
+    )
+    return () => timers.forEach((timer) => window.clearTimeout(timer))
+  }, [])
+
   return (
     <ScreenBackground as="section" className="figma-frame candidate-frame" aria-label="Kenali pilihanmu">
       <FlowHeader title="KENALI PILIHANMU" subtitle="Kenali pilihan yang tersedia, lalu pilih satu kandidat." />
@@ -224,7 +239,10 @@ function FigmaFlow({ onStartVoting, initialScreen = 'idle' }: { onStartVoting: (
 
   return (
     <main className="figma-host">
-      {screen === 'idle' && <IdleScreen onStart={() => setScreen('guide')} />}
+      {screen === 'idle' && <IdleScreen onStart={() => {
+        audioManager.playBgm('gameplay')
+        setScreen('guide')
+      }} />}
       {screen === 'guide' && <GuideScreen onBack={() => setScreen('idle')} onNext={() => setScreen('candidates')} />}
       {(screen === 'candidates' || screen === 'details') && (
         <CandidateScreen

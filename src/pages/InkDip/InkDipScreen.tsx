@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import type { CSSProperties, RefObject } from 'react'
+import { audioManager } from '../../services/audio/AudioManager'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import Button from '../../components/common/Button'
 import FlowHeader from '../../components/layout/FlowHeader'
@@ -63,6 +65,11 @@ export default function InkDipScreen({ onComplete }: { onComplete: () => void })
   const { state, offset, handRef, targetRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onKeyDown } = useInkDip()
   const reduceMotion = useReducedMotion()
   const success = state === 'success'
+
+  useEffect(() => {
+    if (state === 'dipping') audioManager.playSfx('liquidDip')
+    if (state === 'success') audioManager.playSfx('resultsReveal')
+  }, [state])
   const dipPhase = state === 'ready' || state === 'dragging' || state === 'dipping'
   const message = state === 'dipping' ? 'Sedikit lagi! Angkat jarimu!' : 'Seret jari kelingkingmu ke dalam tinta!'
 

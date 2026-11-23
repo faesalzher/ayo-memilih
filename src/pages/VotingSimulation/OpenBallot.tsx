@@ -2,6 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { animate, motion, useAnimationControls, useMotionValue, useReducedMotion } from 'framer-motion'
 import gsap from 'gsap'
+import { audioManager } from '../../services/audio/AudioManager'
 const Ballot3D = lazy(() => import('../../components/Ballot3D/Ballot3D'))
 import type { BallotPhase, PunchState, PunchTarget } from '../../components/Ballot3D/ballotTypes'
 import BallotBoxImage from '../../img/ballot-box.png'
@@ -48,6 +49,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const startOpening = useCallback(() => {
     if (transitionLocked.current || phase !== 'folded-cover' || deliveryReady) return
     transitionLocked.current = true
+    audioManager.playSfx('paperUnfold')
     setPhase('opening-outer-fold')
   }, [deliveryReady, phase])
 
@@ -60,6 +62,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const startFlip = useCallback(() => {
     if (transitionLocked.current || phase !== 'outer-open') return
     transitionLocked.current = true
+    audioManager.playSfx('paperRustle')
     setPhase('flipping-inner')
   }, [phase])
 
@@ -72,6 +75,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const startRefold = useCallback(() => {
     if (phase !== 'opened' || punchState !== 'completed' || transitionLocked.current) return
     transitionLocked.current = true
+    audioManager.playSfx('paperFold')
     setPhase('refolding-outer')
   }, [phase, punchState])
 
@@ -174,6 +178,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
     const droppedInSlot = isOverDropSlot(info.point, 10)
     setTargetActive(false)
     if (droppedInSlot) {
+      audioManager.playSfx('ballotInsert')
       setFinaleStage('ballot-inserted')
       const ballotRect = ballotDragRef.current?.getBoundingClientRect()
       const slotRect = dropSlotRef.current?.getBoundingClientRect()
@@ -253,6 +258,9 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
               onReady={markBallotReady}
             />
           </Suspense>
+          {phase === 'folded-cover' && !deliveryReady && <span className="ballot-tap-hint" aria-hidden="true">
+            <svg viewBox="0 0 60 60" preserveAspectRatio="none"><path d="M42 12 L18 30 L42 48" /></svg>
+          </span>}
         </motion.div>
         {deliveryReady && <motion.div
           className={`ballot-drop-scene${boxCentered ? ' ballot-drop-scene-final' : ''}`}
@@ -281,7 +289,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
         {!deposited && <TutorialBubble speaker="angga">{instruction}</TutorialBubble>}
       </section>
       {!deposited && <NavigationControls className="voting-navigation">
-        {onBack && <GuideArrowButton direction="back" className="voting-arrow" aria-label="Kembali ke daftar kandidat" title="Kembali ke daftar kandidat" onClick={onBack} />}
+        {onBack && <GuideArrowButton direction="back" className="voting-arrow" aria-label="Kembali ke daftar kandidat" title="Kembali ke daftar kandidat" disabled={punchState !== 'idle'} onClick={onBack} />}
         <GuideArrowButton
           direction="next"
           className="voting-arrow voting-arrow-next"

@@ -2,6 +2,8 @@ const path = require('node:path')
 const { pathToFileURL } = require('node:url')
 const { app, BrowserWindow, shell, protocol, net } = require('electron')
 
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+
 const devServerUrl = process.env.VITE_DEV_SERVER_URL || 'http://127.0.0.1:5173'
 const distDir = path.join(__dirname, '../dist')
 let mainWindow

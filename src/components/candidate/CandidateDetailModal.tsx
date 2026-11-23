@@ -63,6 +63,7 @@ export default function CandidateDetailModal({
               size="small"
               className={`detail-tab${tab === item ? ' is-active' : ''}`}
               type="button"
+              sfx="cardSelect"
               aria-pressed={tab === item}
               onClick={() => setTab(item)}
             >
@@ -98,6 +99,7 @@ export default function CandidateDetailModal({
         </div>
         <Button
           className="flow-button detail-return"
+          sfx="navigation"
           onClick={onClose}
           leftIcon={<FigmaAsset file="42680.svg" {...position(40, 18, 30, 40)} />}
         >

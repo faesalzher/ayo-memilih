@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import * as THREE from 'three'
 import type { RootState } from '@react-three/fiber'
 import type { BallotPhase, PunchState, PunchTarget } from './ballotTypes'
+import { audioManager } from '../../services/audio/AudioManager'
 import { animatePaperPhase } from './PaperAnimation'
 import type { PaperAnimationRefs } from './PaperAnimation'
 import { createCandidateBallotTextures, createStaticBallotTextures, disposeBallotTextures } from '../BallotDesign/BallotDesign'
@@ -240,6 +241,8 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
       ease: 'power2.in',
     })
     timeline.call(() => {
+      audioManager.playSfx('ballotHit')
+      audioManager.playSfx('ballotPunch')
       gsap.to(paper.position, { z: -0.025, duration: 0.07, yoyo: true, repeat: 1, ease: 'power1.out' })
     })
     timeline.to(pinGroup.position, {
