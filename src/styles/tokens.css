@@ -89,10 +89,3 @@
   --motion-fast: 140ms;
   --motion-normal: 220ms;
 }
-
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --motion-fast: 0.01ms;
-    --motion-normal: 0.01ms;
-  }
-}

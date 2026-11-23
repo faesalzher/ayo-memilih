@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import type { CSSProperties, RefObject } from 'react'
 import { audioManager } from '../../services/audio/AudioManager'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Button from '../../components/common/Button'
 import FlowHeader from '../../components/layout/FlowHeader'
 import FlowFooter from '../../components/layout/FlowFooter'
@@ -63,7 +63,6 @@ function InkBottleDropZone({ targetRef, state }: { targetRef: RefObject<HTMLDivE
 
 export default function InkDipScreen({ onComplete }: { onComplete: () => void }) {
   const { state, offset, handRef, targetRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onKeyDown } = useInkDip()
-  const reduceMotion = useReducedMotion()
   const success = state === 'success'
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export default function InkDipScreen({ onComplete }: { onComplete: () => void })
               key="ink-notice"
               className="ink-notice"
               role="status"
-              initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.85 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >

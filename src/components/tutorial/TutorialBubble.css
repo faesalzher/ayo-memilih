@@ -148,9 +148,3 @@
 .tutorial-bubble--wide {
   width: min(86%, 620px);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .tutorial-bubble-avatar,
-  .tutorial-bubble-avatar.is-talking,
-  .tutorial-bubble-caret.is-typing { animation: none; }
-}

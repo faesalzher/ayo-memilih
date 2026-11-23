@@ -42,7 +42,7 @@
   background: var(--color-cream-warm);
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .idle-frame > .figma-asset[src$='a2f45.png'],
   .idle-frame > .figma-asset[src$='d918e.png'] {
     transform-origin: 50% 95%;
@@ -115,7 +115,7 @@
   text-transform: uppercase;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .idle-tagline {
     opacity: 0;
     animation: idle-fade-in 0.6s ease 0.2s forwards;
@@ -365,7 +365,7 @@
 .guide-roadmap-step { z-index: 1; }
 .guide-roadmap-marker { opacity: 0; }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .guide-roadmap-step {
     animation: guide-stop-appear 0.6s ease-out both;
   }
@@ -492,7 +492,7 @@
   display: contents;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .candidate-visual > :not(.candidate-tap-hint) {
     animation: candidate-fade-in 0.6s ease backwards;
     animation-delay: var(--card-delay, 0s);
@@ -595,7 +595,7 @@
   stroke-linejoin: round;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .candidate-tap-hint { animation: candidate-tap-blink 1.1s ease-in-out infinite; }
 
   .candidate-visual > * {
@@ -964,7 +964,7 @@
   text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .flow-button,
   .detail-tab,
   .guide-arrow,

@@ -53,9 +53,8 @@ export function useInkDip() {
 
   useEffect(() => {
     if (state !== 'lifting' && state !== 'flipping') return
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const next: InkDipState = state === 'lifting' ? 'flipping' : 'success'
-    const duration = reduced ? 50 : state === 'lifting' ? 700 : 750
+    const duration = state === 'lifting' ? 700 : 750
     const timer = window.setTimeout(() => {
       stateRef.current = next
       setState(next)

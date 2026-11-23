@@ -1,6 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
-import { animate, motion, useAnimationControls, useMotionValue, useReducedMotion } from 'framer-motion'
+import { animate, motion, useAnimationControls, useMotionValue } from 'framer-motion'
 import gsap from 'gsap'
 import { audioManager } from '../../services/audio/AudioManager'
 const Ballot3D = lazy(() => import('../../components/Ballot3D/Ballot3D'))
@@ -40,7 +40,6 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const ballotDragRef = useRef<HTMLDivElement>(null)
   const dragControls = useAnimationControls()
   const dragRotation = useMotionValue(0)
-  const reduceMotion = useReducedMotion()
   const deposited = finaleStage !== 'idle'
   const outerOpen = phase === 'outer-open'
   const opened = phase === 'opened'
@@ -96,12 +95,12 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   useEffect(() => {
     let timer: number | undefined
     if (finaleStage === 'ballot-inserted') {
-      timer = window.setTimeout(() => setFinaleStage('centering-box'), reduceMotion ? 50 : 520)
+      timer = window.setTimeout(() => setFinaleStage('centering-box'), 520)
     } else if (finaleStage === 'centering-box') {
-      timer = window.setTimeout(() => setFinaleStage('voting-finished'), reduceMotion ? 50 : 850)
+      timer = window.setTimeout(() => setFinaleStage('voting-finished'), 850)
     }
     return () => { if (timer !== undefined) window.clearTimeout(timer) }
-  }, [finaleStage, reduceMotion])
+  }, [finaleStage])
 
   useEffect(() => {
     if (finaleStage === 'voting-finished' && selectedCandidate) onComplete?.(selectedCandidate)
@@ -188,8 +187,8 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
       const yIntoSlot = ballotRect && slotRect
         ? info.offset.y + slotRect.top + slotRect.height / 2 - ballotRect.top - ballotRect.height / 2
         : info.offset.y
-      animate(dragRotation, 12, { duration: reduceMotion ? 0.01 : 0.3, ease: 'easeIn' })
-      void dragControls.start({ x: xIntoSlot, y: yIntoSlot, scale: 0.12, opacity: 0, transition: { duration: reduceMotion ? 0.01 : 0.34, ease: 'easeIn' } })
+      animate(dragRotation, 12, { duration: 0.3, ease: 'easeIn' })
+      void dragControls.start({ x: xIntoSlot, y: yIntoSlot, scale: 0.12, opacity: 0, transition: { duration: 0.34, ease: 'easeIn' } })
     } else {
       animate(dragRotation, 0, { type: 'spring', stiffness: 260, damping: 24 })
       void dragControls.start({ x: 0, y: 0, scale: 1, opacity: 1, transition: { type: 'spring', stiffness: 330, damping: 25 } })
@@ -267,13 +266,13 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
           layout="position"
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ layout: { type: 'spring', stiffness: 150, damping: 26 }, x: { type: 'spring', stiffness: 120, damping: 24 }, opacity: { duration: reduceMotion ? 0.01 : 0.6, ease: 'easeOut' } }}
+          transition={{ layout: { type: 'spring', stiffness: 150, damping: 26 }, x: { type: 'spring', stiffness: 120, damping: 24 }, opacity: { duration: 0.6, ease: 'easeOut' } }}
         >
           <motion.div
             className={`ballot-box${targetActive ? ' target-active' : ''}${deposited ? ' ballot-box-success' : ''}`}
             layout="position"
             animate={finaleInProgress ? { scale: [1, 1.07, 1], y: [0, -10, 0] } : { scale: boxCentered ? 1.12 : 1, y: 0 }}
-            transition={{ duration: reduceMotion ? 0.01 : finaleInProgress ? 0.48 : 0.65, ease: 'easeInOut' }}
+            transition={{ duration: finaleInProgress ? 0.48 : 0.65, ease: 'easeInOut' }}
           >
             <div ref={dropSlotRef} className="ballot-box-art">
               <img src={BallotBoxImage} alt="Kotak suara KPU simulasi" draggable={false} />

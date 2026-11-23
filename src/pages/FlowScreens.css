@@ -385,7 +385,7 @@
   box-shadow: 0 0 0 0.28cqw var(--candidate-accent), 0 0.93cqw 2.6cqw #e3061329;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .candidate-card:hover {
     transform: translateY(-2.2cqw);
     box-shadow: 0 3.2cqw 4.4cqw #e3061333;
@@ -886,7 +886,7 @@
   text-shadow: none !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .figma-page-results .results-total,
   .figma-page-results .results-chart-card,
   .figma-page-results .results-disclaimer {
@@ -949,7 +949,7 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .figma-primary-button,
   .figma-back-button,
   .candidate-next,
@@ -978,12 +978,5 @@
   .guide-arrow-back:active,
   .guide-arrow-next:active {
     transform: translateY(0.3cqw);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .candidate-card,
-  .figma-primary-button {
-    transition-duration: 0.01ms;
   }
 }

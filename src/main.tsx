@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { MotionConfig } from 'framer-motion'
 import '@fontsource/baloo-2/800.css'
 import '@fontsource/nunito/400.css'
 import '@fontsource/nunito/600.css'
@@ -15,6 +16,8 @@ import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <MotionConfig reducedMotion="never">
+      <App />
+    </MotionConfig>
   </StrictMode>,
 )

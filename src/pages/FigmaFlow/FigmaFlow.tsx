@@ -37,9 +37,7 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
   useEffect(() => {
     audioManager.playBgm('idle')
   }, [])
-  const [typedCount, setTypedCount] = useState(() =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? IDLE_TAGLINE.length : 0,
-  )
+  const [typedCount, setTypedCount] = useState(0)
   const isTyping = typedCount < IDLE_TAGLINE.length
 
   useEffect(() => {
@@ -170,7 +168,6 @@ function CandidateScreen({
   children?: ReactNode
 }) {
   useEffect(() => {
-    if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) return
     const timers = FIGMA_CANDIDATES.map((_, index) =>
       window.setTimeout(() => audioManager.playSfx('stepReveal'), index * CANDIDATE_CARD_DELAY_MS),
     )

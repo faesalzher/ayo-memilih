@@ -23,7 +23,7 @@ export function animatePaperPhase(
   onFoldComplete?: () => void,
 ) {
   const { root, leftTop, rightTop, bottomRow, leftBottom, rightBottom, shadow } = refs
-  const motionScale = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 4 : 1
+  const motionScale = 1
   const setOpenPose = () => {
     gsap.set(root.position, { x: 0, y: 0, z: 0 })
     gsap.set(root.rotation, { x: 0, y: 0, z: 0 })

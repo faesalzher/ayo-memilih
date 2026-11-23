@@ -35,10 +35,6 @@
   50% { filter: drop-shadow(0 0 2.4cqw #f58f20) drop-shadow(0 0 1cqw #ffd54a); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ink-hand:not(.is-dragging):not(.is-inked) { animation: none; }
-}
-
 .ink-hand-image {
   position: absolute;
   inset: 0;
@@ -213,7 +209,7 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
+@media all {
   .ink-hand:not(.is-dragging):not(.is-inked) { animation: ink-part-in 0.6s ease-out backwards, ink-hand-glow 1.6s ease-in-out infinite; }
   .ink-bottle { animation: ink-part-in 0.6s ease-out backwards; }
   .ink-path, .ink-tutorial { animation: ink-fade-in 0.6s ease-out backwards; }
@@ -257,10 +253,4 @@
 @keyframes ink-ripple {
   from { opacity: 0.9; transform: scale(0.7); }
   to { opacity: 0; transform: scale(1.5); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ink-hand:not(.is-dragging), .ink-hand-colored, .ink-bottle { transition: none; }
-  .ink-bottle.is-dipping .ink-ripple { animation: none; opacity: 0.8; }
-  .ink-bottle img, .ink-bottle.is-flipping img { transition: none; }
 }

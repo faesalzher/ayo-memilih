@@ -233,7 +233,6 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
         onPunchComplete?.()
       },
     })
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) timeline.timeScale(4)
     timeline.to(pinGroup.position, {
       y: punchTarget.screenY + 0.34,
       z: 0.18,
