@@ -77,60 +77,69 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
   )
 }
 
-function GuideStep({ number, label, x, y, barOffset, barWidth }: { number: number; label: string; x: number; y: number; barOffset: number; barWidth: number }) {
-  const first = number === 1
-  const barHeight = first ? 90.5 : 87.251
+const GUIDE_STEP_COLOR: Record<number, string> = {
+  1: '#c8102e',
+  2: '#f58f20',
+  3: '#1f7a45',
+}
+
+function GuideMarker({ number, cx, cy }: { number: number; cx: number; cy: number }) {
   return (
-    <div className="guide-step" style={position(x, y, barOffset + barWidth, 105)}>
-      <FigmaAsset file={first ? '50fc6.svg' : number === 2 ? 'f5ffe.svg' : '54939.svg'} {...position(barOffset + 1, 7, barWidth, barHeight)} />
-      <FigmaAsset file={first ? '688e5.svg' : 'b6227.svg'} {...position(barOffset + barWidth * 0.0087, 0, barWidth * 0.982, barHeight)} />
-      <span className="guide-step-label">{label}</span>
-      <FigmaAsset file="747e0.svg" {...position(0, 0, 96, 97)} />
-      <FigmaAsset file="f5b89.svg" {...position(0, 28, 96, 72)} />
-      <FigmaAsset file="ac019.svg" {...position(2, 2, 92, 93)} />
-      <FigmaAsset file="18913.svg" {...position(5, 68, 85, 27)} />
-      <span className="guide-step-number">{number}</span>
+    <svg className="guide-pin" style={position(cx - 55, cy - 55, 110, 140)} viewBox="0 0 110 140" aria-hidden="true">
+      <path d="M55 3C27 3 4 25 4 54c0 36 51 83 51 83s51-47 51-83C106 25 83 3 55 3z" fill={GUIDE_STEP_COLOR[number]} stroke="#fff" strokeWidth="6" />
+      <text x="55" y="74" textAnchor="middle" style={{ fontFamily: 'var(--font-digitalt)', fontSize: 58, fill: '#fff' }}>{number}</text>
+    </svg>
+  )
+}
+
+function GuideStep({ number, label, icon, x, y, width, tilt }: { number: number; label: string; icon: string; x: number; y: number; width: number; tilt: number }) {
+  return (
+    <div className="guide-card" style={{ ...position(x, y, width, 180), transform: `rotate(${tilt}deg)` }}>
+      <span className="guide-card-tape" style={position(width / 2 - 70, -12, 140, 40)} />
+      <div className="guide-tier-copy" style={position(40, 0, width - 200, 180)}>
+        <span className="guide-tier-tag">TAHAP {number}</span>
+        <strong className="guide-tier-title">{label}</strong>
+      </div>
+      <div className="guide-tier-icon" style={position(width - 150, 30, 120, 120)}>
+        <FigmaAsset file={icon} {...position(0, 0, 120, 120)} />
+      </div>
     </div>
   )
 }
 
 function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
-  const roadmapPath = 'M240 671.5C218 999.5 765 715.5 783.5 1000.5C783.5 1504.5 228 1015.5 240 1480'
+  const roadmapPath = 'M161 487C161 720 889 640 889 880C889 1100 161 1100 161 1325'
   const playStepReveal = () => audioManager.playSfx('stepReveal')
   return (
     <ScreenBackground as="section" className="figma-frame guide-frame" aria-label="Yuk, belajar memilih">
       <FigmaAsset file="519df.svg" {...position(0, 0, 1080, 1920)} />
       <svg className="guide-roadmap" viewBox="0 0 1080 1920" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <mask id="guide-roadmap-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1920">
-            <path className="guide-roadmap-mask-path" d={roadmapPath} pathLength="1" fill="none" stroke="white" strokeWidth="110" strokeLinecap="round" />
-          </mask>
-        </defs>
-        <image href="/figma-assets/fccb0.svg" width="1080" height="1920" mask="url(#guide-roadmap-mask)" />
+        <path d={roadmapPath} fill="none" stroke="rgba(60, 30, 0, 0.25)" strokeWidth="14" strokeLinecap="round" strokeDasharray="22 16" transform="translate(0 4)" />
+        <path d={roadmapPath} fill="none" stroke="#fff8ec" strokeWidth="10" strokeLinecap="round" strokeDasharray="22 16" />
         <g className="guide-roadmap-marker">
           <circle r="24" fill="#f58f20" stroke="white" strokeWidth="7" />
           <circle r="7" fill="white" />
           <animateMotion path={roadmapPath} begin="0.3s" dur="1.7s" fill="freeze" />
         </g>
       </svg>
-      <FlowHeader title="YUK, BELAJAR MEMILIH!" subtitle="Yuk ikut menentukan pemimpin dan masa depan bersama." />
+      <FlowHeader title="TAHAPAN MEMILIH" subtitle="Yuk ikut menentukan pemimpin dan masa depan bersama." />
       <FlowFooter />
       <div className="guide-roadmap-step guide-roadmap-step-one" onAnimationStart={playStepReveal}>
-        <FigmaAsset file="14fbd.svg" {...position(72, 490, 322, 245)} />
-        <FigmaAsset file="8733d.png" {...position(114, 485, 239, 229)} />
-        <GuideStep number={1} label="KENALI PILIHANMU" x={397} y={544} barOffset={28} barWidth={449} />
+        <GuideMarker number={1} cx={161} cy={487} />
+        <GuideStep number={1} label="KENALI PILIHANMU" icon="8733d.png" x={315} y={436} width={540} tilt={-2.5} />
       </div>
 
       <div className="guide-roadmap-step guide-roadmap-step-two" onAnimationStart={playStepReveal}>
-        <FigmaAsset file="85241.svg" {...position(626, 927, 322, 245)} />
-        <FigmaAsset file="32d6e.png" {...position(698, 952, 179, 173)} />
-        <GuideStep number={2} label="TENTUKAN PILIHAN" x={67} y={1001} barOffset={45} barWidth={476} />
+        <GuideMarker number={2} cx={889} cy={880} />
+        <GuideStep number={2} label="TENTUKAN PILIHAN" icon="32d6e.png" x={240} y={790} width={540} tilt={1.8} />
       </div>
 
       <div className="guide-roadmap-step guide-roadmap-step-three" onAnimationStart={playStepReveal}>
-        <FigmaAsset file="66e75.svg" {...position(113, 1347, 330, 253)} />
-        <FigmaAsset file="24a63.png" {...position(192, 1387, 173, 143)} />
-        <GuideStep number={3} label="LIHAT HASIL" x={482} y={1401} barOffset={40} barWidth={476} />
+        <GuideMarker number={3} cx={161} cy={1325} />
+        <GuideStep number={3} label="LIHAT HASIL" icon="24a63.png" x={315} y={1235} width={540} tilt={-1} />
+      </div>
+      <div className="guide-tutorial">
+        <TutorialBubble speaker="angga">Klik panah untuk lanjut.</TutorialBubble>
       </div>
       <NavigationControls className="guide-navigation">
         <GuideArrowButton
@@ -180,7 +189,7 @@ function CandidateScreen({
 
   return (
     <ScreenBackground as="section" className="figma-frame candidate-frame" aria-label="Kenali pilihanmu">
-      <FlowHeader title="KENALI PILIHANMU" subtitle="Kenali pilihan yang tersedia, lalu pilih satu kandidat." />
+      <FlowHeader title="KENALI PILIHANMU" />
       <FigmaAsset file="8733d.png" {...position(811, 40, 199, 191)} />
       {FIGMA_CANDIDATES.map((candidate, index) => (
         <CandidateCard

@@ -361,8 +361,8 @@
   pointer-events: none;
 }
 
-.guide-roadmap { z-index: 0; }
-.guide-roadmap-step { z-index: 1; }
+.guide-roadmap { z-index: 2; }
+.guide-roadmap-step { z-index: 3; }
 .guide-roadmap-marker { opacity: 0; }
 
 @media all {
@@ -374,11 +374,6 @@
   .guide-roadmap-step-two { animation-delay: 1.1s; }
   .guide-roadmap-step-three { animation-delay: 2s; }
 
-  .guide-roadmap-mask-path {
-    stroke-dasharray: 1;
-    animation: guide-route-draw 1.7s linear 0.3s both;
-  }
-
   .guide-roadmap-marker {
     animation: guide-marker-visibility 2.2s linear both;
   }
@@ -389,56 +384,108 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes guide-route-draw {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
-
 @keyframes guide-marker-visibility {
   0%, 14% { opacity: 0; }
   16%, 91% { opacity: 1; }
   100% { opacity: 0; }
 }
 
-.guide-step {
+.guide-frame .guide-tutorial {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
+  top: 142.5cqw;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
-.guide-step-label {
+.guide-frame .guide-tutorial .tutorial-bubble {
+  flex-direction: row;
+  align-items: flex-end;
+  width: min(78%, 680px);
+  margin: 0 6cqw 0 auto;
+}
+
+.guide-frame .guide-tutorial .tutorial-bubble-box {
+  flex: 1;
+  margin-top: 0;
+  opacity: 1;
+}
+
+.guide-frame .guide-tutorial .tutorial-bubble-box::before,
+.guide-frame .guide-tutorial .tutorial-bubble-box::after {
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  margin-top: -1.8cqw;
+}
+
+.guide-frame .guide-tutorial .tutorial-bubble-box::before {
+  right: -2.9cqw;
+}
+
+.guide-frame .guide-tutorial .tutorial-bubble-box::after {
+  right: -2.4cqw;
+}
+
+.guide-frame .guide-tutorial .tutorial-bubble-avatar {
+  margin: 0 2cqw 0 0;
+  width: 9cqw;
+  height: 9cqw;
+}
+
+.guide-card {
   position: absolute;
   z-index: 3;
-  top: 0;
-  left: 8.89cqw;
-  right: 0;
-  height: 8.43cqw;
-  display: grid;
-  place-items: center;
-  color: var(--color-white);
+  background: #fcfbf9;
+  border-radius: 1.6cqw;
+  box-shadow: 0 0.8cqw 2cqw rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+}
+
+.guide-card-tape {
+  position: absolute;
+  z-index: 3;
+  background: rgba(245, 200, 120, 0.85);
+  box-shadow: 0 0.2cqw 0.4cqw rgba(0, 0, 0, 0.12);
+  transform: rotate(-2deg);
+}
+
+.guide-pin {
+  position: absolute;
+  z-index: 4;
+  overflow: visible;
+}
+
+.guide-tier-copy {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.guide-tier-tag {
+  display: block;
+  color: #6d6257;
+  font-family: var(--font-label);
+  font-size: 2.6cqw;
+  letter-spacing: 0.15cqw;
+}
+
+.guide-tier-title {
+  display: block;
+  color: #242424;
   font-family: var(--font-digitalt);
-  font-size: 3.7cqw;
+  font-size: 3.8cqw;
   font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.1;
+  line-height: 1.05;
   text-transform: uppercase;
 }
 
-.guide-step-number {
+.guide-tier-icon {
   position: absolute;
-  z-index: 4;
-  top: 0;
-  left: 0;
-  width: 8.8cqw;
-  height: 8.98cqw;
-  display: grid;
-  place-items: center;
-  color: var(--color-white);
-  font-family: var(--font-digitalt);
-  font-size: 5.93cqw;
-  font-weight: 400;
-  line-height: 1;
-  text-align: center;
+  border-radius: 50%;
 }
 
 .guide-arrow {
@@ -619,9 +666,10 @@
 .candidate-frame .candidate-tutorial {
   position: absolute;
   z-index: 4;
-  top: 141cqw;
+  top: 145.6cqw;
   left: 0;
   right: 0;
+  transform: translateY(-50%);
   pointer-events: none;
 }
 

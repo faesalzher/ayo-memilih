@@ -124,6 +124,11 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
       return
     }
 
+    if (phase === 'outer-open') {
+      startFlip()
+      return
+    }
+
     if (phase !== 'opened' || punchState !== 'idle' || transitionLocked.current) return
 
     // Match pointer coordinates to the printed photograph region of the sheet.
@@ -278,7 +283,8 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
               <img src={BallotBoxImage} alt="Kotak suara KPU simulasi" draggable={false} />
               {deliveryReady && !deposited && <div className="ballot-box-hint" aria-hidden="true">
                 <svg viewBox="0 0 24 40" preserveAspectRatio="none">
-                  <path d="M12 0 V30 M4 22 L12 32 L20 22" />
+                  <path className="ballot-box-hint-line" d="M12 0 V30" />
+                  <path d="M4 22 L12 32 L20 22" />
                 </svg>
               </div>}
               <div className="ballot-box-slot-hit" role="img" aria-label="Lubang kotak suara" />
