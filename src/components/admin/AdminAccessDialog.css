@@ -1,0 +1,60 @@
+.admin-panel {
+  padding: var(--space-5) var(--space-4) var(--space-4);
+}
+
+.admin-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--button-height);
+}
+
+.admin-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--type-section-title);
+  color: var(--color-primary-dark);
+  text-align: center;
+}
+
+.admin-dots {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.admin-dot {
+  width: 4cqw;
+  height: 4cqw;
+  border-radius: 50%;
+  border: var(--border-width) solid var(--color-primary-dark);
+}
+
+.admin-dot.is-filled {
+  background: var(--color-primary-dark);
+}
+
+.admin-error {
+  min-height: 1.2em;
+  margin: 0;
+  font-size: var(--type-caption);
+  color: var(--color-primary);
+}
+
+.admin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.admin-key {
+  width: 100%;
+}
+
+.admin-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}

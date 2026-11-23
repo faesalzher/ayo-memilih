@@ -101,13 +101,13 @@
 .idle-tagline {
   position: absolute;
   z-index: 2;
-  top: 64cqw;
+  top: 60cqw;
   left: 0;
   width: 100%;
   margin: 0;
   color: #080808;
   font-family: var(--font-label);
-  font-size: 2.5cqw;
+  font-size: 4cqw;
   font-weight: 400;
   letter-spacing: 0.1cqw;
   text-align: center;
@@ -173,10 +173,10 @@
 .idle-title {
   position: absolute;
   z-index: 2;
-  top: 68.3cqw;
-  left: 33.45cqw;
+  top: 67cqw;
+  left: 26cqw;
   display: block;
-  width: 33.1cqw;
+  width: 48cqw;
   height: auto;
   pointer-events: none;
 }

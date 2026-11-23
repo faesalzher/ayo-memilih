@@ -14,6 +14,7 @@ import { NavigationControls } from '../../components/navigation/NavigationContro
 import GuideArrowButton from '../../components/navigation/GuideArrowButton'
 import TutorialBubble from '../../components/tutorial/TutorialBubble'
 import { audioManager } from '../../services/audio/AudioManager'
+import AdminAccessDialog from '../../components/admin/AdminAccessDialog'
 import './FigmaFlow.css'
 
 type Screen = 'idle' | 'guide' | 'candidates' | 'details'
@@ -38,6 +39,7 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
     audioManager.playBgm('idle')
   }, [])
   const [typedCount, setTypedCount] = useState(0)
+  const [adminOpen, setAdminOpen] = useState(false)
   const isTyping = typedCount < IDLE_TAGLINE.length
 
   useEffect(() => {
@@ -54,6 +56,7 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
       <ScreenHeader
         brandClassName="idle-kpu-header"
         logoClassName="idle-brand-logo"
+        onLogoHold={() => setAdminOpen(true)}
         brandTextClassName="idle-brand-copy"
       />
       <p className="idle-tagline">
@@ -68,6 +71,7 @@ function IdleScreen({ onStart }: { onStart: () => void }) {
         <FigmaAsset file="a2ccf.svg" {...position(39, 10, 53, 53)} />
         <span>MULAI</span>
       </FlatButton>
+      {adminOpen && <AdminAccessDialog onClose={() => setAdminOpen(false)} />}
       <img className="idle-social" src="/idle-assets/sosmed-kpu.png" alt="Media sosial KPU Kota Batu" />
     </ScreenBackground>
   )
