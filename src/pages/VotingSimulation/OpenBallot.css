@@ -98,6 +98,19 @@
   0%, 100% { opacity: 0.25; transform: translateX(0); }
   50% { opacity: 1; transform: translateX(-1.2vw); }
 }
+.ballot-chevrons { position: absolute; z-index: 2; pointer-events: none; }
+.ballot-chevron {
+  position: absolute;
+  top: 112%;
+  width: 8%;
+  transform: translateX(-50%);
+  animation: ballot-chevron-rise 1.2s ease-in-out infinite;
+}
+.ballot-chevron svg { display: block; width: 100%; height: auto; overflow: visible; fill: none; stroke: #ffb11f; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px #ffd45a) drop-shadow(0 0 8px #ffb11fcc); }
+@keyframes ballot-chevron-rise {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.45; }
+  50% { transform: translateX(-50%) translateY(-6px); opacity: 1; }
+}
 .ballot-box-slot-hit {
   position: absolute;
   /* Align to the dark horizontal slot in src/img/ballot-box.png. */
@@ -192,6 +205,17 @@
 .voting-arrow:disabled {
   opacity: 0.45;
   cursor: not-allowed;
+}
+
+@media all {
+  .voting-navigation .voting-arrow-next:not(:disabled) {
+    animation: ballot-next-glow 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes ballot-next-glow {
+  0%, 100% { filter: drop-shadow(0 0 0 #ffb11f00); }
+  50% { filter: drop-shadow(0 0 1.2cqw #ffb11fcc) drop-shadow(0 0 2.4cqw #ffd45a88); }
 }
 
 .ballot-stage {

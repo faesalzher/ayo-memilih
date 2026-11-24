@@ -460,6 +460,7 @@
   font-size: var(--type-section-title);
   font-weight: 800;
   line-height: 1.05;
+  text-shadow: none;
 }
 
 .candidate-card-copy h2 span {
@@ -741,14 +742,14 @@
 
 .results-candidate-label b {
   font-family: var(--font-digitalt);
-  font-size: 1.85cqw;
-  font-weight: 700;
+  font-size: 3cqw;
+  font-weight: 200;
   text-shadow: none;
 }
 
 .results-candidate-label small {
   font-family: var(--font-digitalt);
-  font-size: 1.85cqw;
+  font-size: 4cqw;
   font-weight: 700;
   text-shadow: none;
 }
@@ -756,6 +757,13 @@
 .results-bar-column .results-vote-count {
   font-size: 2cqw;
   line-height: 1;
+}
+
+.results-candidate-photo {
+  width: 12.5cqw;
+  height: 9cqw;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .results-total {

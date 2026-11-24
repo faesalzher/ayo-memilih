@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { CSSProperties } from 'react'
-import type { FigmaCandidate } from '../../config/figmaCandidates'
+import type { Candidate } from '../../data/candidates'
 import Button from '../common/Button'
 import BaseModal from '../modal/BaseModal'
 import FigmaAsset from '../figma/FigmaAsset'
@@ -9,7 +9,7 @@ import { position } from '../../utils/figmaPosition'
 type CandidateTab = 'visi' | 'misi' | 'program'
 
 type CandidateDetailModalProps = {
-  candidate: FigmaCandidate
+  candidate: Candidate
   candidateIndex: number
   onClose: () => void
 }
@@ -21,9 +21,9 @@ export default function CandidateDetailModal({
 }: CandidateDetailModalProps) {
   const [tab, setTab] = useState<CandidateTab>('visi')
   const content = {
-    visi: { title: 'VISI', copy: candidate.vision },
-    misi: { title: 'MISI', copy: candidate.mission },
-    program: { title: 'PROGRAM', copy: '' },
+    visi: { title: 'VISI', copy: candidate.vision, items: null },
+    misi: { title: 'MISI', copy: '', items: candidate.missions },
+    program: { title: 'PROGRAM', copy: '', items: candidate.programs },
   }[tab]
 
   return (
@@ -40,15 +40,15 @@ export default function CandidateDetailModal({
       <div
         className="detail-card-surface"
         style={{
-          '--detail-accent': candidate.theme.accent,
-          '--detail-accent-shadow': candidate.theme.shadow,
-          '--detail-accent-text': candidate.theme.text,
+          '--detail-accent': candidate.palette.accent,
+          '--detail-accent-shadow': candidate.palette.shadow,
+          '--detail-accent-text': candidate.palette.text,
         } as CSSProperties}
       >
         <FigmaAsset file="a34c2.svg" {...position(0, 0, 992, 1567)} />
         <header className="detail-header">
-          <FigmaAsset file="8f11a.png" {...position(48, 43, 222, 203)} />
-          <h2 id="detail-title">{candidate.firstName}<br />DAN {candidate.runningMate}</h2>
+          <img className="figma-asset" src={candidate.campaignImage} alt="" style={{ ...position(48, 43, 222, 203), objectFit: 'contain' }} />
+          <h2 id="detail-title">{candidate.name}<br /> {candidate.viceName}</h2>
           <FigmaAsset file="58484.svg" {...position(785, 119, 106, 125)} />
           <FigmaAsset file="a6607.svg" {...position(785, 119, 106, 121)} />
           <span className="detail-number">{candidate.number}</span>
@@ -73,28 +73,17 @@ export default function CandidateDetailModal({
         </nav>
         <div className="detail-content" aria-live="polite">
           <h3>{content.title}</h3>
-          {tab === 'program' ? (
-            <ol className="detail-program-list" aria-label="Daftar program">
-              {candidate.program.map((program, index) => (
-                <li key={program}>
+          {tab !== 'visi' && content.items ? (
+            <ol className="detail-program-list" aria-label={`Daftar ${content.title.toLowerCase()}`}>
+              {content.items.map((item, index) => (
+                <li key={`${index}-${item}`}>
                   <span className="detail-program-number" aria-hidden="true">{index + 1}</span>
-                  <span>{program}</span>
+                  <span>{item}</span>
                 </li>
               ))}
             </ol>
           ) : (
-            <>
-              <p className="detail-copy">{content.copy}</p>
-              <FigmaAsset file="3799e.svg" {...position(28, 258, 880, 2)} />
-            </>
-          )}
-          {tab === 'visi' && (
-            <>
-              <h4>NILAI UTAMA</h4>
-              <div className="vision-values">
-                {candidate.values.map((value) => <span key={value}>{value}</span>)}
-              </div>
-            </>
+            <p className="detail-copy">{content.copy}</p>
           )}
         </div>
         <Button

@@ -1,8 +1,10 @@
 const STORAGE_KEY = 'ayo-memilih-simulation-votes'
 
+export type VoteTally = Record<string, number>
+
 type StoredVotes = {
   date: string
-  votes: number[]
+  votes: VoteTally
 }
 
 function getTodayKey() {
@@ -12,8 +14,12 @@ function getTodayKey() {
   return `${now.getFullYear()}-${month}-${day}`
 }
 
-export function loadVotes(candidateCount: number): number[] {
-  const empty = Array.from({ length: candidateCount }, () => 0)
+function emptyTally(candidateIds: readonly string[]): VoteTally {
+  return Object.fromEntries(candidateIds.map((id) => [id, 0]))
+}
+
+export function loadVotes(candidateIds: readonly string[]): VoteTally {
+  const empty = emptyTally(candidateIds)
 
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -21,14 +27,17 @@ export function loadVotes(candidateCount: number): number[] {
 
     const stored = JSON.parse(raw) as StoredVotes
     const isToday = stored.date === getTodayKey()
-    const isValid = Array.isArray(stored.votes) && stored.votes.length === candidateCount
-    return isToday && isValid ? stored.votes.map(Number) : empty
+    const isValid = typeof stored.votes === 'object' && stored.votes !== null &&
+      candidateIds.every((id) => typeof stored.votes[id] === 'number')
+    if (!isToday || !isValid) return empty
+
+    return Object.fromEntries(candidateIds.map((id) => [id, Number(stored.votes[id])]))
   } catch {
     return empty
   }
 }
 
-export function saveVotes(votes: number[]) {
+export function saveVotes(votes: VoteTally) {
   const payload: StoredVotes = { date: getTodayKey(), votes }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
 }

@@ -58,7 +58,7 @@
   margin: 0;
   color: var(--color-primary-dark);
   font-family: var(--font-figma-body);
-  font-size: clamp(12px, 2.2cqw, 26px);
+  font-size: clamp(16px, 2.2cqw, 28px);
   font-weight: 700;
   line-height: 1.4;
   text-align: left;

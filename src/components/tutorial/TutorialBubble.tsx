@@ -11,7 +11,7 @@ const SPEAKERS: Record<TutorialSpeaker, { name: string; avatar: string }> = {
 }
 
 const TYPING_INTERVAL_MS = 28
-const COLLAPSE_DELAY_MS = 7000
+const COLLAPSE_DELAY_MS = 60000
 
 function TypingText({ text, onTypingChange }: { text: string; onTypingChange: (typing: boolean) => void }) {
   const [count, setCount] = useState(0)

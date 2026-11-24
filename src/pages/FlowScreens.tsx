@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import type { SimulationCandidate } from '../config/candidates'
+import type { Candidate } from '../data/candidates'
+import type { VoteTally } from '../utils/voteStorage'
 import { audioManager } from '../services/audio/AudioManager'
 import Button from '../components/common/Button'
 import Card from '../components/common/Card'
@@ -18,16 +19,17 @@ export function ResultsScreen({
   votes,
   onReturnHome,
 }: {
-  candidates: SimulationCandidate[]
-  votes: number[]
+  candidates: Candidate[]
+  votes: VoteTally
   onReturnHome: () => void
 }) {
   useEffect(() => {
     audioManager.playSfx('success')
   }, [])
 
-  const totalVotes = votes.reduce((sum, count) => sum + count, 0)
-  const maxVotes = Math.max(...votes, 1)
+  const voteValues = candidates.map((candidate) => votes[candidate.id] ?? 0)
+  const totalVotes = voteValues.reduce((sum, count) => sum + count, 0)
+  const maxVotes = Math.max(...voteValues, 1)
 
   return (
     <main className="figma-screen-host">
@@ -45,15 +47,16 @@ export function ResultsScreen({
           <header><h2>Grafik Hasil</h2><p>Lihat siapa yang paling banyak dapat suara di simulasi ini.</p></header>
           <div className="results-bars">
             {candidates.map((candidate, index) => {
-              const voteCount = votes[index] ?? 0
+              const voteCount = votes[candidate.id] ?? 0
               const percentage = totalVotes === 0 ? 0 : Math.round((voteCount / totalVotes) * 100)
-              const height = Math.max(14, (voteCount / maxVotes) * 300)
+              const height = Math.max(14, (voteCount / maxVotes) * 240)
               return (
-                <article className="results-bar-column" key={candidate.number}>
+                <article className="results-bar-column" key={candidate.id}>
                   <strong>{percentage}%</strong>
                   <span className="results-vote-count">{voteCount} suara</span>
                   <div className="results-bar" style={{ height: `${height / 10.8}cqw`, backgroundColor: ['#c0392b', '#f0a500', '#2e86c1'][index] }} />
-                  <span className="results-candidate-label"><b>{candidate.name}</b><small>{candidate.runningMate}</small></span>
+                  <img className="results-candidate-photo" src={candidate.campaignImage} alt={candidate.name} />
+                  <span className="results-candidate-label"><b>{candidate.name}</b><b>{candidate.viceName}</b></span>
                 </article>
               )
             })}

@@ -6,7 +6,7 @@
   --figma-ink: var(--color-neutral-ink);
   --figma-heading-font: var(--font-heading);
   --figma-heading-size: 5.1cqw;
-  --figma-card-name-size: 2.7cqw;
+  --figma-card-name-size: 3.3cqw;
   --figma-candidate-number-size: 8.6cqw;
 }
 
@@ -524,6 +524,17 @@
   height: 13.42cqw;
 }
 
+@media all {
+  .guide-arrow-next:not(:disabled) {
+    animation: guide-next-glow 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes guide-next-glow {
+  0%, 100% { filter: drop-shadow(0 0 0 #ffb11f00); }
+  50% { filter: drop-shadow(0 0 1.2cqw #ffb11fcc) drop-shadow(0 0 2.4cqw #ffd45a88); }
+}
+
 .candidate-frame > .flow-header,
 .candidate-frame > .flow-brand,
 .candidate-frame > .flow-title,
@@ -578,6 +589,7 @@
   letter-spacing: 0;
   line-height: 1.5;
   text-transform: uppercase;
+  text-shadow: none;
   pointer-events: none;
 }
 
@@ -767,7 +779,7 @@
   margin: 0;
   color: var(--detail-accent-text);
   font-family: var(--font-display);
-  font-size: 4.07cqw;
+  font-size: 4.5cqw;
   line-height: 1.18;
   text-shadow: none;
 }
@@ -824,6 +836,7 @@
   font-family: var(--font-figma-body);
   font-size: 2.31cqw;
   font-weight: 600;
+  text-shadow: none;
   text-align: center;
 }
 
@@ -895,18 +908,15 @@
   left: 2.4cqw;
   display: flex;
   width: 81.85cqw;
-  min-height: 12.22cqw;
   align-items: center;
   margin: 0;
   padding: 2.5cqw 4.35cqw;
   border-radius: 4.63cqw;
-  color: var(--color-neutral-ink);
+  color: var(--color-text-secondary);
   background: var(--color-cream-soft);
-  font-family: var(--font-digitalt);
-  font-size: 2.78cqw;
+  font-family: var(--font-figma-body);
+  font-size: 3.6cqw;
   font-weight: 600;
-  line-height: 1.25;
-  text-shadow: none;
 }
 
 .detail-content > .figma-asset {
@@ -929,11 +939,11 @@
   align-items: center;
   gap: 2.5cqw;
   min-height: 15cqw;
-  padding: 2cqw 0;
-  border-bottom: 0.2cqw dotted var(--color-border-soft);
-  color: var(--color-neutral-ink);
+  padding: 2.4cqw 0;
+  border-bottom: 0.3cqw dotted var(--color-border-soft);
+  color: var(--color-text-secondary);
   font-family: var(--font-figma-body);
-  font-size: 2.78cqw;
+  font-size: 4cqw;
   font-weight: 600;
   line-height: 1.35;
 }
@@ -949,8 +959,9 @@
   color: var(--detail-accent-text);
   background: var(--detail-accent);
   box-shadow: 0 0.45cqw 0 var(--detail-accent-shadow);
-  font-family: var(--font-display);
+  font-family: var(--font-figma-body);
   font-size: 4cqw;
+  font-weight: 800;
   line-height: 1;
 }
 

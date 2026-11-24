@@ -24,9 +24,9 @@
  <path d="M256 457v130" stroke="rgba(83,76,68,.38)"
         stroke-width="1" />
  <g text-anchor="middle" font-family="Arial,sans-serif">
-       <text x="139" y="475" font-size="12" font-weight="700" fill="#625c54">CALON WALIKOTA</text>
-       <text x="373" y="475" font-size="12" font-weight="700" fill="#625c54">CALON WAKIL WALIKOTA</text>
-       <text x="139" font-size="22" font-weight="800" dominant-baseline="central" fill="#262626">{{NAME_LINES}}</text>
-       <text x="373" font-size="22" font-weight="800" dominant-baseline="central" fill="#262626">{{MATE_LINES}}</text>
+       <text x="139" y="475" font-size="18" font-weight="700" fill="#625c54">CALON WALIKOTA</text>
+       <text x="373" y="475" font-size="18" font-weight="700" fill="#625c54">CALON WAKIL WALIKOTA</text>
+       <text x="139" font-size="28" font-weight="800" dominant-baseline="central" fill="#262626">{{NAME_LINES}}</text>
+       <text x="373" font-size="28" font-weight="800" dominant-baseline="central" fill="#262626">{{MATE_LINES}}</text>
     </g>
 </svg>

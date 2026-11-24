@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { FIGMA_CANDIDATES } from '../../config/figmaCandidates'
+import { CANDIDATES } from '../../data/candidates'
 import Button from '../../components/common/Button'
 import CandidateCard from '../../components/candidate/CandidateCard'
 import CandidateDetailModal from '../../components/candidate/CandidateDetailModal'
@@ -122,7 +122,7 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
           <animateMotion path={roadmapPath} begin="0.3s" dur="1.7s" fill="freeze" />
         </g>
       </svg>
-      <FlowHeader title="TAHAPAN MEMILIH" subtitle="Yuk ikut menentukan pemimpin dan masa depan bersama." />
+      <FlowHeader title="TAHAPAN MEMILIH" subtitle="Yuk ikut menentukan pemimpin dan masa depan RPP Jatim Park bersama." />
       <FlowFooter />
       <div className="guide-roadmap-step guide-roadmap-step-one" onAnimationStart={playStepReveal}>
         <GuideMarker number={1} cx={161} cy={487} />
@@ -139,7 +139,7 @@ function GuideScreen({ onBack, onNext }: { onBack: () => void; onNext: () => voi
         <GuideStep number={3} label="LIHAT HASIL" icon="24a63.png" x={315} y={1235} width={540} tilt={-1} />
       </div>
       <div className="guide-tutorial">
-        <TutorialBubble speaker="angga">Klik panah untuk lanjut.</TutorialBubble>
+        <TutorialBubble speaker="angga">Kali ini kamu akan memilih Wali Kota dan Wakil Walikota yang akan menjadi pemimpin dan membawa ide-ide baik untuk lingkungan RPP Jatim Park. Tekan panah   untuk lanjut</TutorialBubble>
       </div>
       <NavigationControls className="guide-navigation">
         <GuideArrowButton
@@ -181,7 +181,7 @@ function CandidateScreen({
   children?: ReactNode
 }) {
   useEffect(() => {
-    const timers = FIGMA_CANDIDATES.map((_, index) =>
+    const timers = CANDIDATES.map((_, index) =>
       window.setTimeout(() => audioManager.playSfx('stepReveal'), index * CANDIDATE_CARD_DELAY_MS),
     )
     return () => timers.forEach((timer) => window.clearTimeout(timer))
@@ -189,11 +189,11 @@ function CandidateScreen({
 
   return (
     <ScreenBackground as="section" className="figma-frame candidate-frame" aria-label="Kenali pilihanmu">
-      <FlowHeader title="KENALI PILIHANMU" />
+      <FlowHeader title="KENALI PILIHANMU" subtitle="Yuk kenali kandidat yang sesuai dengan visi misi" />
       <FigmaAsset file="8733d.png" {...position(811, 40, 199, 191)} />
-      {FIGMA_CANDIDATES.map((candidate, index) => (
+      {CANDIDATES.map((candidate, index) => (
         <CandidateCard
-          key={candidate.number}
+          key={candidate.id}
           variant="figma"
           candidate={candidate}
           index={index}
@@ -205,8 +205,8 @@ function CandidateScreen({
         <div className="candidate-tutorial">
           <TutorialBubble speaker="angga">
             {canContinue
-              ? 'Klik panah untuk memilih kandidat.'
-              : 'Sentuh ketiga kartu kandidat untuk mengenal visi dan misinya sebelum lanjut.'}
+              ? 'Klik panah untuk memilih kandidat dan masuk bilik surat suara'
+              : 'Sentuh ketiga kartu kandidat untuk mengenal VISI dan MISI '}
           </TutorialBubble>
         </div>
       )}
@@ -236,7 +236,7 @@ function CandidateScreen({
 function FigmaFlow({ onStartVoting, initialScreen = 'idle' }: { onStartVoting: () => void; initialScreen?: 'idle' | 'candidates' }) {
   const [screen, setScreen] = useState<Screen>(initialScreen)
   const [selectedCandidate, setSelectedCandidate] = useState(0)
-  const [viewedCandidates, setViewedCandidates] = useState<boolean[]>(() => FIGMA_CANDIDATES.map(() => false))
+  const [viewedCandidates, setViewedCandidates] = useState<boolean[]>(() => CANDIDATES.map(() => false))
 
   useEffect(() => {
     if (screen !== 'details') return
@@ -269,7 +269,7 @@ function FigmaFlow({ onStartVoting, initialScreen = 'idle' }: { onStartVoting: (
         >
           {screen === 'details' && (
             <CandidateDetailModal
-              candidate={FIGMA_CANDIDATES[selectedCandidate]}
+              candidate={CANDIDATES[selectedCandidate]}
               candidateIndex={selectedCandidate}
               onClose={() => setScreen('candidates')}
             />

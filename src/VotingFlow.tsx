@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import OpenBallot from './pages/VotingSimulation/OpenBallot'
 import InkDipScreen from './pages/InkDip/InkDipScreen'
-import { SIMULATION_CANDIDATES } from './config/candidates'
+import { CANDIDATES } from './data/candidates'
 import { ResultsScreen } from './pages/FlowScreens'
 import { loadVotes, saveVotes } from './utils/voteStorage'
+import type { VoteTally } from './utils/voteStorage'
 
 const RESULTS_AUTO_RETURN_MS = 60_000
+const CANDIDATE_IDS = CANDIDATES.map((candidate) => candidate.id)
 
 type VotingFlowProps = {
   onBackFromBallot: () => void
@@ -14,7 +16,7 @@ type VotingFlowProps = {
 
 export default function VotingFlow({ onBackFromBallot, onReturnHome }: VotingFlowProps) {
   const [screen, setScreen] = useState<'ballot' | 'ink' | 'results'>('ballot')
-  const [votes, setVotes] = useState(() => loadVotes(SIMULATION_CANDIDATES.length))
+  const [votes, setVotes] = useState<VoteTally>(() => loadVotes(CANDIDATE_IDS))
 
   useEffect(() => {
     saveVotes(votes)
@@ -29,9 +31,10 @@ export default function VotingFlow({ onBackFromBallot, onReturnHome }: VotingFlo
   if (screen === 'ballot') {
     return <OpenBallot
       onBack={onBackFromBallot}
-      onComplete={(candidateNumber) => {
-        const index = SIMULATION_CANDIDATES.findIndex((candidate) => candidate.number === candidateNumber)
-        if (index >= 0) setVotes((current) => current.map((count, candidateIndex) => count + Number(index === candidateIndex)))
+      onComplete={(candidateId) => {
+        if (CANDIDATE_IDS.includes(candidateId)) {
+          setVotes((current) => ({ ...current, [candidateId]: (current[candidateId] ?? 0) + 1 }))
+        }
         setScreen('ink')
       }}
     />
@@ -39,5 +42,5 @@ export default function VotingFlow({ onBackFromBallot, onReturnHome }: VotingFlo
 
   if (screen === 'ink') return <InkDipScreen onComplete={() => setScreen('results')} />
 
-  return <ResultsScreen candidates={SIMULATION_CANDIDATES} votes={votes} onReturnHome={onReturnHome} />
+  return <ResultsScreen candidates={CANDIDATES} votes={votes} onReturnHome={onReturnHome} />
 }

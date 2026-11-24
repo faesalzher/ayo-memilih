@@ -1,11 +1,12 @@
 import * as THREE from 'three'
-import { SIMULATION_CANDIDATES } from '../../config/candidates'
-import type { SimulationCandidate } from '../../config/candidates'
+import { CANDIDATES } from '../../data/candidates'
+import type { Candidate } from '../../data/candidates'
 import { canvasToTexture, disposeTextures, rasterizeSvg, svgToTexture } from './svgTexture'
 import type { RasterizedSvg } from './svgTexture'
 import ayoLogoSvg from './assets/AyoMemilihLogo.svg?raw'
 import ballotCoverSvg from './assets/BallotCover.svg?raw'
 import candidateColumnSvg from './assets/CandidateColumn.svg?raw'
+import ballotCandidateBackground from '../../assets/candidates/bg-ballot-candidate.png'
 import innerHeaderSvg from './assets/InnerHeader.svg?raw'
 import outerCoverSvg from './assets/OuterCover.svg?raw'
 import outerInformationSvg from './assets/OuterInformation.svg?raw'
@@ -131,40 +132,28 @@ async function photoAsDataUri(photo: string | null) {
   return photoData
 }
 
-function placeholderPortrait(candidate: SimulationCandidate) {
-  return `<g>
-    <path d="M22 296h468v96H22z" fill="#c92724" opacity=".28"/>
-    <path d="M60 392c4-91 39-141 108-141s104 50 108 141" fill="${escapeXml(candidate.shirt)}"/>
-    <circle cx="168" cy="225" r="61" fill="${escapeXml(candidate.skin)}"/>
-    <path d="M107 215c3-60 113-73 122 3-25-19-72-17-122-3" fill="#392a2a"/>
-    <circle cx="344" cy="225" r="61" fill="${escapeXml(candidate.runningMateSkin)}"/>
-    <path d="M283 215c3-60 113-73 122 3-25-19-72-17-122-3" fill="#392a2a"/>
-    <path d="M236 392c4-91 39-141 108-141s104 50 108 141" fill="${escapeXml(candidate.runningMateShirt)}"/>
-    <path d="M141 232h54M317 232h54" stroke="#342a2a" stroke-width="7" stroke-linecap="round"/>
-    <path d="M151 260q17 14 34 0M327 260q17 14 34 0" fill="none" stroke="#8b4b4a" stroke-width="5" stroke-linecap="round"/>
-  </g>`
-}
-
-function candidateSvg(candidate: SimulationCandidate, photo: string) {
-  const photoMarkup = photo ? `<image href="${photo}" x="22" y="94" width="468" height="298" preserveAspectRatio="xMidYMid slice" clip-path="url(#photo-clip)"/>` : ''
+function candidateSvg(candidate: Candidate, photo: string, background: string) {
+  const backgroundMarkup = background ? `<image href="${background}" x="22" y="94" width="468" height="298" preserveAspectRatio="xMidYMid slice" clip-path="url(#photo-clip)"/>` : ''
+  const photoMarkup = photo ? `<image href="${photo}" x="22" y="94" width="468" height="298" preserveAspectRatio="xMidYMid meet" clip-path="url(#photo-clip)"/>` : ''
   const source = candidateColumnSvg
-    .replace('{{NUMBER}}', escapeXml(candidate.number))
-    .replace('{{ACCENT}}', escapeXml(candidate.accent))
-    .replace('{{PHOTO}}', photoMarkup)
-    .replace('{{PLACEHOLDER}}', photo ? '' : placeholderPortrait(candidate))
+    .replace('{{NUMBER}}', escapeXml(String(candidate.number).padStart(2, '0')))
+    .replace('{{ACCENT}}', escapeXml(candidate.accentColor))
+    .replace('{{PHOTO}}', backgroundMarkup + photoMarkup)
+    .replace('{{PLACEHOLDER}}', '')
     .replace('{{NAME_LINES}}', textLines(candidate.name.toUpperCase(), 139))
-    .replace('{{MATE_LINES}}', textLines(candidate.runningMate.toUpperCase(), 373))
+    .replace('{{MATE_LINES}}', textLines(candidate.viceName.toUpperCase(), 373))
   return source
 }
 
-export async function createCandidateBallotTextures(candidateIndexes = SIMULATION_CANDIDATES.map((_candidate, index) => index)): Promise<BallotTextures> {
-  const validIndexes = candidateIndexes.filter((index) => index >= 0 && index < SIMULATION_CANDIDATES.length)
+export async function createCandidateBallotTextures(candidateIndexes = CANDIDATES.map((_candidate, index) => index)): Promise<BallotTextures> {
+  const validIndexes = candidateIndexes.filter((index) => index >= 0 && index < CANDIDATES.length)
   const entries = await Promise.all(validIndexes.map(async (index) => {
-    const candidate = SIMULATION_CANDIDATES[index]
+    const candidate = CANDIDATES[index]
     if (!candidate) return null
     const key = (`candidate-${String(index + 1).padStart(2, '0')}`) as PanelKind
-    const photo = await photoAsDataUri(candidate.photo)
-    return [key, await svgToTexture(candidateSvg(candidate, photo), 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE)] as const
+    const photo = await photoAsDataUri(candidate.ballotImage)
+    const background = await photoAsDataUri(ballotCandidateBackground)
+    return [key, await svgToTexture(candidateSvg(candidate, photo, background), 512 * TEXTURE_SCALE, 640 * TEXTURE_SCALE)] as const
   }))
   return Object.fromEntries(entries.filter((entry) => entry !== null)) as BallotTextures
 }

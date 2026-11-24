@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { PointerEvent } from 'react'
 import { animate, motion, useAnimationControls, useMotionValue } from 'framer-motion'
 import gsap from 'gsap'
@@ -6,7 +6,7 @@ import { audioManager } from '../../services/audio/AudioManager'
 const Ballot3D = lazy(() => import('../../components/Ballot3D/Ballot3D'))
 import type { BallotPhase, PunchState, PunchTarget } from '../../components/Ballot3D/ballotTypes'
 import BallotBoxImage from '../../img/ballot-box.png'
-import { SIMULATION_CANDIDATES } from '../../config/candidates'
+import { CANDIDATES } from '../../data/candidates'
 import ScreenBackground from '../../components/layout/ScreenBackground'
 import FlowHeader from '../../components/layout/FlowHeader'
 import FigmaAsset from '../../components/figma/FigmaAsset'
@@ -20,8 +20,22 @@ import './OpenBallot.css'
 const PANEL_WIDTH = 1.68
 type FinaleStage = 'idle' | 'ballot-inserted' | 'centering-box' | 'voting-finished'
 
+// Maps the printed sheet onto a wrapper of the given pixel size (fractions of width/height).
+function getSheetLayout(width: number, height: number) {
+  const zoom = Math.min(width / 5.45, height / 4.45)
+  const sheetWidth = 5.04 * zoom / width
+  const sheetHeight = 4 * zoom / height
+  const sheetLeft = (1 - sheetWidth) / 2
+  const sheetTop = (1 - sheetHeight) / 2
+  const photoTop = sheetTop + 2.294 * zoom / height
+  const photoBottom = sheetTop + 3.225 * zoom / height
+  return { sheetLeft, sheetTop, sheetWidth, sheetHeight, photoTop, photoHeight: photoBottom - photoTop }
+}
+
+type SheetLayout = ReturnType<typeof getSheetLayout>
+
 type OpenBallotProps = {
-  onComplete?: (candidateNumber: string) => void
+  onComplete?: (candidateId: string) => void
   onBack?: () => void
 }
 
@@ -34,6 +48,7 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const [finaleStage, setFinaleStage] = useState<FinaleStage>('idle')
   const [targetActive, setTargetActive] = useState(false)
   const [ballotReady, setBallotReady] = useState(false)
+  const [sheetLayout, setSheetLayout] = useState<SheetLayout | null>(null)
   const markBallotReady = useCallback(() => setBallotReady(true), [])
   const transitionLocked = useRef(false)
   const dropSlotRef = useRef<HTMLDivElement>(null)
@@ -112,6 +127,18 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
     requestAnimationFrame(() => setPunchState('completed'))
   }, [])
 
+  useLayoutEffect(() => {
+    const element = ballotDragRef.current
+    if (!element) return
+    const updateLayout = () => {
+      const rect = element.getBoundingClientRect()
+      if (rect.width > 0 && rect.height > 0) setSheetLayout(getSheetLayout(rect.width, rect.height))
+    }
+    updateLayout()
+    window.addEventListener('resize', updateLayout)
+    return () => window.removeEventListener('resize', updateLayout)
+  }, [phase, deliveryReady])
+
   const handlePaperTouch = (event: PointerEvent<HTMLDivElement>) => {
     if (deliveryReady) return
     const bounds = event.currentTarget.getBoundingClientRect()
@@ -132,34 +159,33 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
     if (phase !== 'opened' || punchState !== 'idle' || transitionLocked.current) return
 
     // Match pointer coordinates to the printed photograph region of the sheet.
-    const zoom = Math.min(bounds.width / 5.45, bounds.height / 4.45)
-    const sheetWidth = 5.04 * zoom / bounds.width
-    const sheetHeight = 4 * zoom / bounds.height
-    const sheetLeft = (1 - sheetWidth) / 2
-    const sheetTop = (1 - sheetHeight) / 2
-    const photoTop = sheetTop + 2.294 * zoom / bounds.height
-    const photoBottom = sheetTop + 3.225 * zoom / bounds.height
-    if (y < photoTop || y > photoBottom || x < sheetLeft || x > sheetLeft + sheetWidth) return
+    const { sheetLeft, sheetWidth, photoTop, photoHeight } = getSheetLayout(bounds.width, bounds.height)
+    // Candidate column frame in the 512x640 column SVG: y 15-625, x 18-494. Photo spans y 94-392.
+    const frameTop = photoTop + (15 - 94) / 298 * photoHeight
+    const frameBottom = photoTop + (625 - 94) / 298 * photoHeight
+    if (y < frameTop || y > frameBottom || x < sheetLeft || x > sheetLeft + sheetWidth) return
 
     const columnWidth = sheetWidth / 3
     const column = Math.floor((x - sheetLeft) / columnWidth)
-    const candidate = SIMULATION_CANDIDATES[column]
+    const candidate = CANDIDATES[column]
     if (!candidate || column < 0 || column > 2) return
 
     const columnX = x - (sheetLeft + column * columnWidth)
+    const frameLeft = 18 / 512 * columnWidth
+    const frameRight = 494 / 512 * columnWidth
+    if (columnX < frameLeft || columnX > frameRight) return
+
     const imageLeft = 22 / 512 * columnWidth
     const imageWidth = 468 / 512 * columnWidth
-    if (columnX < imageLeft || columnX > imageLeft + imageWidth) return
-
     const imageX = (columnX - imageLeft) / imageWidth
-    const imageY = (y - photoTop) / (photoBottom - photoTop)
+    const imageY = (y - photoTop) / photoHeight
     const target: PunchTarget = {
       screenX: (column - 1) * PANEL_WIDTH + (imageX - 0.5) * PANEL_WIDTH,
       screenY: -0.294 - imageY * 0.931,
     }
 
     transitionLocked.current = true
-    setSelectedCandidate(candidate.number)
+    setSelectedCandidate(candidate.id)
     setPunchTarget(target)
     setPunchState('candidate-selected')
   }
@@ -200,21 +226,21 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
     }
   }
 
-  const selectedCandidateData = SIMULATION_CANDIDATES.find((candidate) => candidate.number === selectedCandidate)
+  const selectedCandidateData = CANDIDATES.find((candidate) => candidate.id === selectedCandidate)
   const instruction = deliveryReady
     ? 'Sentuh dan geser surat suara menuju lubang bagian atas kotak suara.'
     : folding
       ? 'Surat suara sedang dilipat kembali.'
       : opened
         ? punchState === 'completed'
-          ? `Coblosan berhasil! Pilihanmu: ${selectedCandidateData?.name} ${selectedCandidateData?.runningMate}. Tekan panah kanan untuk melipat kembali surat suara.`
+          ? `Coblosan berhasil! Pilihanmu: ${selectedCandidateData?.name} ${selectedCandidateData?.viceName}. Tekan panah kanan untuk melipat kembali surat suara.`
           : punchState === 'punching'
             ? 'Paku sedang mencoblos pilihanmu...'
             : punchState === 'candidate-selected'
               ? 'Pilihan terkunci. Paku bersiap mencoblos...'
-              : 'Sentuh langsung gambar pasangan calon untuk mencoblos.'
+              : 'Coblos di dalam kolom pasangan calon (nomor, gambar, atau nama) untuk memilih.'
         : outerOpen
-          ? 'Lipatan terbuka. Tekan panah kanan untuk melihat sisi dalam surat suara.'
+          ? 'Lipatan terbuka. Sentuh surat suara untuk melihat sisi dalamnya.'
           : phase === 'flipping-inner'
             ? 'Membalik surat suara...'
             : phase === 'opening-outer-fold'
@@ -265,6 +291,24 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
           {phase === 'folded-cover' && !deliveryReady && <span className="ballot-tap-hint" aria-hidden="true">
             <svg viewBox="0 0 60 60" preserveAspectRatio="none"><path d="M42 12 L18 30 L42 48" /></svg>
           </span>}
+          {((opened && punchState === 'idle' && !deliveryReady) || outerOpen) && sheetLayout && <div
+            className="ballot-chevrons"
+            aria-hidden="true"
+            style={{
+              left: `${sheetLayout.sheetLeft * 100}%`,
+              top: `${sheetLayout.sheetTop * 100}%`,
+              width: `${sheetLayout.sheetWidth * 100}%`,
+              height: `${sheetLayout.sheetHeight * 100}%`,
+            }}
+          >
+            {(outerOpen ? [0.5] : CANDIDATES.map((_, index) => (index + 0.5) / CANDIDATES.length)).map((x, index) => <span
+              key={index}
+              className="ballot-chevron"
+              style={{ left: `${x * 100}%`, animationDelay: `${index * 0.2}s` }}
+            >
+              <svg viewBox="0 0 24 14"><path d="M3 11 L12 3 L21 11" /></svg>
+            </span>)}
+          </div>}
         </motion.div>
         {deliveryReady && <motion.div
           className={`ballot-drop-scene${boxCentered ? ' ballot-drop-scene-final' : ''}`}
@@ -298,10 +342,10 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
         <GuideArrowButton
           direction="next"
           className="voting-arrow voting-arrow-next"
-          aria-label={outerOpen ? 'Lihat sisi dalam surat suara' : 'Lipat surat suara'}
-          title={outerOpen ? 'Lihat sisi dalam surat suara' : 'Lipat surat suara'}
-          disabled={!outerOpen && !(opened && punchState === 'completed' && !deliveryReady)}
-          onClick={outerOpen ? startFlip : startRefold}
+          aria-label="Lipat surat suara"
+          title="Lipat surat suara"
+          disabled={!(opened && punchState === 'completed' && !deliveryReady)}
+          onClick={startRefold}
         />
       </NavigationControls>}
     </div>

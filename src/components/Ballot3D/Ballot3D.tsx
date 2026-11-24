@@ -9,7 +9,7 @@ import { animatePaperPhase } from './PaperAnimation'
 import type { PaperAnimationRefs } from './PaperAnimation'
 import { createCandidateBallotTextures, createStaticBallotTextures, disposeBallotTextures } from '../BallotDesign/BallotDesign'
 import type { BallotTextures, PanelKind } from '../BallotDesign/BallotDesign'
-import { SIMULATION_CANDIDATES } from '../../config/candidates'
+import { CANDIDATES } from '../../data/candidates'
 import './Ballot3D.css'
 
 type Props = {
@@ -277,10 +277,10 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
     : 'cover-folded'
 
   const panel = (kind: PanelKind, backKind: PanelKind, position: [number, number, number], corner?: number, edges: readonly ('left' | 'right' | 'top' | 'bottom')[] = []) => {
-    const candidateNumber = backKind.startsWith('candidate-')
-      ? SIMULATION_CANDIDATES[Number(backKind.slice(-2)) - 1]?.number
+    const candidateId = backKind.startsWith('candidate-')
+      ? CANDIDATES[Number(backKind.slice(-2)) - 1]?.id
       : undefined
-    const dimCandidate = Boolean(selectedCandidate && candidateNumber && candidateNumber !== selectedCandidate)
+    const dimCandidate = Boolean(selectedCandidate && candidateId && candidateId !== selectedCandidate)
     const geometry = kind === 'cover-folded' ? paperGeometries.folded : corner === undefined ? undefined : paperGeometries.corners[corner]
     const backGeometry = kind === 'cover-folded' ? paperGeometries.folded : corner === undefined ? undefined : paperGeometries.corners[[1, 0, 3, 2][corner]]
     return <group position={position}>
@@ -304,7 +304,7 @@ function PaperRig({ phase, selectedCandidate, punchTarget, onOpenComplete, onFli
   </group>
   }
 
-  const chosenIndex = selectedCandidate ? SIMULATION_CANDIDATES.findIndex((candidate) => candidate.number === selectedCandidate) : -1
+  const chosenIndex = selectedCandidate ? CANDIDATES.findIndex((candidate) => candidate.id === selectedCandidate) : -1
   const holeX = punchTarget ? -punchTarget.screenX : 0
   const holeZ = -PAPER_THICKNESS / 2 - 0.006
 
