@@ -9,6 +9,7 @@ import ScreenBackground from '../../components/layout/ScreenBackground'
 import TutorialBubble from '../../components/tutorial/TutorialBubble'
 import { useInkDip } from './useInkDip'
 import type { InkDipState } from './useInkDip'
+import { useCriticalAnimation } from '../../session/criticalAnimation'
 import './InkDipScreen.css'
 
 const HAND = '/assets/Cartoon%20Hand%20with%20Downward%20Pinky.png'
@@ -64,6 +65,7 @@ function InkBottleDropZone({ targetRef, state }: { targetRef: RefObject<HTMLDivE
 export default function InkDipScreen({ onComplete }: { onComplete: () => void }) {
   const { state, offset, handRef, targetRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel, onKeyDown } = useInkDip()
   const success = state === 'success'
+  useCriticalAnimation(state === 'lifting' || state === 'flipping')
 
   useEffect(() => {
     if (state === 'dipping') audioManager.playSfx('liquidDip')

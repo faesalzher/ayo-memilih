@@ -233,10 +233,22 @@ function CandidateScreen({
   )
 }
 
-function FigmaFlow({ onStartVoting, initialScreen = 'idle' }: { onStartVoting: () => void; initialScreen?: 'idle' | 'candidates' }) {
+function FigmaFlow({
+  onStartVoting,
+  onSessionActiveChange,
+  initialScreen = 'idle',
+}: {
+  onStartVoting: () => void
+  onSessionActiveChange?: (active: boolean) => void
+  initialScreen?: 'idle' | 'candidates'
+}) {
   const [screen, setScreen] = useState<Screen>(initialScreen)
   const [selectedCandidate, setSelectedCandidate] = useState(0)
   const [viewedCandidates, setViewedCandidates] = useState<boolean[]>(() => CANDIDATES.map(() => false))
+
+  useEffect(() => {
+    onSessionActiveChange?.(screen !== 'idle')
+  }, [screen, onSessionActiveChange])
 
   useEffect(() => {
     if (screen !== 'details') return

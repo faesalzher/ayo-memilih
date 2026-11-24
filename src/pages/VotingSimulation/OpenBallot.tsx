@@ -14,6 +14,7 @@ import { NavigationControls } from '../../components/navigation/NavigationContro
 import FlowFooter from '../../components/layout/FlowFooter'
 import GuideArrowButton from '../../components/navigation/GuideArrowButton'
 import TutorialBubble from '../../components/tutorial/TutorialBubble'
+import { useCriticalAnimation } from '../../session/criticalAnimation'
 import '../../App.css'
 import './OpenBallot.css'
 
@@ -59,6 +60,10 @@ export default function OpenBallot({ onComplete, onBack }: OpenBallotProps) {
   const outerOpen = phase === 'outer-open'
   const opened = phase === 'opened'
   const folding = phase === 'refolding-outer' || phase === 'folding-cover'
+  const punching = punchState === 'candidate-selected' || punchState === 'punching' || punchState === 'punched'
+  useCriticalAnimation(
+    phase === 'opening-outer-fold' || phase === 'flipping-inner' || folding || punching || finaleStage !== 'idle',
+  )
 
   const startOpening = useCallback(() => {
     if (transitionLocked.current || phase !== 'folded-cover' || deliveryReady) return
