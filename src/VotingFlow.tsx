@@ -3,10 +3,10 @@ import OpenBallot from './pages/VotingSimulation/OpenBallot'
 import InkDipScreen from './pages/InkDip/InkDipScreen'
 import { CANDIDATES } from './data/candidates'
 import { ResultsScreen } from './pages/FlowScreens'
-import { loadVotes, saveVotes } from './utils/voteStorage'
-import type { VoteTally } from './utils/voteStorage'
+import { addVote, ensureCurrentPeriod, loadVotes, saveVotes } from './utils/voteStorage'
 
 const RESULTS_AUTO_RETURN_MS = 60_000
+const PERIOD_CHECK_INTERVAL_MS = 30_000
 const CANDIDATE_IDS = CANDIDATES.map((candidate) => candidate.id)
 
 type VotingFlowProps = {
@@ -16,11 +16,18 @@ type VotingFlowProps = {
 
 export default function VotingFlow({ onBackFromBallot, onReturnHome }: VotingFlowProps) {
   const [screen, setScreen] = useState<'ballot' | 'ink' | 'results'>('ballot')
-  const [votes, setVotes] = useState<VoteTally>(() => loadVotes(CANDIDATE_IDS))
+  const [snapshot, setSnapshot] = useState(() => loadVotes(CANDIDATE_IDS))
 
   useEffect(() => {
-    saveVotes(votes)
-  }, [votes])
+    saveVotes(snapshot)
+  }, [snapshot])
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setSnapshot((current) => ensureCurrentPeriod(current, CANDIDATE_IDS))
+    }, PERIOD_CHECK_INTERVAL_MS)
+    return () => window.clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     if (screen !== 'results') return
@@ -33,7 +40,7 @@ export default function VotingFlow({ onBackFromBallot, onReturnHome }: VotingFlo
       onBack={onBackFromBallot}
       onComplete={(candidateId) => {
         if (CANDIDATE_IDS.includes(candidateId)) {
-          setVotes((current) => ({ ...current, [candidateId]: (current[candidateId] ?? 0) + 1 }))
+          setSnapshot((current) => addVote(current, candidateId, CANDIDATE_IDS))
         }
         setScreen('ink')
       }}
@@ -42,5 +49,5 @@ export default function VotingFlow({ onBackFromBallot, onReturnHome }: VotingFlo
 
   if (screen === 'ink') return <InkDipScreen onComplete={() => setScreen('results')} />
 
-  return <ResultsScreen candidates={CANDIDATES} votes={votes} onReturnHome={onReturnHome} />
+  return <ResultsScreen candidates={CANDIDATES} votes={snapshot.votes} onReturnHome={onReturnHome} />
 }
